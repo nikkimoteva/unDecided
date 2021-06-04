@@ -15,61 +15,56 @@ Csv, ML vision models(images), NLP (Text), Time series data
 
 **What will users be able to do with this data?**
 
-Visualize data (Just a table)
+- Visualize data (Just a table)
 
-See a job and its progress
+- See a job and its progress
 
-View the previously uploaded data
+- View the previously uploaded data
 
 
 **What is some additional functionality you can add/remove based on time constraints?**
 
-Tutorial page to demo the use of the application
+- Tutorial page to demo the use of the application
 
-Fancy data visualization
+- Fancy data visualization
 
-Other types of data such as JSON and XML (Right now, only supports CSV)
+- Other types of data such as JSON and XML (Right now, only supports CSV)
 
 
 **3-5 minimal requirements (will definitely complete)**
 
-Opening page (UI, responsive)
+- Opening page (UI, responsive)
 
-Menu (Hamburger menu, UI)
+- Menu (Hamburger menu, UI)
 
-Input CSV, output model
+- Input CSV, output model
 
-Job tracking
+- Job tracking
 
-Accounts
+- Accounts
 
 **3-7 "standard" requirements (will most likely complete)**
 
+- Security
 
-Account UI appearing on mainpage
+- Account page
 
-Database storing accounts
+- Hamburger menu for history/job status tracking
 
-Security
+- Table visualization
 
-Account page
+- View previously uploaded data (depending on accounts, can be per browser session or per user)
 
-Hamburger menu for history/job status tracking
-
-Table visualization
-
-View previously uploaded data (depending on accounts, can be per browser session or per user)
-
-Job tracking visualization/notification
+- Job tracking visualization/notification
 
 
 **2-3 stretch requirements (plan to complete at least 1!)**
 
-Take as input images, text, etc.
+- Take as input images, text, etc.
 
-Take as input other types of tabular data
+- Take as input other types of tabular data
 
-Fancy data visualization
+- Fancy data visualization
 
 **Pick 2 of your minimal requirements and break each of them down into ~2-5 smaller
 tasks!**
@@ -86,8 +81,7 @@ tasks!**
   - Create Job Tracking page (Not part of this requirement, but is related so I added this here)
   - Create Account information and settings page
 
-
-● Finally, draw 2-3 rough sketch prototypes of some key tasks of your app. Sketch these
-physically on paper and then scan and add to your repo.
+**Finally, draw 2-3 rough sketch prototypes of some key tasks of your app. Sketch these
+physically on paper and then scan and add to your repo.**
 
 See Image 1 and Image 2.
