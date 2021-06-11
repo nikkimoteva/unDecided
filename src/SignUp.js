@@ -11,23 +11,23 @@ import Box from '@material-ui/core/Box';
 // name validation
 // email validation
 
+const styles = () => ({
 
-const useStyles = makeStyles((theme) => ({
-		  root: {
-		    display: 'flex',
-		    flexWrap: 'wrap',
-		    marginLeft: theme.spacing(1),
 
-		  },
-		  shortField: {
-		    marginLeft: theme.spacing(1),
-		    marginRight: theme.spacing(1),
-		  },
-		  longField: {
-		    marginLeft: theme.spacing(1),
-		    marginRight: theme.spacing(1),
-		  },
-		}));
+  root: {
+    display: 'flex',
+    flexWrap: 'wrap',
+    width: '50ch',
+
+  },
+  textField: {
+    width: '25ch',
+  },
+  longTextField: {
+    width: '50ch',
+  },
+
+});
 
 class SignUp extends React.Component{
 
@@ -50,39 +50,35 @@ class SignUp extends React.Component{
 
 	TextFieldOnChange = (event) =>{
 		let nam = event.target.name;
-	    let val = event.target.value;
-	    this.setState({[nam]: val});
+    let val = event.target.value;
+    this.setState({[nam]: val});
 	}
 
 	render(){
 
 		const TextFieldMargin = 4;
-	    const { classes } = this.props;
-
+    const { classes } = this.props;
 		return(
-			<form  noValidate autoComplete="on">
+			<form className = {classes.root} noValidate autoComplete="on">
 			<div>
 			  	<TextField name="firstName" 
 			  			 label="First Name" 
 			  			 variant="outlined" 
-			  			 style={{ margin: TextFieldMargin }} 
-						 className={classes.shortField}
+						 className={classes.textField}
 						 onChange={this.TextFieldOnChange}
 				/>
 			  	<TextField name="lastName" 
 			  			 label="Last Name" 
 			  			 variant="outlined" 
-			  			 style={{ margin: TextFieldMargin }}
-						 className={classes.shortField}
-						 onChange={this.TextFieldOnChange}
+  						 className={classes.textField}
+  						 onChange={this.TextFieldOnChange}
 			  	/>
 	  		</div >
 	  		<div>
 	  			<TextField name="email" 
 	  					   label="Email" 
 	  					   variant="outlined" 
-	  					   style={{ margin: TextFieldMargin }}
-	  					   className={classes.longField}
+	  					   className={classes.longTextField}
 	  					   onChange={this.TextFieldOnChange}
 
 	  			/>
@@ -92,16 +88,14 @@ class SignUp extends React.Component{
 						   label="Password" 
 						   variant="outlined" 
 						   type="password"
-						   style={{ margin: TextFieldMargin }}
-						 className={classes.shortField}
-						 onChange={this.TextFieldOnChange}
+						   className={classes.textField}
+						   onChange={this.TextFieldOnChange}
 				/>
 				<TextField name="confirm" 
 						   label="Confirm" 
 						   variant="outlined"
 						   type="password" 
-						   style={{ margin: TextFieldMargin }}
-						   className={classes.shortField}
+						   className={classes.textField}
 				/>
 			</div>
 			<Button type="submit" 
@@ -117,4 +111,4 @@ class SignUp extends React.Component{
 	}
 }
 
-export default withStyles(useStyles)(SignUp);
+export default withStyles(styles)(SignUp);
