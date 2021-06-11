@@ -1,10 +1,15 @@
 import React from 'react';
-
+import { borders } from '@material-ui/system';
 import {TextField} from "@material-ui/core"
 import {Button} from "@material-ui/core"
 import { withStyles } from '@material-ui/styles';
 import { makeStyles } from '@material-ui/core/styles';
+import Box from '@material-ui/core/Box';
 
+// TODO:
+// password validation
+// name validation
+// email validation
 
 
 const useStyles = makeStyles((theme) => ({
@@ -55,60 +60,59 @@ class SignUp extends React.Component{
 	    const { classes } = this.props;
 
 		return(
+			<form  noValidate autoComplete="on">
+			<div>
+			  	<TextField name="firstName" 
+			  			 label="First Name" 
+			  			 variant="outlined" 
+			  			 style={{ margin: TextFieldMargin }} 
+						 className={classes.shortField}
+						 onChange={this.TextFieldOnChange}
+				/>
+			  	<TextField name="lastName" 
+			  			 label="Last Name" 
+			  			 variant="outlined" 
+			  			 style={{ margin: TextFieldMargin }}
+						 className={classes.shortField}
+						 onChange={this.TextFieldOnChange}
+			  	/>
+	  		</div >
+	  		<div>
+	  			<TextField name="email" 
+	  					   label="Email" 
+	  					   variant="outlined" 
+	  					   style={{ margin: TextFieldMargin }}
+	  					   className={classes.longField}
+	  					   onChange={this.TextFieldOnChange}
 
-			<div className={classes.root}>
-				<form  noValidate autoComplete="on">
-				<div>
-				  	<TextField name="firstName" 
-				  			 label="First Name" 
-				  			 variant="outlined" 
-				  			 style={{ margin: TextFieldMargin }} 
-							 className={classes.shortField}
-							 onChange={this.TextFieldOnChange}
-					/>
-				  	<TextField name="lastName" 
-				  			 label="Last Name" 
-				  			 variant="outlined" 
-				  			 style={{ margin: TextFieldMargin }}
-							 className={classes.shortField}
-							 onChange={this.TextFieldOnChange}
-				  	/>
-		  		</div >
-		  		<div>
-		  			<TextField name="email" 
-		  					   label="Email" 
-		  					   variant="outlined" 
-		  					   style={{ margin: TextFieldMargin }}
-		  					   className={classes.longField}
-		  					   onChange={this.TextFieldOnChange}
-
-		  			/>
-		  		</div>
-		  		<div >
-					<TextField name="password" 
-							   label="Password" 
-							   variant="outlined" 
-							   style={{ margin: TextFieldMargin }}
-							 className={classes.shortField}
-							 onChange={this.TextFieldOnChange}
-					/>
-					<TextField name="confirm" 
-							   label="Confirm" 
-							   variant="outlined" 
-							   style={{ margin: TextFieldMargin }}
-							   className={classes.shortField}
-					/>
-				</div>
-				<Button type="submit" 
-						variant="outlined" 
-						color="primary" 
-						className={classes.button} 
-						onClick={this.submitHandler}>
-			     		Sign Up!
-			    </Button>
-				</form>
-
+	  			/>
+	  		</div>
+	  		<div >
+				<TextField name="password" 
+						   label="Password" 
+						   variant="outlined" 
+						   type="password"
+						   style={{ margin: TextFieldMargin }}
+						 className={classes.shortField}
+						 onChange={this.TextFieldOnChange}
+				/>
+				<TextField name="confirm" 
+						   label="Confirm" 
+						   variant="outlined"
+						   type="password" 
+						   style={{ margin: TextFieldMargin }}
+						   className={classes.shortField}
+				/>
 			</div>
+			<Button type="submit" 
+					variant="outlined" 
+					color="primary" 
+					className={classes.button} 
+					onClick={this.submitHandler}>
+		     		Sign Up!
+		    </Button>
+			</form>
+
 		)
 	}
 }
