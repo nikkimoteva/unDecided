@@ -1,70 +1,87 @@
-# Getting Started with Create React App
+**Who is it for?**
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+The AutoML team at UBC. Users will be both individuals and businesses who rely on having very little ML expertise to be able to perform ML operations.
 
-## Available Scripts
 
-In the project directory, you can run:
+**What will it do? (What "human activity" will it support?)**
 
-### `npm start`
+Takes data as input and visualize/process the data as output. Allows users to view jobs that have completed or are in progress
+ 
+ 
+**What type of data will it store?**
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in the browser.
+Csv, ML vision models(images), NLP (Text), Time series data
 
-The page will reload if you make edits.\
-You will also see any lint errors in the console.
 
-### `npm test`
+**What will users be able to do with this data?**
 
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+- Visualize data (Just a table)
 
-### `npm run build`
+- See a job and its progress
 
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
+- View the previously uploaded data
 
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
+**What is some additional functionality you can add/remove based on time constraints?**
 
-### `npm run eject`
+- Tutorial page to demo the use of the application
 
-**Note: this is a one-way operation. Once you `eject`, you can’t go back!**
+- Fancy data visualization
 
-If you aren’t satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
+- Other types of data such as JSON and XML (Right now, only supports CSV)
 
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you’re on your own.
 
-You don’t have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn’t feel obligated to use this feature. However we understand that this tool wouldn’t be useful if you couldn’t customize it when you are ready for it.
+**3-5 minimal requirements (will definitely complete)**
 
-## Learn More
+- Opening page (UI, responsive)
 
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
+- Menu (Hamburger menu, UI)
 
-To learn React, check out the [React documentation](https://reactjs.org/).
+- Input CSV, output model
 
-### Code Splitting
+- Job tracking
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/code-splitting](https://facebook.github.io/create-react-app/docs/code-splitting)
+- Accounts
 
-### Analyzing the Bundle Size
+**3-7 "standard" requirements (will most likely complete)**
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size](https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size)
+- Security
 
-### Making a Progressive Web App
+- Account page
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app](https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app)
+- Hamburger menu for history/job status tracking
 
-### Advanced Configuration
+- Table visualization
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/advanced-configuration](https://facebook.github.io/create-react-app/docs/advanced-configuration)
+- View previously uploaded data (depending on accounts, can be per browser session or per user)
 
-### Deployment
+- Job tracking visualization/notification
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/deployment](https://facebook.github.io/create-react-app/docs/deployment)
 
-### `npm run build` fails to minify
+**2-3 stretch requirements (plan to complete at least 1!)**
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify](https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify)
+- Take as input images, text, etc.
+
+- Take as input other types of tabular data
+
+- Fancy data visualization
+
+**Pick 2 of your minimal requirements and break each of them down into ~2-5 smaller
+tasks!**
+
+- Opening page
+  - Create a page for the landing page of the website
+  - Add a page to compare our software to other AutoML solutions, and link to it from home page
+  - Add a Get Started page and link to it from home page
+  - Add Use Cases page and link to it from home page
+
+- Accounts
+  - Structure data in database to store account information
+  - Create Sign up and Log in pages
+  - Create Job Tracking page (Not part of this requirement, but is related so I added this here)
+  - Create Account information and settings page
+
+**Finally, draw 2-3 rough sketch prototypes of some key tasks of your app. Sketch these
+physically on paper and then scan and add to your repo.**
+
+See Image 1 and Image 2.
