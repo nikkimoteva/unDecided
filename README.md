@@ -85,3 +85,31 @@ tasks!**
 physically on paper and then scan and add to your repo.**
 
 See Image 1 and Image 2.
+
+**Some more info**
+- https://www.automl.org/
+  - A listing of some autoML companies and related topics
+- Auto-Sklearn/Auto-Pytorch: https://automl.github.io/auto-sklearn/master/
+  - Really just github repos for software developers to use
+- Auto-Weka: http://www.cs.ubc.ca/labs/beta/Projects/autoweka/
+  - Very primitive, seems deprecated
+- TPOT: http://epistasislab.github.io/tpot/
+  - Python auto-ML tool. No frontend
+- MLPlan: https://starlibs.github.io/AILibs/projects/mlplan
+  - Java auto-ML library.
+- Data robot: https://www.datarobot.com/
+  - Decent website
+- Google AutoML: https://cloud.google.com/automl/
+  - Big competitor. Supports Vision, Video intelligence (currently beta) and NLP data
+- MLJar: https://mljar.com/
+  - Supports tabular data only. Decent frontend and includes lots of explainability in their models
+- H20 AutoML: https://www.h2o.ai/products/h2o-automl/
+  - Supports tabular data only. Mostly a command-line interface
+- Ludwig: https://github.com/ludwig-ai/ludwig
+  - AutoML library. Supports all kinds of data types, but no frontend
+- AutoGluon: https://auto.gluon.ai/stable/index.html
+  - AutoML Library with support for all kinds of data
+- AutoKeras:  https://autokeras.com/
+  - AutoML library for neural nets.
+  
+  
