@@ -11,3 +11,27 @@
 .App-link {
   color: #61dafb;
 }
+
+.HeaderLogo {
+  display: flex;
+  flex-flow: column wrap;
+  justify-content: space-around;
+  align-items: center;
+  
+  padding: 0;
+  padding-top: 5%;
+  margin: 0;
+
+}
+
+.initialLogo {
+  width: 75%;
+  height: 60%;
+}
+
+.keywords {
+  font-family: "Lucida Console";
+  font-size: 300%;
+  font-weight: bolder;
+  padding-top: 3%
+}
