@@ -5,10 +5,6 @@ import {Link} from "react-router-dom";
 
 
 class Button extends React.Component {
-    constructor(props) {
-        super(props);
-    }
-
     render () {
         let data = this.props.data;
         let route = "./" + data.route;

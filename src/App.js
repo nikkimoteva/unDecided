@@ -1,10 +1,10 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import Typed from 'react-typed';
-import logo from './logo.png';
 import Button from "./Button"
 import "./Button.css"
 import LoginModal from "./LoginModal";
 import {Modal} from "@material-ui/core";
+import Header from "./Header";
 
 function App() {
   const [login, setLogin] = useState(false);
@@ -30,35 +30,33 @@ function App() {
 
   return (
     <div className="HeaderLogo">
+      <Header handleLogin={openLoginModal}/>
       <Modal
         open={login}
         onClose={closeLoginModal}
         aria-labelledby="Login Form"
         aria-describedby="Input your login details here"
       >
-        <LoginModal handleLogin={openLoginModal}/>
+        <LoginModal/>
       </Modal>
-
-        <img className="initialLogo" src={logo} alt="logo" />
-        <br/>
-        <Typed className="keywords"
-            strings={keywords}
-            typeSpeed={50}
-            startDelay= {500}
-            backSpeed= {60}
-            showCursor= {true}
-            cursorChar= {'|'}
-            autoInsertCss= {true}
-            shuffle= {true}
-            smartBackspace= {false}
-            loop= {true}
-        />
-        <br/>
-        <div className="ButtonUI">
-          <Button data={buttonDemo} />
-          <Button data={buttonSignup} />
-        </div>
-    </div>
+      <Typed className="keywords"
+          strings={keywords}
+          typeSpeed={50}
+          startDelay= {500}
+          backSpeed= {60}
+          showCursor= {true}
+          cursorChar= {'|'}
+          autoInsertCss= {true}
+          shuffle= {true}
+          smartBackspace= {false}
+          loop= {true}
+      />
+      <br/>
+      <div className="ButtonUI">
+        <Button data={buttonDemo} />
+        <Button data={buttonSignup} />
+      </div>
+  </div>
 );
 }
 
