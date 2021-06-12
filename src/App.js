@@ -36,7 +36,7 @@ function App() {
         aria-labelledby="Login Form"
         aria-describedby="Input your login details here"
       >
-        <LoginModal/>
+        <LoginModal handleLogin={openLoginModal}/>
       </Modal>
 
         <img className="initialLogo" src={logo} alt="logo" />
