@@ -7,7 +7,9 @@ export default function Header(props) {
   return (
     <AppBar position="static">
       <div style={{float: "left"}}>
-        <img src={logo} className="logo" alt="logo"/>
+        <Link to="/">
+          <img src={logo} className="logo" alt="logo" onClick={}/>
+        </Link>
       </div>
       <div style={{float: "right"}}>
         <ButtonGroup color="secondary">
