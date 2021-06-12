@@ -1,12 +1,13 @@
-import './App.css';
-import Header from "./Header";
 import React, { useState, useEffect } from 'react';
 import Typed from 'react-typed';
 import logo from './logo.png';
 import Button from "./Button"
 import "./Button.css"
+import LoginModal from "./LoginModal";
+import {Modal} from "@material-ui/core";
 
 function App() {
+  const [login, setLogin] = useState(false);
 
   let keywords = ["autoML", "Automated Machine Learning", "UBC", "State Of The Art"];
   let buttonSignup = {
@@ -18,9 +19,26 @@ function App() {
     name: "autoML In Action",
     route: "./demo"
   }
+  
+   function openLoginModal() {
+    setLogin(true);
+  }
+
+  function closeLoginModal() {
+    setLogin(false);
+  }
 
   return (
     <div className="HeaderLogo">
+      <Modal
+        open={login}
+        onClose={closeLoginModal}
+        aria-labelledby="Login Form"
+        aria-describedby="Input your login details here"
+      >
+        <LoginModal/>
+      </Modal>
+
         <img className="initialLogo" src={logo} alt="logo" />
         <br/>
         <Typed className="keywords"
@@ -43,6 +61,5 @@ function App() {
     </div>
 );
 }
-
 
 export default App;
