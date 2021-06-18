@@ -5,7 +5,7 @@ import {Button} from "@material-ui/core"
 import {withStyles} from '@material-ui/styles';
 import {makeStyles} from '@material-ui/core/styles';
 import Box from '@material-ui/core/Box';
-import Header from "./Header";
+import Header from "../Header";
 import { useState } from 'react';
 
 

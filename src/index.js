@@ -1,11 +1,11 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 import './index.css';
-import App from './App';
+import App from './Landing Page/App';
 import {BrowserRouter as Router, Route, Switch} from "react-router-dom";
-import Docs from "./Docs";
-import SignUp from "./SignUp";
-import Demo from "./Demo";
+import Docs from "./Docs/Docs";
+import SignUp from "./Sign Up/SignUp";
+import Demo from "./Demo/Demo";
 
 ReactDOM.render(
   <React.StrictMode>

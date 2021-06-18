@@ -1,10 +1,10 @@
 import React, { useState } from 'react';
 import Typed from 'react-typed';
-import Button from "./Button"
-import "./Button.css"
-import LoginModal from "./LoginModal";
+import Button from "../Button"
+import "../Button.css"
+import LoginModal from "../LoginModal";
 import {Modal} from "@material-ui/core";
-import Header from "./Header";
+import Header from "../Header";
 
 function App() {
   const [login, setLogin] = useState(false);
