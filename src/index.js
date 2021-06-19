@@ -11,7 +11,6 @@ ReactDOM.render(
   <React.StrictMode>
     <Router>
       <Switch>
-        
         <Route path="/signup"><SignUp/></Route>
         <Route path="/docs"><Docs/></Route>
         <Route path="/demo"><Demo/></Route>
