@@ -5,7 +5,6 @@ import {Button} from "@material-ui/core"
 import {withStyles} from '@material-ui/styles';
 import {makeStyles} from '@material-ui/core/styles';
 import Box from '@material-ui/core/Box';
-import Header from "../Header";
 import { useState } from 'react';
 
 
@@ -66,7 +65,6 @@ export default function Signup() {
 
   return (
       <>
-        // <Header handleLogin={classes.handleLogin}/> {/*Does not work yet*/}
         <form className={classes.root} noValidate autoComplete="on">
           <div>
             <TextField name="firstName"

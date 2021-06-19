@@ -2488,6 +2488,22 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@types/gapi.auth2@npm:0.0.54":
+  version: 0.0.54
+  resolution: "@types/gapi.auth2@npm:0.0.54"
+  dependencies:
+    "@types/gapi": "*"
+  checksum: 1ebf1f14138be48b9a26032c389ee68f8f25798fb7f61df05d98db2e32d2bc9b2435bc7c3ac637b6660311b3c389603bfa3cf1b94f3653d25739ca215857ad4d
+  languageName: node
+  linkType: hard
+
+"@types/gapi@npm:*, @types/gapi@npm:0.0.39":
+  version: 0.0.39
+  resolution: "@types/gapi@npm:0.0.39"
+  checksum: 95a616e55a9a3a8651d820036734af92166d9802eef85a50de9af45c383477093d3e43b41df248619231650e3638bf5e91e9d1990156cf31a97fc9eaa9bcb5e9
+  languageName: node
+  linkType: hard
+
 "@types/glob@npm:^7.1.1":
   version: 7.1.3
   resolution: "@types/glob@npm:7.1.3"
@@ -3087,6 +3103,15 @@ __metadata:
   languageName: node
   linkType: hard
 
+"abort-controller@npm:^3.0.0":
+  version: 3.0.0
+  resolution: "abort-controller@npm:3.0.0"
+  dependencies:
+    event-target-shim: ^5.0.0
+  checksum: cc53ad8df9a6de3f55d4f804fca5106908f855e47b572fb5ab3cdd723b76374686dcefa557a2f87d4396db77e31bc0e6ce9d48637388cef6d884c29ad2691448
+  languageName: node
+  linkType: hard
+
 "accepts@npm:~1.3.4, accepts@npm:~1.3.5, accepts@npm:~1.3.7":
   version: 1.3.7
   resolution: "accepts@npm:1.3.7"
@@ -3488,7 +3513,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"arrify@npm:^2.0.1":
+"arrify@npm:^2.0.0, arrify@npm:^2.0.1":
   version: 2.0.1
   resolution: "arrify@npm:2.0.1"
   checksum: 2a19726815590d829e07998aefa2c352bd9061e58bf4391ffffa227129995841a710bef2d8b4c9408a6b0679d96c96bd23764bdbcc29bb21666c976816093972
@@ -3878,7 +3903,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"base64-js@npm:^1.0.2":
+"base64-js@npm:^1.0.2, base64-js@npm:^1.3.0":
   version: 1.5.1
   resolution: "base64-js@npm:1.5.1"
   checksum: c1b41a26ddc6620eb7f1ee6c29c812f5942a4e328e74263f995872cfb8ca3aee08542beb25cd10fd7ef16e4f16603e25c35a26e776c01fd55277e5035e829e0e
@@ -3932,6 +3957,13 @@ __metadata:
   version: 5.2.2
   resolution: "big.js@npm:5.2.2"
   checksum: ea33d7d25674df4253ae3667da7f48ade6cc8828cb4f2c3a7753f53975f10cebae57e0d1ecf84f1b920b5467262dc0d4f357e5e497b138472d0e64992a8402a4
+  languageName: node
+  linkType: hard
+
+"bignumber.js@npm:^9.0.0":
+  version: 9.0.1
+  resolution: "bignumber.js@npm:9.0.1"
+  checksum: 605e9639c413f344c37b23e919254f60a5017cc5ccd925e2f8fb79b36aa3d54f356df9c726f38465263236455f685d60dcf38dbe32cb0b7e4d2a32c94b035476
   languageName: node
   linkType: hard
 
@@ -4177,6 +4209,13 @@ __metadata:
   dependencies:
     node-int64: ^0.4.0
   checksum: 302af195672988c21be9590b0b4fcacf9bd5bc116a32cbb5f613b21800fce8ee6aa1c57e76bbfa15a60269fe48885d062383e353fbaa821dbf06e92f72cc8b7d
+  languageName: node
+  linkType: hard
+
+"buffer-equal-constant-time@npm:1.0.1":
+  version: 1.0.1
+  resolution: "buffer-equal-constant-time@npm:1.0.1"
+  checksum: a38a6fead170594b97894658d0e62e3686ccaecea480051c0bf69ba29274eca87203452590c3b6a1b589a7da1baef89420da00a8f08c010675c1dbc25f58edf9
   languageName: node
   linkType: hard
 
@@ -5882,6 +5921,15 @@ __metadata:
   languageName: node
   linkType: hard
 
+"ecdsa-sig-formatter@npm:1.0.11, ecdsa-sig-formatter@npm:^1.0.11":
+  version: 1.0.11
+  resolution: "ecdsa-sig-formatter@npm:1.0.11"
+  dependencies:
+    safe-buffer: ^5.0.1
+  checksum: 9d07775ee274e0ca3978a562e9eba14ce77ecc804d977d0e94525c2aa4a70d909eda5703810955d22fd06fc6312e6aacf85e233eebdabc7b27a0a38fd62902a4
+  languageName: node
+  linkType: hard
+
 "ee-first@npm:1.1.1":
   version: 1.1.1
   resolution: "ee-first@npm:1.1.1"
@@ -6538,6 +6586,13 @@ __metadata:
   languageName: node
   linkType: hard
 
+"event-target-shim@npm:^5.0.0":
+  version: 5.0.1
+  resolution: "event-target-shim@npm:5.0.1"
+  checksum: d176477a31adf328ff50148886e46cef3f61ff8bdc1d6db161f6b3ead2501085d5652a81fab8dddc59aed93727231c0b5c8a0948de77ae401b2d977a3d18329e
+  languageName: node
+  linkType: hard
+
 "eventemitter3@npm:^4.0.0":
   version: 4.0.7
   resolution: "eventemitter3@npm:4.0.7"
@@ -6713,6 +6768,13 @@ __metadata:
   languageName: node
   linkType: hard
 
+"extend@npm:^3.0.2":
+  version: 3.0.2
+  resolution: "extend@npm:3.0.2"
+  checksum: 1406da1f0c4b00b839497e4cdd0ec4303ce2ae349144b7c28064a5073c93ce8c08da4e8fb1bc5cb459ffcdff30a35fc0fe54344eb88320e70100c1baea6f195c
+  languageName: node
+  linkType: hard
+
 "extglob@npm:^2.0.4":
   version: 2.0.4
   resolution: "extglob@npm:2.0.4"
@@ -6761,6 +6823,13 @@ __metadata:
   version: 2.0.6
   resolution: "fast-levenshtein@npm:2.0.6"
   checksum: a2d03af3088b0397633e007fb3010ecfa4f91cae2116d2385653c59396a1b31467641afa672a79e6f82218518670dc144128378124e711e35dbf90bc82846f22
+  languageName: node
+  linkType: hard
+
+"fast-text-encoding@npm:^1.0.0":
+  version: 1.0.3
+  resolution: "fast-text-encoding@npm:1.0.3"
+  checksum: f14fb9242fc8ea942d8b6374f84e918aa5e97bbdf3cafbbf737b04f677277a1900cb9914eab601822cc51787dc607bfff5904e646b3fcc82d84081b21261ba87
   languageName: node
   linkType: hard
 
@@ -7159,6 +7228,29 @@ fsevents@^1.2.7:
   languageName: node
   linkType: hard
 
+"gaxios@npm:^4.0.0":
+  version: 4.3.0
+  resolution: "gaxios@npm:4.3.0"
+  dependencies:
+    abort-controller: ^3.0.0
+    extend: ^3.0.2
+    https-proxy-agent: ^5.0.0
+    is-stream: ^2.0.0
+    node-fetch: ^2.3.0
+  checksum: 190f693d72c78a9168eb8ce0ea8d394f628dd2d15bbaa26eb7cd3b023212afd172355be372e0efaf2ae4d89afc1d93d2c41c3dd0ff1d9b3080b2ab1b0eaa439f
+  languageName: node
+  linkType: hard
+
+"gcp-metadata@npm:^4.2.0":
+  version: 4.3.0
+  resolution: "gcp-metadata@npm:4.3.0"
+  dependencies:
+    gaxios: ^4.0.0
+    json-bigint: ^1.0.0
+  checksum: 12991390914716518dbc16ff16403dfee12240ec8cb6cbdb53195af852d96f433e013d4eb421a6728da7cd7f35e001bae6d6f32ba393e24488c8a8552f0f2d12
+  languageName: node
+  linkType: hard
+
 "gensync@npm:^1.0.0-beta.1, gensync@npm:^1.0.0-beta.2":
   version: 1.0.0-beta.2
   resolution: "gensync@npm:1.0.0-beta.2"
@@ -7333,6 +7425,34 @@ fsevents@^1.2.7:
   languageName: node
   linkType: hard
 
+"google-auth-library@npm:^7.1.2":
+  version: 7.1.2
+  resolution: "google-auth-library@npm:7.1.2"
+  dependencies:
+    arrify: ^2.0.0
+    base64-js: ^1.3.0
+    ecdsa-sig-formatter: ^1.0.11
+    fast-text-encoding: ^1.0.0
+    gaxios: ^4.0.0
+    gcp-metadata: ^4.2.0
+    gtoken: ^5.0.4
+    jws: ^4.0.0
+    lru-cache: ^6.0.0
+  checksum: c1bffb9f7c42efa368ea9e41911d7447e6dfd8ec1fe4caed4752b4b4f1f66157177d19f6ab7bb73ca8ac45f6dbed9757bcdfc755eeecaeb244df0f69cea26c61
+  languageName: node
+  linkType: hard
+
+"google-p12-pem@npm:^3.0.3":
+  version: 3.1.0
+  resolution: "google-p12-pem@npm:3.1.0"
+  dependencies:
+    node-forge: ^0.10.0
+  bin:
+    gp12-pem: build/src/bin/gp12-pem.js
+  checksum: b1dfd8b69819243a75002adb65abbf92d2c9d5ee2f5597f03d741d12705fad5bd2cd0aa0ce66e44eca9ad6274c381dd141b7179fd59c7ae33079cdd69091a2e4
+  languageName: node
+  linkType: hard
+
 "graceful-fs@npm:^4.1.11, graceful-fs@npm:^4.1.15, graceful-fs@npm:^4.1.2, graceful-fs@npm:^4.1.6, graceful-fs@npm:^4.2.0, graceful-fs@npm:^4.2.4, graceful-fs@npm:^4.2.6":
   version: 4.2.6
   resolution: "graceful-fs@npm:4.2.6"
@@ -7344,6 +7464,17 @@ fsevents@^1.2.7:
   version: 1.3.0
   resolution: "growly@npm:1.3.0"
   checksum: c87f7e8c785cac6ee60719c9d62f7d790a85dafa13d62c4667664e3a21ee771f5fd19df3f374d2f7bdf297b8f687cf70e19bb066aba4832e6f6caa5190812578
+  languageName: node
+  linkType: hard
+
+"gtoken@npm:^5.0.4":
+  version: 5.3.0
+  resolution: "gtoken@npm:5.3.0"
+  dependencies:
+    gaxios: ^4.0.0
+    google-p12-pem: ^3.0.3
+    jws: ^4.0.0
+  checksum: 14644b721c1e0eaead5d412c13a46c08b6e355ceecef9a7b4528f5d068a200e75f81e207ba0b50dc7ebb3b01e56e99f4ab87e8c964d512c32697192467d89668
   languageName: node
   linkType: hard
 
@@ -9178,6 +9309,15 @@ fsevents@^1.2.7:
   languageName: node
   linkType: hard
 
+"json-bigint@npm:^1.0.0":
+  version: 1.0.0
+  resolution: "json-bigint@npm:1.0.0"
+  dependencies:
+    bignumber.js: ^9.0.0
+  checksum: f6c550e09f25416d07d888db88e3cec6c13443b4c0ed5a903dc39b9870fc5adc77aecc30a2d4373888abce7526410a42b0bcf926382a399a285686163a479801
+  languageName: node
+  linkType: hard
+
 "json-parse-better-errors@npm:^1.0.1, json-parse-better-errors@npm:^1.0.2":
   version: 1.0.2
   resolution: "json-parse-better-errors@npm:1.0.2"
@@ -9361,6 +9501,27 @@ fsevents@^1.2.7:
     array-includes: ^3.1.2
     object.assign: ^4.1.2
   checksum: 2a8033e63234d04e6ed77ac91222e2dff527f64cf70c10d2f26fda6f35dc9b78d5e3a43fc3d28df7fe0dab45294b94c9c90e58ab242ecf14e58cd39691ee0ed4
+  languageName: node
+  linkType: hard
+
+"jwa@npm:^2.0.0":
+  version: 2.0.0
+  resolution: "jwa@npm:2.0.0"
+  dependencies:
+    buffer-equal-constant-time: 1.0.1
+    ecdsa-sig-formatter: 1.0.11
+    safe-buffer: ^5.0.1
+  checksum: 03f8af36a3adf27b55ef98ef09be5b4a02b4533e33c91225a38addea1b164e28349cdf78b0e54cce088c472e203e8910bb37e989663c577454d371c7eef1b870
+  languageName: node
+  linkType: hard
+
+"jws@npm:^4.0.0":
+  version: 4.0.0
+  resolution: "jws@npm:4.0.0"
+  dependencies:
+    jwa: ^2.0.0
+    safe-buffer: ^5.0.1
+  checksum: fb7d2725da5f4a9669024e3e743a3c4bfc193265614e03d52ea24a5251717107491004892d3524fdee525341d91212928bc19b8253f42f0df3dc35bf478dc92e
   languageName: node
   linkType: hard
 
@@ -10278,6 +10439,13 @@ fsevents@^1.2.7:
     lower-case: ^2.0.2
     tslib: ^2.0.3
   checksum: 84db4909caec37504c6655f995a004067f8733be8cd8d849f1578661b60a1685e086325fa4e1a5e8ce94e7416c1d0f037e2a00f635a14457183de80ab4fc7612
+  languageName: node
+  linkType: hard
+
+"node-fetch@npm:^2.3.0":
+  version: 2.6.1
+  resolution: "node-fetch@npm:2.6.1"
+  checksum: cbb171635e538162b977eac5dfe7a1e07a9a02e991924377a6435502291e2f823d306b95aabc455caebf4a118ccf836868462bc70ccc3095af02bb9da61fda37
   languageName: node
   linkType: hard
 
@@ -12406,6 +12574,19 @@ fsevents@^1.2.7:
   version: 6.0.9
   resolution: "react-error-overlay@npm:6.0.9"
   checksum: 5e971284cc76af684940d78a91c8eac639f16b3b9500a03423ae177392cdaf320788b9c9112f58a2dde4f5a80688acdbc89334827354e95493244968af94830f
+  languageName: node
+  linkType: hard
+
+"react-gapi-auth2@npm:^1.0.3":
+  version: 1.0.3
+  resolution: "react-gapi-auth2@npm:1.0.3"
+  dependencies:
+    "@types/gapi": 0.0.39
+    "@types/gapi.auth2": 0.0.54
+  peerDependencies:
+    react: ">=16.8.0"
+    react-dom: ">=16.8.0"
+  checksum: 4e02fbb867b6e318c06d057d9cdfe779ed0e9a521f4363e57a415366c4622e8549cc44561ce456d61c8419ab1a03680a73ab6dd577fc020a40f61252432d8903
   languageName: node
   linkType: hard
 
@@ -14734,9 +14915,11 @@ resolve@^2.0.0-next.3:
     "@testing-library/user-event": ^12.8.3
     cors: ^2.8.5
     express: ^4.17.1
+    google-auth-library: ^7.1.2
     morgan: ^1.10.0
     react: ^17.0.2
     react-dom: ^17.0.2
+    react-gapi-auth2: ^1.0.3
     react-router-dom: ^5.2.0
     react-scripts: 4.0.3
     react-typed: ^1.2.0
