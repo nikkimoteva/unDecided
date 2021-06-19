@@ -15,7 +15,7 @@ export default function Header(props) {
         <ButtonGroup color="secondary">
           <Button variant="contained" component={Link} to="/docs">Docs</Button>
           <Button variant="contained" component={Link} to="/demo">Demo</Button>
-          <Button variant="contained" onClick={props.handleLogin}>Log In</Button>
+          <Button variant="contained" onClick={props.openLogin}>Log In</Button>
           <Button variant="contained" component={Link} to="/signup">Sign Up</Button>
         </ButtonGroup>
       </div>

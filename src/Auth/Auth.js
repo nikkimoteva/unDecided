@@ -8,6 +8,7 @@ import {
   useHistory,
   useLocation
 } from "react-router-dom";
+import {MockAuthProvider as fakeAuth} from "./AuthProviders";
 
 // This example has 3 pages: a public page, a protected
 // page, and a login screen. In order to see the protected
@@ -61,10 +62,11 @@ import {
  * `authContext`, `ProvideAuth`, `useAuth` and `useProvideAuth`
  * refer to: https://usehooks.com/useAuth/
  */
-const authContext = createContext(undefined); // TODO add auth provider here
+const authContext = createContext(); // TODO add auth provider here
 
-function ProvideAuth({ children }) {
-  const auth = useProvideAuth();
+// Makes the useAuth "hook" available to all children of this component
+export function ProvideAuth({ children }) {
+  const auth = useFakeAuth();
   return (
     <authContext.Provider value={auth}>
       {children}
@@ -76,22 +78,21 @@ export function useAuth() {
   return useContext(authContext);
 }
 
-function useProvideAuth() {
+// Authentication state holding the auth provider
+function useFakeAuth() {
   const [user, setUser] = useState(null);
 
-  const signin = cb => {
+  function signin(cb) {
     return fakeAuth.signin(() => {
       setUser("user");
-      cb();
     });
-  };
+  }
 
-  const signout = cb => {
+  function signout(cb) {
     return fakeAuth.signout(() => {
       setUser(null);
-      cb();
     });
-  };
+  }
 
   return {
     user,
@@ -99,8 +100,6 @@ function useProvideAuth() {
     signout
   };
 }
-
-
 
 // A wrapper for <Route> that redirects to the login
 // screen if you're not yet authenticated.

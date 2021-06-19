@@ -2,19 +2,17 @@ import React, {useState} from 'react';
 import "./Button.css"
 import {Modal, responsiveFontSizes} from "@material-ui/core";
 import {createMuiTheme, StylesProvider, ThemeProvider} from "@material-ui/core/styles";
-import {BrowserRouter as Router, Route, Switch} from "react-router-dom";
-import SignUp from "./Sign Up/SignUp";
-import Docs from "./Docs/Docs";
-import Demo from "./Demo/Demo";
-import Landing from "./Landing Page/Landing"
-import LoginModal from "./LoginModal";
-import Header from "./Header";
-import Console from "./Console/Console"
-import {PrivateRoute} from "./Auth/Auth";
+import {ProvideAuth} from "./Auth/Auth";
+import { GApiProvider } from 'react-gapi-auth2';
+import BaseRouter from "./BaseRouter";
+
 
 export default function App() {
-  const [loginModal, setLoginModal] = useState(false);
-  const [loggedIn, setLoggedIn] = useState(false);
+  const clientConfig = {
+    client_id: '296036318202-uraiim5u0cf5qpqhujl3aaj1kniuu41e.apps.googleusercontent.com',
+    // cookie_policy: 'single_host_origin',
+    // scope: 'https://www.googleapis.com/auth/<POLICY>'
+  };
 
   let theme = createMuiTheme({
     // See https://material-ui.com/customization/theming/
@@ -32,42 +30,16 @@ export default function App() {
     overrides: {}
   });
 
-  function handleLogin() {
-
-  }
-
-  function openLoginModal() {
-    setLoginModal(true);
-  }
-
-  function closeLoginModal() {
-    setLoginModal(false);
-  }
-
   theme = responsiveFontSizes(theme);
 
   return (
-    <ThemeProvider theme={theme}>
-      <StylesProvider injectFirst>
-        <Router>
-          <Header handleLogin={handleLogin}/>
-          <Modal
-            open={loginModal}
-            onClose={closeLoginModal}
-            aria-labelledby="Login Form"
-            aria-describedby="Input your login details here"
-          >
-            <LoginModal/>
-          </Modal>
-          <Switch>
-            <PrivateRoute path="/console">
-            </PrivateRoute>
-            <Route path="/signup"><SignUp/></Route>
-            <Route path="/docs"><Docs/></Route>
-            <Route path="/demo"><Demo/></Route>
-            <Route path="/"><Landing/></Route>
-          </Switch>
-        </Router>
+    <ThemeProvider theme={theme}> {/*Provides default global theme*/}
+      <StylesProvider injectFirst> {/*Makes it so we can override default styles*/}
+        <GApiProvider clientConfig={clientConfig}>  {/*Provides hooks for getting google api stuff*/}
+          <ProvideAuth> {/*Provides useAuth hook so every component can check for authentication*/}
+            <BaseRouter/>
+          </ProvideAuth>
+        </GApiProvider>
       </StylesProvider>
     </ThemeProvider>
   )

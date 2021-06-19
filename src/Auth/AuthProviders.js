@@ -1,3 +1,7 @@
+import {validateGoogleUser} from "../Endpoints";
+import { useGoogleAuth, useGoogleUser } from 'react-gapi-auth2';
+
+// this garbage code brought to you by https://reactrouter.com/web/example/auth-workflow
 export const MockAuthProvider = {
   isAuthenticated: false,
   signin(cb) {
@@ -13,6 +17,13 @@ export const MockAuthProvider = {
 export const GoogleAuthProvider = {
   isAuthenticated: false,
   signin(user) {
+    // The `GoogleAuth` object described here:
+    // https://developers.google.com/identity/sign-in/web/reference#authentication
+    const { googleAuth } = useGoogleAuth();
+    // The `GoogleUser` object described here:
+    // https://developers.google.com/identity/sign-in/web/reference#users
+    const { currentUser } = useGoogleUser();
+
     const profile = user.getBasicProfile();
     console.log('ID: ' + profile.getId()); // Do not send to your backend! Use an ID token instead.
     console.log('Name: ' + profile.getName());
@@ -20,18 +31,22 @@ export const GoogleAuthProvider = {
     console.log('Email: ' + profile.getEmail()); // This is null if the 'email' scope is not present.
 
     const id_token = user.getAuthResponse().id_token
-    const xhr = new XMLHttpRequest();
-    xhr.open('POST', 'https://yourbackend.example.com/tokensignin');
-    xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
-    xhr.onload = function() {
-      console.log('Signed in as: ' + xhr.responseText);
-    };
-    xhr.send('idtoken=' + id_token);
-
+    return validateGoogleUser(id_token)
+      .then(res => {
+        if (res.status === 200) GoogleAuthProvider.isAuthenticated = true;
+      })
+      .catch(error => console.log(error));
   },
   signOut() {
-    const auth2 = gapi.auth2.getAuthInstance();
-    auth2.signOut().then(function () {
+    // The `GoogleAuth` object described here:
+    // https://developers.google.com/identity/sign-in/web/reference#authentication
+    const { googleAuth } = useGoogleAuth();
+    // The `GoogleUser` object described here:
+    // https://developers.google.com/identity/sign-in/web/reference#users
+    const { currentUser } = useGoogleUser();
+
+    googleAuth.signOut().then(function () {
+      GoogleAuthProvider.isAuthenticated = false;
       console.log('User signed out.');
     });
   }
