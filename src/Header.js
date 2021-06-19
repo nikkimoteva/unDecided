@@ -1,5 +1,5 @@
 import logo from './logo.png';
-import "./Landing Page/App.css";
+import "./App.css";
 import {AppBar, Button, ButtonGroup} from "@material-ui/core";
 import {Link} from "react-router-dom";
 

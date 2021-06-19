@@ -6,7 +6,7 @@ import LoginModal from "../LoginModal";
 import {Modal} from "@material-ui/core";
 import Header from "../Header";
 
-function App() {
+export default function Landing() {
   const [login, setLogin] = useState(false);
 
   let keywords = ["autoML", "Automated Machine Learning", "UBC", "State Of The Art"];
@@ -14,13 +14,13 @@ function App() {
     name: "Get Started",
     route: "./signup"
   }
-  
+
   let buttonDemo = {
     name: "autoML In Action",
     route: "./demo"
   }
-  
-   function openLoginModal() {
+
+  function openLoginModal() {
     setLogin(true);
   }
 
@@ -40,24 +40,22 @@ function App() {
         <LoginModal/>
       </Modal>
       <Typed className="keywords"
-          strings={keywords}
-          typeSpeed={50}
-          startDelay= {500}
-          backSpeed= {60}
-          showCursor= {true}
-          cursorChar= {'|'}
-          autoInsertCss= {true}
-          shuffle= {true}
-          smartBackspace= {false}
-          loop= {true}
+             strings={keywords}
+             typeSpeed={50}
+             startDelay= {500}
+             backSpeed= {60}
+             showCursor= {true}
+             cursorChar= {'|'}
+             autoInsertCss= {true}
+             shuffle= {true}
+             smartBackspace= {false}
+             loop= {true}
       />
       <br/>
       <div className="ButtonUI">
         <Button data={buttonDemo} />
         <Button data={buttonSignup} />
       </div>
-  </div>
-);
+    </div>
+  );
 }
-
-export default App;
