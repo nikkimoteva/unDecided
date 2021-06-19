@@ -1,4 +1,4 @@
-import React, { useContext, createContext, useState } from "react";
+import React, {useContext, createContext, useState} from "react";
 import {
   BrowserRouter as Router,
   Switch,
@@ -8,65 +8,19 @@ import {
   useHistory,
   useLocation
 } from "react-router-dom";
-import {MockAuthProvider as fakeAuth} from "./AuthProviders";
 
-// This example has 3 pages: a public page, a protected
-// page, and a login screen. In order to see the protected
-// page, you must first login. Pretty standard stuff.
-//
-// First, visit the public page. Then, visit the protected
-// page. You're not yet logged in, so you are redirected
-// to the login page. After you login, you are redirected
-// back to the protected page.
-//
-// Notice the URL change each time. If you click the back
-// button at this point, would you expect to go back to the
-// login page? No! You're already logged in. Try it out,
-// and you'll see you go back to the page you visited
-// just *before* logging in, the public page.
 
-// export default function AuthExample() {
-//   return (
-//     <ProvideAuth>
-//       <Router>
-//         <div>
-//           <AuthButton />
-//
-//           <ul>
-//             <li>
-//               <Link to="/public">Public Page</Link>
-//             </li>
-//             <li>
-//               <Link to="/protected">Protected Page</Link>
-//             </li>
-//           </ul>
-//
-//           <Switch>
-//             <Route path="/public">
-//               <PublicPage />
-//             </Route>
-//             <Route path="/login">
-//               <LoginPage />
-//             </Route>
-//             <PrivateRoute path="/protected">
-//               <ProtectedPage />
-//             </PrivateRoute>
-//           </Switch>
-//         </div>
-//       </Router>
-//     </ProvideAuth>
-//   );
-// }
+// this garbage code brought to you by https://reactrouter.com/web/example/auth-workflow
 
 /** For more details on
  * `authContext`, `ProvideAuth`, `useAuth` and `useProvideAuth`
  * refer to: https://usehooks.com/useAuth/
  */
-const authContext = createContext(); // TODO add auth provider here
+const authContext = createContext(null);
 
-// Makes the useAuth "hook" available to all children of this component
-export function ProvideAuth({ children }) {
-  const auth = useFakeAuth();
+export function ProvideAuth({children}) {
+  const auth = useGoogleAuthProvider();
+  const fakeAuth = useMockAuthProvider();
   return (
     <authContext.Provider value={auth}>
       {children}
@@ -79,19 +33,44 @@ export function useAuth() {
 }
 
 // Authentication state holding the auth provider
-function useFakeAuth() {
-  const [user, setUser] = useState(null);
+function useGoogleAuthProvider() {
+  const [user, setUser] = useState([]);
 
-  function signin(cb) {
-    return fakeAuth.signin(() => {
-      setUser("user");
-    });
+  function signin(credentials) {
+    const profile = credentials.getBasicProfile()
+    const id = profile.getId(); // Do not send to your backend! Use an ID token instead.
+    const name = profile.getName();
+    const image = profile.getImageUrl();
+    const email = profile.getEmail(); // This is null if the 'email' scope is not present.
+    setUser([id, name]);
+    return {id, name, image, email};
   }
 
-  function signout(cb) {
-    return fakeAuth.signout(() => {
-      setUser(null);
-    });
+  function signout() {
+    setUser(null);
+  }
+
+  return {
+    user,
+    signin,
+    signout
+  };
+}
+
+function useMockAuthProvider() {
+  const [user, setUser] = useState(null);
+
+  function signin(credentials) {
+    setUser("FakeUser");
+    return {
+      name: "FakeUser",
+      imageURL: "N/A",
+      email: "fakeuser@email.com"
+    }
+  }
+
+  function signout() {
+    setUser(null);
   }
 
   return {
@@ -103,19 +82,19 @@ function useFakeAuth() {
 
 // A wrapper for <Route> that redirects to the login
 // screen if you're not yet authenticated.
-export function PrivateRoute({ children, ...rest }) {
+export function PrivateRoute({children, ...rest}) {
   let auth = useAuth();
   return (
     <Route
       {...rest}
-      render={({ location }) =>
+      render={({location}) =>
         auth.user ? (
           children
         ) : (
           <Redirect // TODO: May want to redirect to actual login page, but not necessary since they can't hit this route through the UI
             to={{
               pathname: "/",
-              state: { from: location }
+              state: {from: location}
             }}
           />
         )

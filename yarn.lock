@@ -12599,6 +12599,19 @@ fsevents@^1.2.7:
   languageName: node
   linkType: hard
 
+"react-google-login@npm:^5.2.2":
+  version: 5.2.2
+  resolution: "react-google-login@npm:5.2.2"
+  dependencies:
+    "@types/react": "*"
+    prop-types: ^15.6.0
+  peerDependencies:
+    react: ^16 || ^17
+    react-dom: ^16 || ^17
+  checksum: 4550cab4b2033b7f340699b6f54606bb2cd039ca4d988de925e2c94b8a4ed407780734918291ea3fdb108d3ca659f93ec5797f63a598aa8b56e02eea1f9851f0
+  languageName: node
+  linkType: hard
+
 "react-is@npm:^16.6.0, react-is@npm:^16.7.0, react-is@npm:^16.8.1":
   version: 16.13.1
   resolution: "react-is@npm:16.13.1"
@@ -14930,6 +14943,7 @@ resolve@^2.0.0-next.3:
     react: ^17.0.2
     react-dom: ^17.0.2
     react-gapi-auth2: ^1.0.3
+    react-google-login: ^5.2.2
     react-router-dom: ^5.2.0
     react-scripts: 4.0.3
     react-typed: ^1.2.0

@@ -1,19 +1,12 @@
-import React, {useState} from 'react';
+import React from 'react';
 import "./Button.css"
-import {Modal, responsiveFontSizes} from "@material-ui/core";
+import {responsiveFontSizes} from "@material-ui/core";
 import {createMuiTheme, StylesProvider, ThemeProvider} from "@material-ui/core/styles";
 import {ProvideAuth} from "./Auth/Auth";
-import { GApiProvider } from 'react-gapi-auth2';
 import BaseRouter from "./BaseRouter";
 
 
 export default function App() {
-  const clientConfig = {
-    client_id: '296036318202-uraiim5u0cf5qpqhujl3aaj1kniuu41e.apps.googleusercontent.com',
-    // cookie_policy: 'single_host_origin',
-    // scope: 'https://www.googleapis.com/auth/<POLICY>'
-  };
-
   let theme = createMuiTheme({
     // See https://material-ui.com/customization/theming/
 
@@ -35,11 +28,9 @@ export default function App() {
   return (
     <ThemeProvider theme={theme}> {/*Provides default global theme*/}
       <StylesProvider injectFirst> {/*Makes it so we can override default styles*/}
-        <GApiProvider clientConfig={clientConfig}>  {/*Provides hooks for getting google api stuff*/}
-          <ProvideAuth> {/*Provides useAuth hook so every component can check for authentication*/}
-            <BaseRouter/>
-          </ProvideAuth>
-        </GApiProvider>
+        <ProvideAuth> {/*Provides useAuth hook so every component can check for authentication*/}
+          <BaseRouter/>
+        </ProvideAuth>
       </StylesProvider>
     </ThemeProvider>
   )

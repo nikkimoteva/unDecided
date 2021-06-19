@@ -15,5 +15,5 @@ export default function Console() {
   //   <Route path={path}><></></Route>  {/*Default route*/}
   // </Switch>
 
-  return <p>{auth.user}</p>
+  return <p>{auth.user[1]}</p>
 }
