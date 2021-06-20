@@ -9,7 +9,8 @@ import Demo from "./Demo/Demo";
 import Landing from "./Landing Page/Landing";
 import React, {useState} from "react";
 import GoogleLogin from "react-google-login";
-
+import LoginModal from "./LoginModal";
+import {validateGoogleUser} from "./Endpoints";
 
 export default function BaseRouter() {
   const [loginModal, setLoginModal] = useState(false);
@@ -17,8 +18,16 @@ export default function BaseRouter() {
   const auth = useAuth();
 
   function handleLogin(res) {
-    console.log(res);
-    const profile = auth.signin(res); // todo store profile in state. Will be tricky, preferably in a cookie
+    const profileInfo = auth.signin(res);
+    // todo store profile in state. Will be tricky, preferably in a cookie
+    const id_token = res.getAuthResponse().id_token;
+    validateGoogleUser(id_token)
+      .then(res => {
+        console.log("Stored info in backend")
+      })
+      .catch(err => {
+        console.log(err);
+      });
   }
 
   function openLoginModal() {
@@ -32,20 +41,14 @@ export default function BaseRouter() {
   return (
     <Router>
       <Header openLogin={openLoginModal}/>
-      {/*<Modal*/}
-      {/*  open={loginModal}*/}
-      {/*  onClose={closeLoginModal}*/}
-      {/*  aria-labelledby="Login Form"*/}
-      {/*  aria-describedby="Input your login details here"*/}
-      {/*>*/}
-      {/*</Modal>*/}
-      <GoogleLogin
-        clientId="296036318202-uraiim5u0cf5qpqhujl3aaj1kniuu41e.apps.googleusercontent.com"
-        buttonText="Login"
-        onSuccess={handleLogin}
-        onFailure={(res) => console.log(res)}
-        cookiePolicy="http://localhost:3000"
-      />
+      <Modal
+        open={loginModal}
+        onClose={closeLoginModal}
+        aria-labelledby="Login Form"
+        aria-describedby="Input your login details here"
+      >
+        <LoginModal signin={handleLogin}/>
+      </Modal>
       <Switch>
         <PrivateRoute path="/console"><Console/></PrivateRoute>
         <Route path="/signup"><SignUp/></Route>
@@ -53,7 +56,6 @@ export default function BaseRouter() {
         <Route path="/demo"><Demo/></Route>
         <Route path="/"><Landing/></Route>
       </Switch>
-      {auth.user !== null && <Redirect to="/console"/>}
     </Router>
   )
 

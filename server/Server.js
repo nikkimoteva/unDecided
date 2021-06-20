@@ -1,11 +1,11 @@
-import {verify} from "Auth";
+// const auth = require("./Auth.js");
 
 const express = require('express');
 const app = express();
 const cors = require('cors');
 const logger = require('morgan');
 const axios = require('axios');
-export const port = 3001;
+const port = 3001;
 
 app.use(express.json());
 app.use(express.urlencoded({extended: true}));
@@ -23,7 +23,8 @@ app.get("/jobs", (req, res) => {
 });
 
 app.post("/gauth", (req, res) => {
-  const userToken = req.body.token;
+  const userToken = req.body.id_token;
+  console.log(userToken)
 
   // not really needed unless we go into actual production.
   // verify(userToken)

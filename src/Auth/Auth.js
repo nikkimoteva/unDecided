@@ -34,19 +34,22 @@ export function useAuth() {
 
 // Authentication state holding the auth provider
 function useGoogleAuthProvider() {
-  const [user, setUser] = useState([]);
+  const [user, setUser] = useState(null);
 
   function signin(credentials) {
-    const profile = credentials.getBasicProfile()
+    console.log("Signing in with Gauth");
+    const profile = credentials.getBasicProfile();
     const id = profile.getId(); // Do not send to your backend! Use an ID token instead.
     const name = profile.getName();
     const image = profile.getImageUrl();
     const email = profile.getEmail(); // This is null if the 'email' scope is not present.
-    setUser([id, name]);
-    return {id, name, image, email};
+    const info = {id, name, image, email};
+    setUser(info); // TODO: Figure out why this doesn't set the user properly. Even doing await doesnt work on it.
+    return info;
   }
 
   function signout() {
+    console.log("Signing out Gauth");
     setUser(null);
   }
 
