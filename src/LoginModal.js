@@ -8,7 +8,7 @@ export default function LoginModal(props) {
       <div style={{margin: "auto", display: "block", width: "-moz-fit-content"}}>
         <GoogleLogin
           clientId="296036318202-uraiim5u0cf5qpqhujl3aaj1kniuu41e.apps.googleusercontent.com"
-          buttonText="Login with Google"
+          buttonText="Sign in with Google"
           onSuccess={props.signin}
           onFailure={(res) => console.log(res)}
           cookiePolicy="http://localhost:3000"
