@@ -1,14 +1,7 @@
-import React, {useContext, createContext, useState} from "react";
-import {
-  BrowserRouter as Router,
-  Switch,
-  Route,
-  Link,
-  Redirect,
-  useHistory,
-  useLocation
-} from "react-router-dom";
-
+import React, {createContext, useContext, useState} from "react";
+import {Route, Redirect} from "react-router-dom";
+import {addAuthListener, getAuthCookie, removeAuthListener, setAuthCookie} from "../CookieManager";
+import {validateGoogleUser} from "../Endpoints";
 
 // this garbage code brought to you by https://reactrouter.com/web/example/auth-workflow
 
@@ -20,7 +13,6 @@ const authContext = createContext(null);
 
 export function ProvideAuth({children}) {
   const auth = useGoogleAuthProvider();
-  const fakeAuth = useMockAuthProvider();
   return (
     <authContext.Provider value={auth}>
       {children}
@@ -34,52 +26,41 @@ export function useAuth() {
 
 // Authentication state holding the auth provider
 function useGoogleAuthProvider() {
-  const [user, setUser] = useState(null);
+  const [user, setUser] = useState(getAuthCookie());  // when users refresh, immediately loads auth cookie
 
   function signin(credentials) {
     console.log("Signing in with Gauth");
-    const profile = credentials.getBasicProfile();
-    const id = profile.getId(); // Do not send to your backend! Use an ID token instead.
-    const name = profile.getName();
-    const image = profile.getImageUrl();
-    const email = profile.getEmail(); // This is null if the 'email' scope is not present.
-    const info = {id, name, image, email};
-    setUser(info); // TODO: Figure out why this doesn't set the user properly. Even doing await doesnt work on it.
-    return info;
+    const id_token = credentials.getAuthResponse().id_token;
+    validateGoogleUser(id_token)
+      .then(res => {
+        console.log("Stored info in backend")
+        addAuthListener(listenerCallback);
+        const profile = credentials.getBasicProfile();
+        const id = profile.getId(); // Do not send to your backend! Use an ID token instead.
+        const name = profile.getName();
+        const image = profile.getImageUrl();
+        const email = profile.getEmail(); // This is null if the 'email' scope is not present.
+        setAuthCookie({id, name, image, email});  // theoretically, this should setUser as well, since we added a listener to it
+      })
+      .catch(err => {
+        console.log(err);
+      });
   }
 
   function signout() {
     console.log("Signing out Gauth");
-    setUser(null);
+    setAuthCookie(null);
+    removeAuthListener(listenerCallback); // not sure if needed tbh
+  }
+
+  function listenerCallback(new_user) {
+    setUser(new_user);
   }
 
   return {
     user,
     signin,
-    signout
-  };
-}
-
-function useMockAuthProvider() {
-  const [user, setUser] = useState(null);
-
-  function signin(credentials) {
-    setUser("FakeUser");
-    return {
-      name: "FakeUser",
-      imageURL: "N/A",
-      email: "fakeuser@email.com"
-    }
-  }
-
-  function signout() {
-    setUser(null);
-  }
-
-  return {
-    user,
-    signin,
-    signout
+    signout,
   };
 }
 

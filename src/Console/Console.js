@@ -1,11 +1,13 @@
 import React from "react";
 import {Switch, Route, useRouteMatch, Redirect} from "react-router-dom";
+import {getAuthCookie} from "../CookieManager";
 import {useAuth} from "../Auth/Auth";
 
 
 export default function Console() {
-  const auth = useAuth();
   const { path, url } = useRouteMatch();
+
+  const auth = useAuth();
 
   // Use this to create pages based off of /docs part of url
   // return <Switch>

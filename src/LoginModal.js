@@ -9,7 +9,7 @@ export default function LoginModal(props) {
         <GoogleLogin
           clientId="296036318202-uraiim5u0cf5qpqhujl3aaj1kniuu41e.apps.googleusercontent.com"
           buttonText="Login with Google"
-          onSuccess={props.signin}
+          onSuccess={props.googleSignin}
           onFailure={(res) => console.log(res)}
           cookiePolicy="http://localhost:3000"
         />
