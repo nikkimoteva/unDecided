@@ -1,5 +1,5 @@
-import logo from './logo.png';
-import "./App.css";
+import logo from '../logo.png';
+import "../App.css";
 import {AppBar, Button, ButtonGroup} from "@material-ui/core";
 import {Link} from "react-router-dom";
 
@@ -15,7 +15,7 @@ export default function Header(props) {
         <ButtonGroup color="secondary">
           <Button variant="contained" component={Link} to="/docs">Docs</Button>
           <Button variant="contained" component={Link} to="/demo">Demo</Button>
-          <Button variant="contained" onClick={props.handleLogin}>Log In</Button>
+          <Button variant="contained" onClick={props.openLogin}>Log In</Button>
           <Button variant="contained" component={Link} to="/signup">Sign Up</Button>
         </ButtonGroup>
       </div>

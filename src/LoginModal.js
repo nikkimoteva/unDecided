@@ -1,32 +1,19 @@
-import {Link} from "react-router-dom";
-import {Button, TextField} from "@material-ui/core";
-import {useState} from "react";
+import GoogleLogin from "react-google-login";
+import React from "react";
 
-
-export default function LoginModal() {
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
-
-  function submitHandler(event) {
-    event.preventDefault();
-    // TODO: Send email and password to server and retrieve account data
-  }
-
-  function emailHandler(event) {
-    setEmail(event.target.value)
-  }
-
-  function passwordHandler(event) {
-    setPassword(event.target.value);
-
-  }
-
+export default function LoginModal(props) {
   return (
-    <form noValidate autoComplete="on">
-      <TextField id="standard-basic" label="Email" value={email} onChange={emailHandler}/>
-      <TextField id="standard-password-input" label="Password" type="password" value={password} onChange={passwordHandler}/>
-      <Button type="submit" onClick={submitHandler}>Submit</Button>
-      <Button component={Link} to="/signup">Sign Up</Button>
-    </form>
-  );
+    <>
+      <div style={{height: "50%"}}/>
+      <div style={{margin: "auto", display: "block", width: "-moz-fit-content"}}>
+        <GoogleLogin
+          clientId="296036318202-uraiim5u0cf5qpqhujl3aaj1kniuu41e.apps.googleusercontent.com"
+          buttonText="Login with Google"
+          onSuccess={props.googleSignin}
+          onFailure={(res) => console.log(res)}
+          cookiePolicy="http://localhost:3000"
+        />
+      </div>
+    </>
+  )
 }

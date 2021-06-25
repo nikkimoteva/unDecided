@@ -1,14 +1,9 @@
-import React, { useState } from 'react';
+import React from 'react';
 import Typed from 'react-typed';
-import Button from "../Button"
-import "../Button.css"
-import LoginModal from "../LoginModal";
-import {Modal} from "@material-ui/core";
-import Header from "../Header";
+import Button from "../common/Button"
+import "../common/Button.css"
 
 export default function Landing() {
-  const [login, setLogin] = useState(false);
-
   let keywords = ["autoML", "Automated Machine Learning", "UBC", "State Of The Art"];
   let buttonSignup = {
     name: "Get Started",
@@ -20,25 +15,8 @@ export default function Landing() {
     route: "./demo"
   }
 
-  function openLoginModal() {
-    setLogin(true);
-  }
-
-  function closeLoginModal() {
-    setLogin(false);
-  }
-
   return (
     <div className="HeaderLogo">
-      <Header handleLogin={openLoginModal}/>
-      <Modal
-        open={login}
-        onClose={closeLoginModal}
-        aria-labelledby="Login Form"
-        aria-describedby="Input your login details here"
-      >
-        <LoginModal/>
-      </Modal>
       <Typed className="keywords"
              strings={keywords}
              typeSpeed={50}
