@@ -1,7 +1,7 @@
 import {BrowserRouter as Router, Route, Switch} from "react-router-dom";
-import Header from "./Header/Header";
+import Header from "./common/Header/Header";
 import {CircularProgress} from "@material-ui/core";
-import {PrivateRoute} from "./Auth/Auth";
+import {PrivateRoute} from "./common/Auth";
 import Docs from "./Docs/Docs";
 import Demo from "./Demo/Demo";
 import Landing from "./Landing Page/Landing";

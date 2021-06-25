@@ -4,7 +4,7 @@ import AccountCircle from "@material-ui/icons/AccountCircle";
 import Menu from "@material-ui/core/Menu";
 import MenuItem from "@material-ui/core/MenuItem";
 import {Link, useHistory} from "react-router-dom";
-import {useAuth} from "../Auth/Auth";
+import {useAuth} from "../Auth";
 
 export default function Profile(props) {
   const [anchorEl, setAnchorEl] = React.useState(null);

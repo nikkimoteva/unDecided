@@ -5,8 +5,8 @@ import {
   getAuthCookie,
   removeAuthCookie,
   setAuthCookie
-} from "../Managers/CookieManager";
-import {validateGoogleUser} from "../Managers/EndpointManager";
+} from "./Managers/CookieManager";
+import {validateGoogleUser} from "./Managers/EndpointManager";
 
 // this ~garbage~ actually helpful but really complicated code brought to you by https://reactrouter.com/web/example/auth-workflow
 

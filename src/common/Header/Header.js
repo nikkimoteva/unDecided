@@ -1,8 +1,8 @@
-import logo from '../logo.png';
-import "../App.css";
+import logo from '../../logo.png';
+import "../../App.css";
 import {AppBar, Button, ButtonGroup, Modal, Toolbar} from "@material-ui/core";
 import {Link, useHistory} from "react-router-dom";
-import {useAuth} from "../Auth/Auth";
+import {useAuth} from "../Auth";
 import React, {useState} from 'react';
 import {makeStyles} from '@material-ui/core/styles';
 import Profile from "./Profile";
