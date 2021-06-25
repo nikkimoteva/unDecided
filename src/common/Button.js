@@ -8,11 +8,11 @@ export default function Button(props) {
     let data = props.data;
     let route = "./" + data.route;
     let style = {
-        "fontWeight": "bolder",
-        "marginLeft": "10em",
-        "marginRight": "10em",
-        "width": "15em",
-        "height": "5em",
+        fontWeight: "bolder",
+        marginLeft: "10em",
+        marginRight: "10em",
+        width: "15em",
+        height: "5em",
     }
 
     return (
