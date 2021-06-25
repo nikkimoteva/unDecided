@@ -5,7 +5,7 @@ let _cookies;
 console.log("Executed CookieManager");
 
 function cookies() {
-  if (_cookies == undefined) _cookies = new Cookies();
+  if (_cookies === undefined) _cookies = new Cookies();
   return _cookies;
 }
 
