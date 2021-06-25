@@ -1,4 +1,4 @@
-import React, { useState, } from 'react';
+import React, { useState, useEffect } from 'react';
 import Typed from 'react-typed';
 import Button from "../common/Button"
 import logo from '../logo.png';
@@ -13,15 +13,22 @@ import { Animator, ScrollContainer, ScrollPage, batch, Fade, FadeIn, Move, MoveO
 export default function Landing() {
 
 
-  const [window, setWindow] = useState({
+  // const [window, setWindow] = useState(false);
+
+  // function handleClick() {
+  //   window.setWindow('https://arxiv.org/pdf/2012.05390.pdf','_blank');
+  // }
+
+  // let changeHandler = handleClick.bind(this); 
+  const [clicked, setClicked] = useState(false);
+
+  useEffect(() => {
+    if (clicked) {
+      // do something meaningful, Promises, if/else, whatever, and then
+      // window.location.assign('https://arxiv.org/pdf/2012.05390.pdf','_blank');
+      window.open('https://arxiv.org/pdf/2012.05390.pdf','_blank');
+    }
   });
-
-
-  function handleClick() {
-    window.open('https://arxiv.org/pdf/2012.05390.pdf','_blank');
-
-  }
-  let changeHandler = handleClick.bind(this); 
 
   let keywords = ["autoML", "Automated Machine Learning", "UBC", "State Of The Art"];
   let buttonSignup = {
@@ -110,7 +117,7 @@ let styleImg = {
 
     <div className="Information">
       {/* <Button className="moreInfo" data={buttonMoreInfo} /> */}
-      <ButtonUI style={style} onClick={()=>changeHandler} variant="outlined" color="primary" href="#outlined-buttons">
+      <ButtonUI style={style} onClick={()=>setClicked(true)} variant="outlined" color="primary" href="#outlined-buttons">
                         Learn More About Ensembled <sup>2</sup>
       </ButtonUI>
     </div>
