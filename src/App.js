@@ -1,5 +1,5 @@
 import React from 'react';
-import "./Button.css"
+import "./common/Button.css"
 import {responsiveFontSizes} from "@material-ui/core";
 import {createMuiTheme, StylesProvider, ThemeProvider} from "@material-ui/core/styles";
 import {ProvideAuth} from "./Auth/Auth";

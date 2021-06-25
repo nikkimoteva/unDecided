@@ -1,5 +1,5 @@
 import {BrowserRouter as Router, Route, Switch} from "react-router-dom";
-import Header from "./Header";
+import Header from "./common/Header";
 import {Modal} from "@material-ui/core";
 import {PrivateRoute, useAuth} from "./Auth/Auth";
 import Console from "./Console/Console";

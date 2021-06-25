@@ -1,6 +1,6 @@
 import React from "react";
 import {Switch, Route, useRouteMatch, Redirect} from "react-router-dom";
-import {getAuthCookie} from "../CookieManager";
+import {getAuthCookie} from "../Managers/CookieManager";
 import {useAuth} from "../Auth/Auth";
 
 

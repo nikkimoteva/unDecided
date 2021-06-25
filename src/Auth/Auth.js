@@ -1,7 +1,7 @@
 import React, {createContext, useContext, useState} from "react";
 import {Route, Redirect} from "react-router-dom";
-import {addAuthListener, getAuthCookie, removeAuthListener, setAuthCookie} from "../CookieManager";
-import {validateGoogleUser} from "../Endpoints";
+import {addAuthListener, getAuthCookie, removeAuthListener, setAuthCookie} from "../Managers/CookieManager";
+import {validateGoogleUser} from "../Managers/EndpointManager";
 
 // this garbage code brought to you by https://reactrouter.com/web/example/auth-workflow
 
