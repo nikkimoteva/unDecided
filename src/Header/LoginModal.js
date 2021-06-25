@@ -5,8 +5,8 @@ export default class LoginModal extends React.Component {
   render() {
     return (
       <>
-        <div style={{height: "50%"}}/>
-        <div style={{margin: "auto", display: "block", width: "-moz-fit-content"}}>
+        <div style={{height: "50%"}} onClick={this.props.onClose}/>
+        <div style={{margin: "auto", display: "block", width: "-moz-fit-content"}} onClick={this.props.onClose}>
           <GoogleLogin
             clientId="296036318202-uraiim5u0cf5qpqhujl3aaj1kniuu41e.apps.googleusercontent.com"
             buttonText="Login with Google"

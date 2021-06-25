@@ -8,13 +8,13 @@ import {
 } from "../Managers/CookieManager";
 import {validateGoogleUser} from "../Managers/EndpointManager";
 
-// this garbage code brought to you by https://reactrouter.com/web/example/auth-workflow
+// this ~garbage~ actually helpful but really complicated code brought to you by https://reactrouter.com/web/example/auth-workflow
 
 /** For more details on
  * `authContext`, `ProvideAuth`, `useAuth` and `useProvideAuth`
  * refer to: https://usehooks.com/useAuth/
  */
-const authContext = createContext(null);
+const authContext = createContext();
 
 export function ProvideAuth({children}) {
   const auth = useGoogleAuthProvider();
@@ -35,8 +35,10 @@ function useGoogleAuthProvider() {
 
   function signin(credentials) {
     console.log("Signing in with Gauth");
+    console.log(credentials);
+    console.log(credentials.getAuthResponse());
     const id_token = credentials.getAuthResponse().id_token;
-    validateGoogleUser(id_token)
+    return validateGoogleUser(id_token)
       .then(res => {
         console.log("Stored info in backend")
         addAuthListener(listenerCallback);
@@ -46,14 +48,16 @@ function useGoogleAuthProvider() {
         const image = profile.getImageUrl();
         const email = profile.getEmail(); // This is null if the 'email' scope is not present.
         setAuthCookie({id, name, image, email});  // theoretically, this should setUser as well, since we added a listener to it
+        return Promise.resolve();
       })
       .catch(err => {
         console.log(err);
+        return Promise.reject(err);
       });
   }
 
   function signout() {
-    console.log("Signing out Gauth");
+    console.log("Signing out with Gauth");
     removeAuthCookie();
     setUser(undefined);
   }
@@ -94,26 +98,6 @@ export function PrivateRoute({children, ...rest}) {
 }
 
 /*
-function AuthButton() {
-  let history = useHistory();
-  let auth = useAuth();
-
-  return auth.user ? (
-    <p>
-      Welcome!{" "}
-      <button
-        onClick={() => {
-          auth.signout(() => history.push("/"));
-        }}
-      >
-        Sign out
-      </button>
-    </p>
-  ) : (
-    <p>You are not logged in.</p>
-  );
-}
-
 function LoginPage() {
   let history = useHistory();
   let location = useLocation();

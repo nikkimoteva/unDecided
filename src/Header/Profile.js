@@ -3,9 +3,10 @@ import IconButton from "@material-ui/core/IconButton";
 import AccountCircle from "@material-ui/icons/AccountCircle";
 import Menu from "@material-ui/core/Menu";
 import MenuItem from "@material-ui/core/MenuItem";
-import {Link} from "react-router-dom";
+import {Link, useHistory} from "react-router-dom";
+import {useAuth} from "../Auth/Auth";
 
-export default function MenuAppBar(props) {
+export default function Profile(props) {
   const [anchorEl, setAnchorEl] = React.useState(null);
   const open = Boolean(anchorEl);
 
@@ -16,6 +17,7 @@ export default function MenuAppBar(props) {
   function handleClose() {
     setAnchorEl(null);
   }
+
 
   return (
     <div>
