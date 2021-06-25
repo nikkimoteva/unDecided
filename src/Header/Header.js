@@ -44,22 +44,21 @@ export default function Header() {
     history.push('/') // redirect to main page
   }
 
-
-  const headerButtons = (auth.user == null) // allow type coercion to catch undefined as well
+  const headerButtons = (auth.user == null)
     ? (
       <ButtonGroup color="secondary">
-        <Button variant="contained" component={Link} to="/docs">Docs</Button>
-        <Button variant="contained" component={Link} to="/demo">Demo</Button>
-        <Button variant="contained" onClick={openLoginModal}>Sign In</Button>
-      </ButtonGroup>
+      <Button variant="contained" component={Link} to="/docs">Docs</Button>
+      <Button variant="contained" component={Link} to="/demo">Demo</Button>
+      <Button variant="contained" onClick={openLoginModal}>Sign In</Button>
+    </ButtonGroup>
     )
     : (
       <ButtonGroup color="secondary">
-        <Button variant="contained" component={Link} to="/docs">Docs</Button>
-        <Button variant="contained" component={Link} to="/console">Dashboard</Button>
-        <Button variant="contained" component={Link} to="/console/jobs">Jobs</Button>
-        <Profile signout={logout}/>
-      </ButtonGroup>
+      <Button variant="contained" component={Link} to="/docs">Docs</Button>
+      <Button variant="contained" component={Link} to="/console">Dashboard</Button>
+      <Button variant="contained" component={Link} to="/console/jobs">Jobs</Button>
+      <Profile signout={logout}/>
+    </ButtonGroup>
     )
 
   return (
