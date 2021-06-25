@@ -21,22 +21,13 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 function SignedOutButtons(props) {
-  return <ButtonGroup color="secondary">
-    <Button variant="contained" component={Link} to="/docs">Docs</Button>
-    <Button variant="contained" component={Link} to="/demo">Demo</Button>
-    <Button variant="contained" onClick={props.openLoginModal}>Sign In</Button>
-  </ButtonGroup>
+  return
 }
 
 function SignedInButtons() {
   const auth = useAuth();
 
-  return <ButtonGroup color="secondary">
-    <Button variant="contained" component={Link} to="/docs">Docs</Button>
-    <Button variant="contained" component={Link} to="/console">Dashboard</Button>
-    <Button variant="contained" component={Link} to="/console/jobs">Jobs</Button>
-    <Profile signout={auth.signout}/>
-  </ButtonGroup>
+  return
 }
 export default function Header() {
   const [loginModal, setLoginModal] = useState(false);
@@ -51,6 +42,23 @@ export default function Header() {
 
   const auth = useAuth();
 
+  const headerButtons = (auth.user == null)
+    ? (
+      <ButtonGroup color="secondary">
+      <Button variant="contained" component={Link} to="/docs">Docs</Button>
+      <Button variant="contained" component={Link} to="/demo">Demo</Button>
+      <Button variant="contained" onClick={openLoginModal}>Sign In</Button>
+    </ButtonGroup>
+    )
+    : (
+      <ButtonGroup color="secondary">
+      <Button variant="contained" component={Link} to="/docs">Docs</Button>
+      <Button variant="contained" component={Link} to="/console">Dashboard</Button>
+      <Button variant="contained" component={Link} to="/console/jobs">Jobs</Button>
+      <Profile signout={auth.signout}/>
+    </ButtonGroup>
+    )
+
   return (
     <>
       <AppBar position="static">
@@ -60,10 +68,7 @@ export default function Header() {
           </Link>
         </div>
         <div style={{float: "right"}}>
-          {auth.user == null
-          ? <SignedOutButtons openLoginModal={openLoginModal}/>
-          : <SignedInButtons/>
-          }
+          {headerButtons}
         </div>
       </AppBar>
 
