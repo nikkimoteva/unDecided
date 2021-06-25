@@ -1,38 +1,37 @@
-import './App.css';
-import Header from "./Header";
-import {useState} from "react";
-import LoginModal from "./LoginModal";
-import {Modal} from "@material-ui/core";
+import React from 'react';
+import "./common/Button.css"
+import {responsiveFontSizes} from "@material-ui/core";
+import {createMuiTheme, StylesProvider, ThemeProvider} from "@material-ui/core/styles";
+import {ProvideAuth} from "./Auth/Auth";
+import BaseRouter from "./BaseRouter";
 
-function App() {
-  const [login, setLogin] = useState(false);
-  function openLoginModal() {
-    setLogin(true);
-  }
 
-  function closeLoginModal() {
-    setLogin(false);
-  }
+export default function App() {
+  let theme = createMuiTheme({
+    // See https://material-ui.com/customization/theming/
+
+    // color palette
+    palette: {
+      type: "dark",
+      divider: "rgba(255, 255, 255, 0.12)",
+    },
+    // fonts and font sizes
+    typography: {},
+    //default component props, like spacing, ripple effect, etc
+    props: {},
+    // all other component styles
+    overrides: {}
+  });
+
+  theme = responsiveFontSizes(theme);
 
   return (
-    <>
-      <Modal
-        open={login}
-        onClose={closeLoginModal}
-        aria-labelledby="Login Form"
-        aria-describedby="Input your login details here"
-      >
-        <LoginModal/>
-      </Modal>
-      <Header handleLogin={openLoginModal}/>
-      <div className="App">
-        <h1>State Of The Art</h1>
-        <h1>Automated</h1>
-        <h1>Machine</h1>
-        <h1>Learning</h1>
-      </div>
-    </>
-  );
+    <ThemeProvider theme={theme}> {/*Provides default global theme*/}
+      <StylesProvider injectFirst> {/*Makes it so we can override default styles*/}
+        <ProvideAuth> {/*Provides useAuth hook so every component can check for authentication*/}
+          <BaseRouter/>
+        </ProvideAuth>
+      </StylesProvider>
+    </ThemeProvider>
+  )
 }
-
-export default App;
