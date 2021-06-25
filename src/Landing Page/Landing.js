@@ -11,21 +11,10 @@ import { Animator, ScrollContainer, ScrollPage, batch, Fade, FadeIn, Move, MoveO
 
 
 export default function Landing() {
-
-
-  // const [window, setWindow] = useState(false);
-
-  // function handleClick() {
-  //   window.setWindow('https://arxiv.org/pdf/2012.05390.pdf','_blank');
-  // }
-
-  // let changeHandler = handleClick.bind(this); 
   const [clicked, setClicked] = useState(false);
 
   useEffect(() => {
     if (clicked) {
-      // do something meaningful, Promises, if/else, whatever, and then
-      // window.location.assign('https://arxiv.org/pdf/2012.05390.pdf','_blank');
       window.open('https://arxiv.org/pdf/2012.05390.pdf','_blank');
       setClicked(false);
     }
@@ -137,9 +126,9 @@ let styleImg = {
       </div> */}
       <br></br>
       <div id="graph">
-      <Graph id="default1" data={accuracy}/>
-      <Graph id="default2" data={rank}/>
-      <Graph id="default3" data={first}/>
+      <Graph data={accuracy}/>
+      <Graph data={rank}/>
+      <Graph data={first}/>
       </div>
     </div>
     </section>

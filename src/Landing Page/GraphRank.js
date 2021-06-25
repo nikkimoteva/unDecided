@@ -1,4 +1,4 @@
-import * as React from 'react';
+import {useState} from 'react';
 import Paper from '@material-ui/core/Paper';
 import {
   Chart,
@@ -62,42 +62,37 @@ const Label = withStyles({
   label: {
     whiteSpace: 'nowrap',
   },
-})(({ classes, ...restProps }) => (
-  <Legend.Label className={classes.label} {...restProps} />
+  })(({ classes, ...restProps }) => (
+    <Legend.Label className={classes.label} {...restProps} />
 ));
 
 const TitleText = withStyles({ title: { marginBottom: '30px' } })(({ classes, ...restProps }) => (
   <Title.Text {...restProps} className={classes.title} />
 ));
 
-// export default function Demo() {
-//   const [state, setState] = useState({
-//     hover: null,
-//     tooltipTarget: null,
-//     tooltipEnabled: true,
-// });
-// }
+export default function GraphRank() {
+  const [state, setStateRank] = useState(
+    {hover: null,
+    tooltipTarget: null,
+    tooltipEnabled: true,}
+    )
 
-class Demo extends React.PureComponent {
-  constructor(props) {
-    super(props);
-
-    this.state = {
-      hover: null,
-      tooltipTarget: null,
-      tooltipEnabled: true,
-    };
-
-    this.changeHover = hover => this.setState({ hover });
-    this.changeTooltip = targetItem => this.setState({ tooltipTarget: targetItem });
-
+  const changeHoverRank = (data) => {
+    setStateRank({
+      hover : data,
+      tooltipTarget : state.tooltipTarget,
+      tooltipEnabled: state.tooltipEnabled});
   }
 
-  render() {
-    const {
-      hover, tooltipTarget, tooltipEnabled,
-    } = this.state;
-    // const { classes } = this.props;
+  const changeTooltipRank = (data) => {
+    setStateRank({
+      hover : state.hover,
+      tooltipTarget : data,
+      tooltipEnabled: state.tooltipEnabled});
+  }
+
+  const myHoverChangeRank = changeHoverRank.bind(this);
+  const myToolTipChangeRank = changeTooltipRank.bind(this);
 
     return (
       <Paper>
@@ -121,11 +116,11 @@ class Demo extends React.PureComponent {
           />
           <Stack />
           <Legend position="bottom" rootComponent={Root} labelComponent={Label} />
-          <EventTracker onClick={this.click} />
-          <HoverState hover={hover} onHoverChange={this.changeHover} />
+          <EventTracker/>
+          <HoverState hover={state.hover} onHoverChange={myHoverChangeRank} />
           <Tooltip
-            targetItem={tooltipEnabled && tooltipTarget}
-            onTargetItemChange={this.changeTooltip}
+            targetItem={state.tooltipEnabled && state.tooltipTarget}
+            onTargetItemChange={myToolTipChangeRank}
             contentComponent={TooltipContent}
           />
           <Animation />
@@ -137,7 +132,3 @@ class Demo extends React.PureComponent {
       </Paper>
     );
   }
-}
-
-export default (Demo);
-// export default withStyles(styles)(Demo);

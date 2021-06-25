@@ -1,4 +1,4 @@
-import * as React from 'react';
+import {useState} from 'react';
 import Paper from '@material-ui/core/Paper';
 import {
   Chart,
@@ -70,34 +70,29 @@ const TitleText = withStyles({ title: { marginBottom: '30px' } })(({ classes, ..
   <Title.Text {...restProps} className={classes.title} />
 ));
 
-// export default function Demo() {
-//   const [state, setState] = useState({
-//     hover: null,
-//     tooltipTarget: null,
-//     tooltipEnabled: true,
-// });
-// }
+export default function GraphFirst() {
+  const [state, setStateFirst] = useState(
+    {hover: null,
+    tooltipTarget: null,
+    tooltipEnabled: true,}
+    )
 
-class Demo extends React.PureComponent {
-  constructor(props) {
-    super(props);
-
-    this.state = {
-      hover: null,
-      tooltipTarget: null,
-      tooltipEnabled: true,
-    };
-
-    this.changeHover = hover => this.setState({ hover });
-    this.changeTooltip = targetItem => this.setState({ tooltipTarget: targetItem });
-
+  const changeHoverFirst = (data) => {
+    setStateFirst({
+      hover : data,
+      tooltipTarget : state.tooltipTarget,
+      tooltipEnabled: state.tooltipEnabled});
   }
 
-  render() {
-    const {
-      hover, tooltipTarget, tooltipEnabled,
-    } = this.state;
-    // const { classes } = this.props;
+  const changeTooltipFirst = (data) => {
+    setStateFirst({
+      hover : state.hover,
+      tooltipTarget : data,
+      tooltipEnabled: state.tooltipEnabled});
+  }
+
+  const myHoverChangeFirst = changeHoverFirst.bind(this);
+  const myToolTipChangeFirst = changeTooltipFirst.bind(this);
 
     return (
       <Paper>
@@ -121,11 +116,11 @@ class Demo extends React.PureComponent {
           />
           <Stack />
           <Legend position="bottom" rootComponent={Root} labelComponent={Label} />
-          <EventTracker onClick={this.click} />
-          <HoverState hover={hover} onHoverChange={this.changeHover} />
+          <EventTracker/>
+          <HoverState hover={state.hover} onHoverChange={myHoverChangeFirst} />
           <Tooltip
-            targetItem={tooltipEnabled && tooltipTarget}
-            onTargetItemChange={this.changeTooltip}
+            targetItem={state.tooltipEnabled && state.tooltipTarget}
+            onTargetItemChange={myToolTipChangeFirst}
             contentComponent={TooltipContent}
           />
           <Animation />
@@ -136,8 +131,5 @@ class Demo extends React.PureComponent {
       </div>
       </Paper>
     );
-  }
-}
 
-export default (Demo);
-// export default withStyles(styles)(Demo);
+}
