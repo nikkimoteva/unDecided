@@ -27,6 +27,7 @@ export default function Landing() {
       // do something meaningful, Promises, if/else, whatever, and then
       // window.location.assign('https://arxiv.org/pdf/2012.05390.pdf','_blank');
       window.open('https://arxiv.org/pdf/2012.05390.pdf','_blank');
+      setClicked(false);
     }
   });
 
