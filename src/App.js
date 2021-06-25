@@ -11,10 +11,10 @@ export default function App() {
     // See https://material-ui.com/customization/theming/
 
     // color palette
-    palette: {
-      type: "dark",
-      divider: "rgba(255, 255, 255, 0.12)",
-    },
+    // palette: {
+    //   type: "dark",
+    //   divider: "rgba(255, 255, 255, 0.12)",
+    // },
     // fonts and font sizes
     typography: {},
     //default component props, like spacing, ripple effect, etc

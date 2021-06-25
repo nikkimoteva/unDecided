@@ -5,3 +5,10 @@
     justify-content: center;
     margin-top: 2vh;
 }
+
+.Buttons {
+    display: flex;
+    align-items: center;
+    /* flex-wrap: wrap; */
+    justify-content: center;
+}
