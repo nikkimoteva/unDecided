@@ -83,7 +83,7 @@ let styleImg = {
 
 <section>
   <br></br>
-      <h1 className="title">What is Ensembled2?</h1>
+      <h1 className="title">What is Ensembled<sup>2</sup>?</h1>
       <img className="E2" style={styleImg} src={figure1} alt="figure1" />
     <ScrollContainer>
       <ScrollPage page={2}>
@@ -111,7 +111,7 @@ let styleImg = {
     <div className="Information">
       {/* <Button className="moreInfo" data={buttonMoreInfo} /> */}
       <ButtonUI style={style} onClick={()=>changeHandler} variant="outlined" color="primary" href="#outlined-buttons">
-                        Learn More About Ensembled2
+                        Learn More About Ensembled <sup>2</sup>
       </ButtonUI>
     </div>
     </section>
@@ -121,7 +121,7 @@ let styleImg = {
 
     <section>
     <div className="Comparison">
-      <h1 className="title">Why Ensembled2?</h1>
+      <h1 className="title">Why Ensembled<sup>2</sup>?</h1>
       {/* <div className="Buttons">
       <GraphButton data={accuracy}/>
       <GraphButton data={rank}/>
