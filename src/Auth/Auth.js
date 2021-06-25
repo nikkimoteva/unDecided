@@ -1,6 +1,11 @@
 import React, {createContext, useContext, useState} from "react";
 import {Route, Redirect} from "react-router-dom";
-import {addAuthListener, getAuthCookie, removeAuthListener, setAuthCookie} from "../Managers/CookieManager";
+import {
+  addAuthListener,
+  getAuthCookie,
+  removeAuthCookie,
+  setAuthCookie
+} from "../Managers/CookieManager";
 import {validateGoogleUser} from "../Managers/EndpointManager";
 
 // this garbage code brought to you by https://reactrouter.com/web/example/auth-workflow
@@ -49,11 +54,12 @@ function useGoogleAuthProvider() {
 
   function signout() {
     console.log("Signing out Gauth");
-    setAuthCookie(null);
-    removeAuthListener(listenerCallback); // not sure if needed tbh
+    removeAuthCookie();
+    setUser(undefined);
   }
 
   function listenerCallback(new_user) {
+    console.log(new_user);
     setUser(new_user);
   }
 
@@ -67,7 +73,7 @@ function useGoogleAuthProvider() {
 // A wrapper for <Route> that redirects to the login
 // screen if you're not yet authenticated.
 export function PrivateRoute({children, ...rest}) {
-  let auth = useAuth();
+  const auth = useAuth();
   return (
     <Route
       {...rest}
