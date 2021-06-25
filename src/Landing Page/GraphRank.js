@@ -22,19 +22,17 @@ const data= [
   { d: "Auto Sklearn 2", First: 13, Rank: 3.634, Accuracy: 0.831 },
   { d: "CMU AutoM", First: 4, Rank: 5.707, Accuracy: 0.807 },
   { d: "H2O AutoML", First: 4, Rank: 5.427, Accuracy: 0.797 },
-  { d: "Ensemble2 Voting", First: 16, Rank: 2.963, Accuracy: 0.844 },
-  { d: "Ensemble2 Stacking", First: 13, Rank: 3.598, Accuracy: 0.84 },
+  { d: "Ensemble2", First: 16, Rank: 2.963, Accuracy: 0.844 },
 ];
 
 let style = {
   "text-align": "center",
-  "color":"white"
 }
 
 const tooltipContentBodyStyle = {
   paddingTop: 0,
 };
-const formatTooltip = d3Format.format(',.2r');
+const formatTooltip = d3Format.format(',.4r');
 const TooltipContent = (props) => {
   const { targetItem, text, ...restProps } = props;
   return (

@@ -12,7 +12,7 @@ import {
 import * as d3Format from 'd3-format';
 import { scaleBand } from '@devexpress/dx-chart-core';
 import {
-  ArgumentScale, Stack, Animation, EventTracker, HoverState,
+  ArgumentScale, Stack, Animation, EventTracker, HoverState,ValueScale
 } from '@devexpress/dx-react-chart';
 import { withStyles } from '@material-ui/core/styles';
 
@@ -22,13 +22,11 @@ const data= [
   { d: "Auto Sklearn 2", First: 13, Rank: 3.634, Accuracy: 0.831 },
   { d: "CMU AutoM", First: 4, Rank: 5.707, Accuracy: 0.807 },
   { d: "H2O AutoML", First: 4, Rank: 5.427, Accuracy: 0.797 },
-  { d: "Ensemble2 Voting", First: 16, Rank: 2.963, Accuracy: 0.844 },
-  { d: "Ensemble2 Stacking", First: 13, Rank: 3.598, Accuracy: 0.84 },
+  { d: "Ensemble2", First: 16, Rank: 2.963, Accuracy: 0.844 },
 ];
 
 let style = {
-  "text-align": "center",
-  "color":"white"
+  "text-align": "center"
 }
 
 const tooltipContentBodyStyle = {
@@ -70,6 +68,8 @@ const TitleText = withStyles({ title: { marginBottom: '30px' } })(({ classes, ..
   <Title.Text {...restProps} className={classes.title} />
 ));
 
+const pc = {startVal : "0.5"}
+
 export default function GraphAccuracy() {
   const [state, setStateAccuracy] = useState(
     {hover: null,
@@ -92,6 +92,7 @@ export default function GraphAccuracy() {
   }
   const myHoverChangeAccuracy = changeHoverAccuracy.bind(this);
   const myToolTipChangeAccuracy = changeTooltipAccuracy.bind(this);
+  const modifyDomain = domain => [domain[0],0.9];
 
 
     return (
@@ -101,6 +102,7 @@ export default function GraphAccuracy() {
           data={data}
         >
           <ArgumentScale factory={scaleBand} />
+          <ValueScale modifyDomain={modifyDomain} />
           <ArgumentAxis />
           <ValueAxis />
 

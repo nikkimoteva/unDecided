@@ -39,6 +39,7 @@ export default function Landing() {
     "fontSize": "1.5em",
     "width" : "50%",
     "margin-left": "25vw",
+    "margin-bottom": "5%"
 }
 
 let styleImg = {
@@ -51,7 +52,7 @@ let styleImg = {
   const FadeUp = batch(Fade(), Move(), Sticky());
 
   return (
-    <div className="MainPage">
+    <div className="MainPage" style={{"margin-top": "5%"}}>
     <section>
       <div className="HeaderLogo">
       <img className="initialLogo" src={logo} alt="logo" />
@@ -103,14 +104,9 @@ let styleImg = {
         </Animator>
       </ScrollPage>
     </ScrollContainer>
-
-
-    <div className="Information">
-      {/* <Button className="moreInfo" data={buttonMoreInfo} /> */}
       <ButtonUI style={style} onClick={()=>setClicked(true)} variant="outlined" color="primary" href="#outlined-buttons">
                         Learn More About Ensembled <sup>2</sup>
       </ButtonUI>
-    </div>
     </section>
     <br></br>
     <hr style={{"width": "100%"}}></hr>
@@ -133,7 +129,6 @@ let styleImg = {
     </div>
     </section>
     <br></br>
-    <hr style={{"width": "100%"}}></hr>
 
     <section>
     <footer className="copywrite">&copy; Copyright, University of British Columbia, 2021</footer>
