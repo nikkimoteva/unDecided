@@ -48,6 +48,7 @@ function useGoogleAuthProvider() {
         const image = profile.getImageUrl();
         const email = profile.getEmail(); // This is null if the 'email' scope is not present.
         setAuthCookie({id, name, image, email});  // theoretically, this should setUser as well, since we added a listener to it
+        setUser({id, name, image, email})
         return Promise.resolve();
       })
       .catch(err => {
@@ -64,7 +65,7 @@ function useGoogleAuthProvider() {
 
   function listenerCallback(new_cookie) {
     console.log(`Auth Listener Callback: ${new_cookie.value}`);
-    setUser(new_cookie.value);
+    // setUser(new_cookie.value);
   }
 
   return {

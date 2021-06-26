@@ -58,9 +58,7 @@ app.post("/gauth", (req, res) => {
 });
 
 app.post("/submitJob", (req, res) => {
-  console.log(req);
   const body = req.body;
-
   const jobName = body.jobName;
   const maxJobTime = body.maxJobTime;
   const dataset = body.dataset;
