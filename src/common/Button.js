@@ -18,7 +18,8 @@ export default function Button(props) {
     return (
         <div>
             <ButtonUI style={style} component={Link}
-                    to={route} variant="outlined" color="primary" href="#outlined-buttons">
+                    to={route} variant="outlined" color="primary" href="#outlined-buttons"
+            >
                         {data.name}
             </ButtonUI>
         </div>
