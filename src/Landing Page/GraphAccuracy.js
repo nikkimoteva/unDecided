@@ -129,7 +129,7 @@ export default function GraphAccuracy() {
         </Chart>
         <h4 style={style}>The average accuracy from running 40 datasets for 1 hour.</h4>
         <h4 style={style}>The higher the average, the more accurate the prediction has been.</h4>
-        <br></br>
+        <br/>
       </div>
       {/* <div className="Rank" id="hidden_div2">
         <Chart

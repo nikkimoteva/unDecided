@@ -48,6 +48,7 @@ export default function Header() {
     history.push('/'); // redirect to main page
   }
 
+  /*eslint-disable no-implicit-coercion, eqeqeq*/
   const headerButtons = (auth.user == null)
     ? (
       <ButtonGroup variant="text" color="inherit" className={classes.toolbarButtons} size="large">

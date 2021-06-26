@@ -118,12 +118,13 @@ export default function Landing() {
           </ScrollPage>
         </ScrollContainer>
         <ButtonUI style={style} onClick={() => setClicked(true)} variant="outlined" color="primary"
-                  href="#outlined-buttons">
+                  href="#outlined-buttons"
+        >
           Learn More About Ensembled <sup>2</sup>
         </ButtonUI>
       </section>
       <br/>
-      <hr style={{"width": "100%"}}/>
+      <hr style={{width: "100%"}}/>
 
 
       <section>
