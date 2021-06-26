@@ -35,9 +35,10 @@
         "jsx-quotes": ["error", "prefer-double"],
         "no-multi-spaces": ["error", {"ignoreEOLComments":  true}],
         "no-implicit-coercion": "error",
-        "eqeqeq": "error"
-
-
+        "eqeqeq": "error",
+        "no-var": "error",
+        "react/no-direct-mutation-state": "error",
+        "react/no-access-state-in-setstate": "error"
     },
     "settings": {
         "react": {

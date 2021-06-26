@@ -19,7 +19,8 @@ app.get("/test", (req, res) => {
 app.get("/jobs", (req, res) => {
   const userToken = req.body.userToken;
   //todo: retrieve jobs given user token
-  res.json(/*jobs*/);
+  // res.json(/*jobs*/);
+  res.sendStatus(200);
 });
 
 app.post("/gauth", (req, res) => {
@@ -55,6 +56,17 @@ app.post("/gauth", (req, res) => {
       res.sendStatus(401);
     });
 });
+
+app.post("/submitJob", (req, res) => {
+  console.log(req);
+  const body = req.body;
+
+  const jobName = body.jobName;
+  const maxJobTime = body.maxJobTime;
+  const dataset = body.dataset;
+  // TODO: Store job in db and start it up
+  res.sendStatus(200);
+})
 
 app.listen(port, () => {
   console.log(`Listening on http://localhost:${port}`)

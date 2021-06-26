@@ -4,7 +4,7 @@ import {Link, useHistory} from "react-router-dom";
 import {useAuth} from "../Auth";
 import React, {useState} from 'react';
 import {makeStyles} from '@material-ui/core/styles';
-import Profile from "./Profile";
+import ProfileIcon from "./ProfileIcon";
 import LoginModal from "./LoginModal";
 
 const useStyles = makeStyles((theme) => ({
@@ -48,7 +48,7 @@ export default function Header() {
     history.push('/'); // redirect to main page
   }
 
-  /*eslint-disable no-implicit-coercion, eqeqeq*/
+  /* eslint-disable no-implicit-coercion, eqeqeq */
   const headerButtons = (auth.user == null)
     ? (
       <ButtonGroup variant="text" color="inherit" className={classes.toolbarButtons} size="large">
@@ -62,7 +62,7 @@ export default function Header() {
         <Button component={Link} to="/docs">Docs</Button>
         <Button component={Link} to="/console">Dashboard</Button>
         <Button component={Link} to="/console/jobs">Jobs</Button>
-        <Profile signout={logout}/>
+        <ProfileIcon signout={logout}/>
       </ButtonGroup>
     )
 
