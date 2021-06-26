@@ -11,9 +11,10 @@ function cookies() {
 
 export function setAuthCookie(profile) {
   console.log(`Setting auth to ${profile}`);
-  cookies().set('auth', profile, {path: "/", maxAge: 86400});
+  cookies().set('auth', profile, {path: "/", maxAge: 86400, sameSite: 'lax'});
 }
 
+// Shouldn't remove any cookies, because removing the cookie removes the listener
 export function removeAuthCookie() {
   console.log("Removing auth cookie");
   cookies().remove('auth', {path: "/"});

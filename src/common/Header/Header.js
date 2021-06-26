@@ -1,5 +1,4 @@
-import logo from '../../logo.png';
-import "../../App.css";
+import logo from '../../cropped_logo.png';
 import {AppBar, Button, ButtonGroup, Modal, Toolbar} from "@material-ui/core";
 import {Link, useHistory} from "react-router-dom";
 import {useAuth} from "../Auth";
@@ -13,8 +12,13 @@ const useStyles = makeStyles((theme) => ({
     flexGrow: 1,
   },
   logo: {
-    marginRight: theme.spacing(2),
+    width: "50px",
+    marginTop: "12px",
+    marginBottom: "12px"
   },
+  toolbarButtons: {
+    marginLeft: 'auto'
+  }
 }));
 
 export default function Header() {
@@ -36,40 +40,42 @@ export default function Header() {
     auth.signin(credentials)
       .then(() => {
         history.push('/console');
-      })
+      });
   }
 
   function logout() {
     auth.signout();
-    history.push('/') // redirect to main page
+    history.push('/'); // redirect to main page
   }
 
   const headerButtons = (auth.user == null)
     ? (
-      <ButtonGroup color="secondary">
-      <Button variant="contained" component={Link} to="/docs">Docs</Button>
-      <Button variant="contained" component={Link} to="/demo">Demo</Button>
-      <Button variant="contained" onClick={openLoginModal}>Sign In</Button>
-    </ButtonGroup>
+      <ButtonGroup variant="text" color="inherit" className={classes.toolbarButtons} size="large">
+        <Button component={Link} to="/docs">Docs</Button>
+        <Button component={Link} to="/demo">Demo</Button>
+        <Button onClick={openLoginModal}>Sign In</Button>
+      </ButtonGroup>
     )
     : (
-      <ButtonGroup color="secondary">
-      <Button variant="contained" component={Link} to="/docs">Docs</Button>
-      <Button variant="contained" component={Link} to="/console">Dashboard</Button>
-      <Button variant="contained" component={Link} to="/console/jobs">Jobs</Button>
-      <Profile signout={logout}/>
-    </ButtonGroup>
+      <ButtonGroup variant="text" color="inherit" className={classes.toolbarButtons} size="large">
+        <Button component={Link} to="/docs">Docs</Button>
+        <Button component={Link} to="/console">Dashboard</Button>
+        <Button component={Link} to="/console/jobs">Jobs</Button>
+        <Profile signout={logout}/>
+      </ButtonGroup>
     )
 
   return (
     <>
       <AppBar position="static">
-        <div className={classes.logo}>
-          <Link to="/">
-            <img src={logo} className="logo" alt="logo"/>
-          </Link>
-        </div>
-        {headerButtons}
+        <Toolbar>
+          <div >
+            <Link to="/">
+              <img src={logo} className={classes.logo} alt="logo"/>
+            </Link>
+          </div>
+          {headerButtons}
+        </Toolbar>
       </AppBar>
 
       <Modal

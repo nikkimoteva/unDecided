@@ -1,7 +1,8 @@
 import React from 'react';
 import Typed from 'react-typed';
-import Button from "../common/Button"
-import "../common/Button.css"
+import Button from "../common/Button";
+import "../common/Button.css";
+import "../App.css";
 
 export default function Landing() {
   let keywords = ["autoML", "Automated Machine Learning", "UBC", "State Of The Art"];

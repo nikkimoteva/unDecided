@@ -22,7 +22,7 @@ export default function BaseRouter() {
           </PrivateRoute>
           <Route path="/docs"><Docs/></Route>
           <Route path="/demo"><Demo/></Route>
-          <Route path="/"><Landing/></Route>
+          <Route exact path="/"><Landing/></Route>
         </Suspense>
       </Switch>
     </Router>

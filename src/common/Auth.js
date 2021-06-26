@@ -62,9 +62,9 @@ function useGoogleAuthProvider() {
     setUser(undefined);
   }
 
-  function listenerCallback(new_user) {
-    console.log(`Auth Listener Callback: ${new_user}`);
-    setUser(new_user);
+  function listenerCallback(new_cookie) {
+    console.log(`Auth Listener Callback: ${new_cookie.value}`);
+    setUser(new_cookie.value);
   }
 
   return {
