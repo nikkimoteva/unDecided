@@ -27,7 +27,7 @@ export default function Profile(props) {
         onClick={handleMenu}
         color="inherit"
       >
-        <AccountCircle/>
+        <AccountCircle fontSize="large"/>
       </IconButton>
       <Menu
         id="menu-appbar"
