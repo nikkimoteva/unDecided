@@ -5,7 +5,7 @@ import Menu from "@material-ui/core/Menu";
 import MenuItem from "@material-ui/core/MenuItem";
 import {Link} from "react-router-dom";
 
-export default function Profile(props) {
+export default function ProfileIcon(props) {
   const [anchorEl, setAnchorEl] = React.useState(null);
   const open = Boolean(anchorEl);
 
