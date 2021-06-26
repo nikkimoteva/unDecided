@@ -125,7 +125,7 @@ export default function GraphFirst() {
         </Chart>
         <h4 style={style}>The number of first places in the majority voting scheme.</h4>
         <h4 style={style}>The higher the number, the better the engine's data processing and prediction.</h4>
-        <br></br>
+        <br/>
       </div>
       </Paper>
     );
