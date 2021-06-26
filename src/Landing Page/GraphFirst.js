@@ -26,7 +26,7 @@ const data= [
 ];
 
 let style = {
-  "text-align": "center",
+  textAlign: "center"
 }
 
 const tooltipContentBodyStyle = {

@@ -31,7 +31,7 @@ export default function Landing() {
       window.open('https://arxiv.org/pdf/2012.05390.pdf', '_blank');
       setClicked(false);
     }
-  });
+  }, [clicked]);
 
   let keywords = ["autoML", "Automated Machine Learning", "UBC", "State Of The Art"];
   let buttonSignup = {
@@ -48,24 +48,24 @@ export default function Landing() {
   }
 
   let style = {
-    "fontWeight": "bolder",
-    "fontSize": "1.5em",
-    "width": "50%",
-    "margin-left": "25vw",
-    "margin-bottom": "5%"
+    fontWeight: "bolder",
+    fontSize: "1.5em",
+    width: "50%",
+    marginLeft: "25vw",
+    marginBottom: "5%"
   }
 
   let styleImg = {
-    "display": "relative",
-    "margin-left": "10%",
-    "width": "80vw",
-    "height": "60vh"
+    display: "relative",
+    marginLeft: "10%",
+    width: "80vw",
+    height: "60vh"
   }
 
   const FadeUp = batch(Fade(), Move(), Sticky());
 
   return (
-    <div className="MainPage" style={{"margin-top": "5%"}}>
+    <div className="MainPage" style={{marginTop: "5%"}}>
       <section>
         <div className="HeaderLogo">
           <img className="initialLogo" src={logo} alt="logo"/>
