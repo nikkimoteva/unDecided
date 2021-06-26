@@ -1,6 +1,6 @@
 import React from "react";
 import {Switch, Route, useRouteMatch, Redirect} from "react-router-dom";
-import {useAuth} from "../Auth/Auth";
+import {useAuth} from "../common/Auth";
 
 
 export default function Console() {

@@ -1,49 +1,29 @@
 import {BrowserRouter as Router, Route, Switch} from "react-router-dom";
-import Header from "./common/Header";
-import {Modal} from "@material-ui/core";
-import {PrivateRoute, useAuth} from "./Auth/Auth";
-import Console from "./Console/Console";
-import SignUp from "./Sign Up/SignUp";
+import Header from "./common/Header/Header";
+import {CircularProgress} from "@material-ui/core";
+import {PrivateRoute} from "./common/Auth";
 import Docs from "./Docs/Docs";
 import Demo from "./Demo/Demo";
 import Landing from "./Landing Page/Landing";
-import React, {useState} from "react";
-import LoginModal from "./LoginModal";
+import React, {lazy, Suspense} from "react";
 
 export default function BaseRouter() {
-  const [loginModal, setLoginModal] = useState(false);
 
-  const auth = useAuth();
-
-  function handleGoogleLogin(res) {
-    auth.signin(res);
-  }
-
-  function openLoginModal() {
-    setLoginModal(true);
-  }
-
-  function closeLoginModal() {
-    setLoginModal(false);
-  }
+  // lazy load it because we don't want ppl to have to wait for this to load just to view the page
+  const LazyLoadConsole = lazy(() => import("./Console/Console"))
 
   return (
     <Router>
-      <Header openLogin={openLoginModal}/>
-      <Modal
-        open={loginModal}
-        onClose={closeLoginModal}
-        aria-labelledby="Login Form"
-        aria-describedby="Input your login details here"
-      >
-        <LoginModal googleSignin={handleGoogleLogin}/>
-      </Modal>
+      <Header/>
       <Switch>
-        <PrivateRoute path="/console"><Console/></PrivateRoute>
-        <Route path="/signup"><SignUp/></Route>
-        <Route path="/docs"><Docs/></Route>
-        <Route path="/demo"><Demo/></Route>
-        <Route path="/"><Landing/></Route>
+        <Suspense fallback={<CircularProgress/>}>
+          <PrivateRoute path="/console">
+            <LazyLoadConsole/>
+          </PrivateRoute>
+          <Route path="/docs"><Docs/></Route>
+          <Route path="/demo"><Demo/></Route>
+          <Route exact path="/"><Landing/></Route>
+        </Suspense>
       </Switch>
     </Router>
   )
