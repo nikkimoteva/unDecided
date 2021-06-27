@@ -62,7 +62,7 @@ app.post("/submitJob", (req, res) => {
   const dataset = body.dataset;
   // TODO: Store job in db and start it up
   res.sendStatus(200);
-})
+});
 
 app.listen(port, () => {
   console.log(`Listening on http://localhost:${port}`);

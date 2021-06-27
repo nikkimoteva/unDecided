@@ -27,7 +27,7 @@ const data = [
 
 let style = {
   textAlign: "center"
-}
+};
 
 const tooltipContentBodyStyle = {
   paddingTop: 0,
@@ -75,7 +75,7 @@ export default function GraphRank() {
       tooltipTarget: null,
       tooltipEnabled: true,
     }
-  )
+  );
 
   const changeHoverRank = (data) => {
     setStateRank({
@@ -83,7 +83,7 @@ export default function GraphRank() {
       tooltipTarget: state.tooltipTarget,
       tooltipEnabled: state.tooltipEnabled
     });
-  }
+  };
 
   const changeTooltipRank = (data) => {
     setStateRank({
@@ -91,7 +91,7 @@ export default function GraphRank() {
       tooltipTarget: data,
       tooltipEnabled: state.tooltipEnabled
     });
-  }
+  };
 
   const myHoverChangeRank = changeHoverRank.bind(this);
   const myToolTipChangeRank = changeTooltipRank.bind(this);

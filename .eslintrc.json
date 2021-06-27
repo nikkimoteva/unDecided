@@ -23,6 +23,8 @@
         "jsx-quotes": ["error", "prefer-double"],
         "no-implicit-coercion": "error",
         "no-multi-spaces": ["error", {"ignoreEOLComments":  true}],
+        "no-lonely-if": "error",
+        "no-unreachable": "error",
         "no-unused-vars": "warn",
         "no-var": "error",
         "react/jsx-closing-bracket-location": "warn",
@@ -37,7 +39,9 @@
             "component": true,
             "html": true
         }],
-        "react/sort-comp": "error"
+        "react/sort-comp": "error",
+        "semi": "error",
+        "semi-spacing": "error"
     },
     "settings": {
         "react": {

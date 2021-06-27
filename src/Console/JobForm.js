@@ -23,7 +23,7 @@ export default function JobForm() {
   const maxJobTimeValue = 20;
 
   const classes = useStyles();
-  const fileInput = React.createRef()
+  const fileInput = React.createRef();
 
   async function submitHandler(event) {
     event.preventDefault();
@@ -70,5 +70,5 @@ export default function JobForm() {
         </Button>
       </div>
     </form>
-  )
+  );
 }

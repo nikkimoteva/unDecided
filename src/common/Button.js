@@ -13,7 +13,7 @@ export default function Button(props) {
         marginRight: "10em",
         width: "15em",
         height: "5em",
-    }
+    };
 
     return (
         <div>

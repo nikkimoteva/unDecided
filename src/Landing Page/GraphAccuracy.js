@@ -27,7 +27,7 @@ const data= [
 
 let style = {
   textAlign: "center"
-}
+};
 
 const tooltipContentBodyStyle = {
   paddingTop: 0,
@@ -68,28 +68,28 @@ const TitleText = withStyles({ title: { marginBottom: '30px' } })(({ classes, ..
   <Title.Text {...restProps} className={classes.title} />
 ));
 
-const pc = {startVal : "0.5"}
+const pc = {startVal : "0.5"};
 
 export default function GraphAccuracy() {
   const [state, setStateAccuracy] = useState(
     {hover: null,
     tooltipTarget: null,
     tooltipEnabled: true,}
-    )
+    );
 
   const changeHoverAccuracy = (data) => {
     setStateAccuracy({
       hover : data,
       tooltipTarget : state.tooltipTarget,
       tooltipEnabled: state.tooltipEnabled});
-  }
+  };
 
   const changeTooltipAccuracy = (data) => {
     setStateAccuracy({
       hover : state.hover,
       tooltipTarget : data,
       tooltipEnabled: state.tooltipEnabled});
-  }
+  };
   const myHoverChangeAccuracy = changeHoverAccuracy.bind(this);
   const myToolTipChangeAccuracy = changeTooltipAccuracy.bind(this);
   const modifyDomain = domain => [domain[0],0.9];
