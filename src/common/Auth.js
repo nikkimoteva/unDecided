@@ -39,7 +39,7 @@ function useGoogleAuthProvider() {
     console.log(credentials.getAuthResponse());
     const id_token = credentials.getAuthResponse().id_token;
     return validateGoogleUser(id_token)
-      .then(res => {
+      .then(() => {
         console.log("Stored info in backend")
         addAuthListener(listenerCallback);
         const profile = credentials.getBasicProfile();
