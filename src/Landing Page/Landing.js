@@ -1,14 +1,14 @@
 import React, {useState, useEffect} from 'react';
 import Typed from 'react-typed';
-import "../common/Button.css";
-import "../App.css";
-import Button from "../common/Button"
+import CustomButton from "../common/Button"
 import logo from '../images/logo.png';
 import figure1 from '../images/figure1.jpg';
-import "./Landing.css"
-import ButtonUI from '@material-ui/core/Button';
+import Button from '@material-ui/core/Button';
 import RankingTable from "./RankingTable";
 import Overview from "./Overview";
+import "../common/Button.css";
+import "../App.css";
+import "./Landing.css";
 
 export default function Landing() {
   const [clicked, setClicked] = useState(false);
@@ -21,7 +21,8 @@ export default function Landing() {
   }, [clicked]);
 
   let keywords = ["Automated Machine Learning", "State Of The Art", "Accessible", 
-                  "Exploiting Machine Learning Solutions", "User Friendly", "Quantitative gains", ];
+                  "Exploiting Machine Learning Solutions", "User Friendly", "Quantitative gains", ];   
+                              
   let buttonSignup = {
     name: "Get Started",
     route: "./signup"
@@ -31,23 +32,6 @@ export default function Landing() {
     name: "autoML In Action",
     route: "./demo"
   };
-
-  let style = {
-    fontWeight: "bolder",
-    fontSize: "1.5em",
-    width: "50%",
-    marginLeft: "25vw",
-    marginBottom: "5%",
-    color: "#2EFFFF",
-  }
-
-  let styleImg = {
-    display: "relative",
-    marginLeft: "10%",
-    width: "80vw",
-    height: "60vh",
-    paddingBottom: "5%",
-  }
 
   return (
     <div className="MainPage">
@@ -66,8 +50,8 @@ export default function Landing() {
                  loop={true}
           />
           <div className="ButtonUI">
-            <Button data={buttonDemo}/>
-            <Button data={buttonSignup}/>
+            <CustomButton data={buttonDemo}/>
+            <CustomButton data={buttonSignup}/>
           </div>
         </div>
         <div className="Comparison">
@@ -82,12 +66,12 @@ export default function Landing() {
 
         <div className="MoreInfo">
         <h1 className="title">Accessible Machine Learning for Everyone</h1>
-        <img className="E2" style={styleImg} src={figure1} alt="figure1"/>
-        <ButtonUI style={style} onClick={() => setClicked(true)} variant="contained" color="primary"
+        <img className="img" src={figure1} alt="figure1"/>
+        <Button className="button" onClick={() => setClicked(true)} variant="contained" color="primary"
               href="#outlined-buttons"
         >
           Learn More About Ensemble<sup>2</sup>
-        </ButtonUI>
+        </Button>
         </div>
       
         <footer className="copywrite">&copy; Copyright, University of British Columbia, 2021</footer>
