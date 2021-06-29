@@ -7,11 +7,6 @@ import TableContainer from '@material-ui/core/TableContainer';
 import TableRow from '@material-ui/core/TableRow';
 import Paper from '@material-ui/core/Paper';
 
-const useStyles = makeStyles({
-//   table: {
-//   },
-});
-
 function createData(name, info) {
   return { name, info };
 }
@@ -24,11 +19,10 @@ const rows = [
 ];
 
 export default function DenseTable() {
-  const classes = useStyles();
 
   return (
     <TableContainer component={Paper}>
-      <Table className={classes.table} size="small" aria-label="a dense table">
+      <Table size="small" aria-label="a dense table">
         <TableBody>
           {rows.map((row) => (
             <TableRow key={row.name}>
