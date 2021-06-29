@@ -112,3 +112,10 @@ See Image 1 and Image 2.
 - Auto-Weka: http://www.cs.ubc.ca/labs/beta/Projects/autoweka/
   - Very primitive, seems deprecated
   
+
+**Development instructions:**
+
+1. Install NPM and Yarn:
+  - Install NPM version 7.17 and Yarn version 2.4
+2. Run `yarn install`
+3. Run `yarn start`

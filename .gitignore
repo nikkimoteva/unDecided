@@ -1,3 +1,14 @@
+# Package manager stuff
 node_modules/
+.yarn/*
+!.yarn/cache
+!.yarn/patches
+!.yarn/plugins
+!.yarn/releases
+!.yarn/sdks
+!.yarn/versions
 
+build/
+
+# SDK stuff
 .idea/
