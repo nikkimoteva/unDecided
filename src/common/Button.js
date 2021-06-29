@@ -1,10 +1,10 @@
 import "./Button.css";
 import React from "react";
-import ButtonUI from '@material-ui/core/Button';
+import Button from '@material-ui/core/Button';
 import {Link} from "react-router-dom";
 
+export default function Buttons(props) {
 
-export default function Button(props) {
     let data = props.data;
     let route = "./" + data.route;
     let style = {
@@ -13,15 +13,16 @@ export default function Button(props) {
         marginRight: "10em",
         width: "15em",
         height: "5em",
+        color: "#2EFFFF",
     }
 
     return (
         <div>
-            <ButtonUI style={style} component={Link}
-                    to={route} variant="outlined" color="primary" href="#outlined-buttons"
+            <Button style={style} component={Link}
+                to={route} variant="contained" color="primary" href="#outlined-buttons"
             >
-                        {data.name}
-            </ButtonUI>
+                    {data.name}
+            </Button>
         </div>
     );
 }
