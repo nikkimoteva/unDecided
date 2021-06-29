@@ -2,10 +2,10 @@ import React, {useState, useEffect} from 'react';
 import Typed from 'react-typed';
 import "../common/Button.css";
 import "../App.css";
-import Button from "../common/Button";
-import logo from '../logo.png';
-import figure1 from './figure1.jpg';
-import "./landing.css"
+import Button from "../common/Button"
+import logo from '../images/logo.png';
+import figure1 from '../images/figure1.jpg';
+import "./Landing.css"
 import ButtonUI from '@material-ui/core/Button';
 import RankingTable from "./RankingTable";
 import Overview from "./Overview";
@@ -73,9 +73,9 @@ export default function Landing() {
         <div className="Comparison">
           <h1 className="title">The Most Advanced Predictive AutoML Engine</h1>
           <div id="graph" style={{"width": "80%", "margin-left":"10%",}}>
-            <h3 className="title">Comparison Overview</h3>
+            <h3 className="subtitle">Comparison Overview</h3>
             <Overview />
-            <h3 className="title">Results</h3>
+            <h3 className="subtitle">Results</h3>
             <RankingTable />
           </div>
         </div>
