@@ -52,6 +52,7 @@
 }
 
 .copywrite {
+    text-align: center;
     color: #2EFFFF;
     background-color: #3f50b5
 }
@@ -59,4 +60,22 @@
 .graph {
     width: 80%; 
     margin-left:10%;
+}
+
+.img {
+    display: relative;
+    margin-left: 10%;
+    width: 80vw;
+    height: 60vh;
+    padding-bottom: 5%;
+
+}
+
+.button {
+    font-weight: bolder;
+    font-size: 1.5em;
+    width: 50%;
+    margin-left: 25vw;
+    margin-bottom: 5%;
+    color: #2EFFFF;
 }
