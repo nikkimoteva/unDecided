@@ -84,7 +84,8 @@ export default function Landing() {
         <h1 className="title">Accessible Machine Learning for Everyone</h1>
         <img className="E2" style={styleImg} src={figure1} alt="figure1"/>
         <ButtonUI style={style} onClick={() => setClicked(true)} variant="contained" color="primary"
-              href="#outlined-buttons">
+              href="#outlined-buttons"
+        >
           Learn More About Ensemble<sup>2</sup>
         </ButtonUI>
         </div>
