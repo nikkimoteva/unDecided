@@ -1,5 +1,11 @@
 .title {
-    font-size: 3vw;
+    font-size: 3.5vw;
+    text-align: center;
+    color: #2EFFFF
+}
+
+.subtitle {
+    font-size: 2.5vw;
     text-align: center;
     color: #2EFFFF
 }
@@ -11,8 +17,26 @@
     font-weight: bold;
 }
 
+
+.HeaderLogo {
+    display: flex;
+    flex-flow: column wrap;
+    justify-content: space-around;
+    align-items: center;
+    
+    padding: 0;
+    margin: 0;
+  
+    background-image: url(../images/background1.jpg);
+    background-repeat: no-repeat;
+    background-size: cover;
+    padding-bottom: 5%;
+    padding-top: 15%;
+  }
+
+
 .Comparison {
-    background-image: url(./background2.jpg);
+    background-image: url(../images/background2.jpg);
     background-repeat: no-repeat;
     background-size: cover;
     padding-bottom: 5%;
@@ -20,7 +44,7 @@
 }
 
 .MoreInfo {
-    background-image: url(./background3.jpeg);
+    background-image: url(../images/background3.jpeg);
     background-repeat: no-repeat;
     background-size: cover;
     padding-bottom: 5%;
@@ -30,4 +54,9 @@
 .copywrite {
     color: #2EFFFF;
     background-color: #3f50b5
+}
+
+.graph {
+    width: 80%; 
+    margin-left:10%;
 }

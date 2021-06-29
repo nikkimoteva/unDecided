@@ -1,4 +1,4 @@
-import logo from '../../cropped_logo.png';
+import logo from '../../images/cropped_logo.png';
 import {AppBar, Button, ButtonGroup, Modal, Toolbar} from "@material-ui/core";
 import {Link, useHistory} from "react-router-dom";
 import {useAuth} from "../Auth";
@@ -68,7 +68,7 @@ export default function Header() {
 
   return (
     <>
-      <AppBar position="static">
+      <AppBar position="fixed">
         <Toolbar>
           <div >
             <Link to="/">
