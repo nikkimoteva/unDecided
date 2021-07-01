@@ -11,10 +11,20 @@ const useStyles = makeStyles({
 
   },
   textField: {
+    transform: 'translate(14px, 7px) scale(1)',
+    width: '20ch',
+  },
+  numberTextField: {
+    transform: 'translate(20px, 0px) scale(1)',
+    width: '20ch',
+  },
+  fileField: {
+    transform: 'translate(20px, 15px) scale(1)',
     width: '25ch',
   },
-  longTextField: {
-    width: '50ch',
+
+  submitButton: {
+    transform: 'translate(20px, 15px) scale(1)',
   }
 });
 
@@ -43,44 +53,34 @@ export default function JobForm() {
   }
 
   return (
-    <div>
-      <form noValidate>
-        <div>
-          <TextField id="jobName"
-                     label="Job Name"
-                     value={jobName}
-                     variant="outlined"
-                     className={classes.textField}
-                     onChange={(event) => setJobName(event.target.value)}
-          />
-          <TextField
-            id="maxJobTime"
-            label="Max Job Time (Minutes)"
-            type="number"
-            value={maxJobTime}
-            onChange={handleMaxJobTimeChange}
-            margin="normal"
-          />
-          <input type="file" ref={fileInput}/>
-          <Button type="submit"
-                  variant="outlined"
-                  color="primary"
-                  className={classes.button}
-                  onClick={submitHandler}
-          >
-            Submit
-          </Button>
-        </div>
-      </form>
-
-      <Button variant="contained"
-              color="secondary"
-              className={classes.button}
-              component={Link}
-              to="/console/import"
-      >
-        Import from AWS S3
-      </Button>
-    </div>
+    <form noValidate>
+      <div>
+        <TextField id="jobName"
+                   label="Job Name"
+                   value={jobName}
+                   variant="outlined"
+                   className={classes.textField}
+                   onChange={(event) => setJobName(event.target.value)}
+        />
+        <TextField
+          id="maxJobTime"
+          label="Max Job Time (Minutes)"
+          type="number"
+          value={maxJobTime}
+          className={classes.numberTextField}
+          onChange={handleMaxJobTimeChange}
+          margin="normal"
+        />
+        <input type="file" className={classes.fileField} ref={fileInput}/>
+        <Button type="submit"
+                variant="outlined"
+                color="primary"
+                className={classes.submitButton}
+                onClick={submitHandler}
+        >
+          Submit
+        </Button>
+      </div>
+    </form>
   );
 }
