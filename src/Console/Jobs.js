@@ -14,7 +14,10 @@ const useStyles = makeStyles({
     display: "flex",
     justify: "flex-end",
     margin: "auto",
-    width: "20vh"
+    width: "15vh"
+  },
+  jobAttributeColumn: {
+    align:"left",
   },
 });
 
@@ -35,10 +38,10 @@ export default function Jobs(props) {
           <TableHead>
             <TableRow>
               <TableCell />
-              <TableCell>Job ID</TableCell>
-              <TableCell align="right">Job Name</TableCell>
-              <TableCell align="right">Description</TableCell>
-              <TableCell align="right">Status</TableCell>
+              <TableCell className={classes.jobAttributeColumn}>Job ID</TableCell>
+              <TableCell className={classes.jobAttributeColumn}>Job Name</TableCell>
+              <TableCell className={classes.jobAttributeColumn}>Description</TableCell>
+              <TableCell className={classes.jobAttributeColumn}>Status</TableCell>
             </TableRow>
           </TableHead>
         </Table>
