@@ -16,3 +16,24 @@ export function getJobs(id_token) {
     data: {id_token}
   });
 }
+
+export function registerAWS(identityPoolId) {
+  return axios({
+    method: "post",
+    url: `${root}/registerAWS`,
+    data: {identityPoolId}
+  });
+}
+
+export function listBuckets() {
+  return axios.get(`${root}/listBuckets`);
+}
+
+export function listObjects(bucketName) {
+  console.log(`Bucket Name: ${bucketName}`);
+  return axios({
+    method: "post",
+    url: `${root}/listObjects`,
+    data: {bucketName: bucketName}
+  });
+}
