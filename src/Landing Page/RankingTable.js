@@ -7,6 +7,7 @@ import TableContainer from '@material-ui/core/TableContainer';
 import TableHead from '@material-ui/core/TableHead';
 import TableRow from '@material-ui/core/TableRow';
 import Paper from '@material-ui/core/Paper';
+import "./Landing.css";
 
 const StyledTableCell = withStyles((theme) => ({
   head: {
@@ -52,7 +53,7 @@ export default function CustomizedTables() {
         <TableHead>
           <TableRow>
             <StyledTableCell>AutoML Engine</StyledTableCell>
-            <StyledTableCell align="right">Ensemble Squared</StyledTableCell>
+            <StyledTableCell align="right" className="ensembled">Ensemble Squared</StyledTableCell>
             <StyledTableCell align="right">AutoGluon</StyledTableCell>
             <StyledTableCell align="right">Auto Sklearn 2</StyledTableCell>
             <StyledTableCell align="right">Auto Sklearn</StyledTableCell>
@@ -66,7 +67,7 @@ export default function CustomizedTables() {
               <StyledTableCell component="th" scope="row">
                 {row.name}
               </StyledTableCell>
-              <StyledTableCell align="right">{row.ensemble}</StyledTableCell>
+              <StyledTableCell align="right" className="ensembled">{row.ensemble}</StyledTableCell>
               <StyledTableCell align="right">{row.autogluon}</StyledTableCell>
               <StyledTableCell align="right">{row.autosk2}</StyledTableCell>
               <StyledTableCell align="right">{row.autosk}</StyledTableCell>
