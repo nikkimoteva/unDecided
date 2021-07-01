@@ -48,8 +48,7 @@ export default function Header() {
     history.push('/'); // redirect to main page
   }
 
-  /* eslint-disable no-implicit-coercion, eqeqeq */
-  const headerButtons = (auth.user == null)
+  const headerButtons = (auth.user === "")
     ? (
       <ButtonGroup variant="text" color="inherit" className={classes.toolbarButtons} size="large">
         <Button component={Link} to="/docs">Docs</Button>
@@ -70,7 +69,7 @@ export default function Header() {
     <>
       <AppBar position="static">
         <Toolbar>
-          <div >
+          <div>
             <Link to="/">
               <img src={logo} className={classes.logo} alt="logo"/>
             </Link>

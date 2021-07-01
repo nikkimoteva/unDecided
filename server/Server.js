@@ -1,11 +1,17 @@
 // const auth = require("./Auth.js");
 
+const {ListBucketsCommand, ListObjectsCommand, GetObjectCommand, S3Client} = require("@aws-sdk/client-s3");
+const {fromCognitoIdentityPool} = require("@aws-sdk/credential-provider-cognito-identity");
+const {CognitoIdentityClient} = require("@aws-sdk/client-cognito-identity");
+
 const express = require('express');
 const app = express();
 const cors = require('cors');
 const logger = require('morgan');
 const axios = require('axios');
 const port = 3001;
+
+let awsClient;
 
 app.use(express.json());
 app.use(express.urlencoded({extended: true}));
@@ -62,6 +68,62 @@ app.post("/submitJob", (req, res) => {
   const dataset = body.dataset;
   // TODO: Store job in db and start it up
   res.sendStatus(200);
+});
+
+app.post('/registerAWS', (req, res) => {
+  try {
+    const identityPoolId = req.body.identityPoolId;
+    const region = identityPoolId.split(":")[0];
+    console.log(region);
+    console.log(identityPoolId);
+    awsClient = new S3Client({
+      region,
+      credentials: fromCognitoIdentityPool({
+        client: new CognitoIdentityClient({ region }),
+        identityPoolId: identityPoolId,
+      })
+    });
+    res.sendStatus(200);
+  } catch (err) {
+    console.log(`Error: ${err}`);
+    res.sendStatus(400);
+  }
+});
+
+app.get('/listBuckets', (req, res) => {
+  awsClient.send(new ListBucketsCommand({}))
+    .then(awsRes => {
+      res.json(awsRes.Buckets);
+    })
+    .catch(err => {
+      res.send(err);
+    });
+});
+
+app.post('/listObjects', (req, res) => {
+  const bucketName = req.body.bucketName;
+  console.log(req);
+  awsClient.send(new ListObjectsCommand({Bucket: bucketName}))
+    .then(awsRes => {
+      res.send(awsRes.Contents);
+    })
+    .catch(err => {
+      console.log(err);
+      res.send(err);
+    });
+});
+
+app.post('/getObject', (req, res) => {
+  const bucketName = req.body.bucketName;
+  const key = req.body.key;
+  awsClient.send(new GetObjectCommand({
+    Bucket: bucketName,
+    Key: key
+  }))
+    .then(awsRes => {
+      res.send(awsRes.body);
+
+    });
 });
 
 app.listen(port, () => {
