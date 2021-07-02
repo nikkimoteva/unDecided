@@ -69,7 +69,7 @@ export default function Landing() {
         </div>
         <div className="Comparison">
           <h1 className="title">The Most Advanced Predictive AutoML Engine</h1>
-          <div id="graph" style={{"width": "80%", "margin-left":"10%",}}>
+          <div id="graph" style={{width: "80%", marginLeft: "10%",}}>
             <h3 className="subtitle">Comparison Overview</h3>
             <Overview />
             <h3 className="subtitle">Results</h3>
@@ -86,7 +86,6 @@ export default function Landing() {
           Learn More About Ensemble<sup>2</sup>
         </Button>
         </div>
-      
         <footer className="copywrite">&copy; Copyright, University of British Columbia, 2021</footer>
     </div>
   );
