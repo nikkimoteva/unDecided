@@ -4,6 +4,7 @@ import {responsiveFontSizes} from "@material-ui/core";
 import {createMuiTheme, StylesProvider, ThemeProvider} from "@material-ui/core/styles";
 import {ProvideAuth} from "./common/Auth";
 import BaseRouter from "./BaseRouter";
+import {ProvideLoginModalState, useLoginModalProvider} from "./common/LoginModalProvider";
 
 
 export default function App() {
@@ -12,8 +13,8 @@ export default function App() {
 
     // color palette
     palette: {
-    //   type: "dark",
-    //   divider: "rgba(255, 255, 255, 0.12)",
+      //   type: "dark",
+      //   divider: "rgba(255, 255, 255, 0.12)",
     },
     // fonts and font sizes
     typography: {},
@@ -29,7 +30,9 @@ export default function App() {
     <ThemeProvider theme={theme}> {/*Provides default global theme*/}
       <StylesProvider injectFirst> {/*Makes it so we can override default styles*/}
         <ProvideAuth> {/*Provides useAuth hook so every component can check for authentication*/}
-          <BaseRouter/>
+          <ProvideLoginModalState>
+            <BaseRouter/>
+          </ProvideLoginModalState>
         </ProvideAuth>
       </StylesProvider>
     </ThemeProvider>

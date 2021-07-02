@@ -6,6 +6,7 @@ import React, {useState} from 'react';
 import {makeStyles} from '@material-ui/core/styles';
 import ProfileIcon from "./ProfileIcon";
 import LoginModal from "./LoginModal";
+import {useLoginModalContext} from "../LoginModalProvider";
 
 const useStyles = makeStyles(() => ({
   root: {
@@ -23,7 +24,9 @@ const useStyles = makeStyles(() => ({
 
 export default function Header() {
   const classes = useStyles();
-  const [loginModal, setLoginModal] = useState(false);
+  const context = useLoginModalContext();
+  const loginModal = context.loginModal;
+  const setLoginModal = context.setLoginModal;
 
   const auth = useAuth();
   const history = useHistory();
