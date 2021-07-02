@@ -3,6 +3,7 @@
 const {ListBucketsCommand, ListObjectsCommand, GetObjectCommand, S3Client} = require("@aws-sdk/client-s3");
 const {fromCognitoIdentityPool} = require("@aws-sdk/credential-provider-cognito-identity");
 const {CognitoIdentityClient} = require("@aws-sdk/client-cognito-identity");
+const {storeCSV} = require("./FileManager");
 
 const express = require('express');
 const app = express();
@@ -74,12 +75,10 @@ app.post('/registerAWS', (req, res) => {
   try {
     const identityPoolId = req.body.identityPoolId;
     const region = identityPoolId.split(":")[0];
-    console.log(region);
-    console.log(identityPoolId);
     awsClient = new S3Client({
       region,
       credentials: fromCognitoIdentityPool({
-        client: new CognitoIdentityClient({ region }),
+        client: new CognitoIdentityClient({region}),
         identityPoolId: identityPoolId,
       })
     });
@@ -102,7 +101,6 @@ app.get('/listBuckets', (req, res) => {
 
 app.post('/listObjects', (req, res) => {
   const bucketName = req.body.bucketName;
-  console.log(req);
   awsClient.send(new ListObjectsCommand({Bucket: bucketName}))
     .then(awsRes => {
       res.send(awsRes.Contents);
@@ -116,13 +114,31 @@ app.post('/listObjects', (req, res) => {
 app.post('/getObject', (req, res) => {
   const bucketName = req.body.bucketName;
   const key = req.body.key;
+  const csvFilePath = `./temp/${key}`;
+
   awsClient.send(new GetObjectCommand({
     Bucket: bucketName,
     Key: key
   }))
     .then(awsRes => {
-      res.send(awsRes.body);
-
+      const streamToString = (stream) =>
+        new Promise((resolve, reject) => {
+          const chunks = [];
+          stream.on("data", (chunk) => chunks.push(chunk));
+          stream.on("error", reject);
+          stream.on("end", () => resolve(Buffer.concat(chunks).toString("utf8")));
+        });
+      return streamToString(awsRes.Body);
+    })
+    .then(csvString => {
+      return storeCSV(csvString, csvFilePath);
+    })
+    .then(() => {
+      res.sendFile(csvFilePath);
+    })
+    .catch(err => {
+      console.log(err);
+      res.sendStatus(400);
     });
 });
 
