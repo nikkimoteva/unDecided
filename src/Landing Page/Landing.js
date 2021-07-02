@@ -9,6 +9,9 @@ import Overview from "./Overview";
 import "../common/Button.css";
 import "../App.css";
 import "./Landing.css";
+import {Link, useHistory} from "react-router-dom";
+import {useLoginModalContext} from "../common/LoginModalProvider";
+import {useAuth} from "../common/Auth";
 
 export default function Landing() {
   const [clicked, setClicked] = useState(false);
@@ -23,21 +26,21 @@ export default function Landing() {
   let keywords = ["Automated Machine Learning", "State Of The Art", "Accessible", 
                   "Exploiting Machine Learning Solutions", "User Friendly", "Quantitative gains",
                   "Minimal Configuration Necessary", "No ML experience necessary"];
-                              
-  let buttonSignup = {
-    name: "Get Started",
-    route: "./signup"
-  }
 
-  let buttonDemo = {
-    name: "autoML In Action",
-    route: "./demo"
+  const setLoginModal = useLoginModalContext().setLoginModal;
+  const auth = useAuth();
+  const history = useHistory();
+
+  function handleGetStartedOnClick() {
+    /* eslint-disable no-implicit-coercion, eqeqeq */
+    if (auth.user == null) setLoginModal(true);
+    else history.push("/console");
   }
 
   return (
     <div className="MainPage">
         <div className="HeaderLogo">
-          <Typed className="keywords" style={{"color":"#DEE"}}
+          <Typed className="keywords" style={{color:"#DEE"}}
                  strings={keywords}
                  typeSpeed={50}
                  startDelay={500}
@@ -50,8 +53,18 @@ export default function Landing() {
                  loop={true}
           />
           <div className="ButtonUI">
-            <CustomButton data={buttonDemo}/>
-            <CustomButton data={buttonSignup}/>
+            <Button className="CustomButton" component={Link}
+                    to="./demo" variant="contained" color="primary" href="#outlined-buttons"
+            >
+              autoML In Action
+            </Button>
+
+            <Button className="CustomButton" variant="contained"
+                    color="primary" onClick={handleGetStartedOnClick}
+            >
+              Get Started
+            </Button>
+
           </div>
         </div>
         <div className="Comparison">
