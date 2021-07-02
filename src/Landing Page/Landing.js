@@ -21,7 +21,8 @@ export default function Landing() {
   }, [clicked]);
 
   let keywords = ["Automated Machine Learning", "State Of The Art", "Accessible", 
-                  "Exploiting Machine Learning Solutions", "User Friendly", "Quantitative gains", ];   
+                  "Exploiting Machine Learning Solutions", "User Friendly", "Quantitative gains",
+                  "Minimal Configuration Necessary", "No ML experience necessary"];
                               
   let buttonSignup = {
     name: "Get Started",
@@ -36,8 +37,7 @@ export default function Landing() {
   return (
     <div className="MainPage">
         <div className="HeaderLogo">
-          <img className="initialLogo" src={logo} alt="logo"/>
-          <Typed className="keywords" style={{"color":"#2EFFFF"}}
+          <Typed className="keywords" style={{"color":"#DEE"}}
                  strings={keywords}
                  typeSpeed={50}
                  startDelay={500}
