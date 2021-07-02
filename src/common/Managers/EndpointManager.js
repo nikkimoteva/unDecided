@@ -26,7 +26,8 @@ export function registerAWS(identityPoolId) {
 }
 
 export function listBuckets() {
-  return axios.get(`${root}/listBuckets`);
+  return axios.get(`${root}/listBuckets`)
+    .then(res => res.data);
 }
 
 export function listObjects(bucketName) {
@@ -35,5 +36,15 @@ export function listObjects(bucketName) {
     method: "post",
     url: `${root}/listObjects`,
     data: {bucketName: bucketName}
-  });
+  })
+    .then(res => res.data);
+}
+
+export function getObject(bucketName, key) {
+  return axios({
+    method: "post",
+    url: `${root}/getObject`,
+    data: {bucketName, key}
+  })
+    .then(res => res.data);
 }
