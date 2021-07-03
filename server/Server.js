@@ -1,10 +1,8 @@
 // const auth = require("./Auth.js");
 
 const {ListBucketsCommand, ListObjectsCommand, GetObjectCommand, S3Client} = require("@aws-sdk/client-s3");
-const {fromCognitoIdentityPool} = require("@aws-sdk/credential-provider-cognito-identity");
-const {CognitoIdentityClient} = require("@aws-sdk/client-cognito-identity");
 const {storeCSV} = require("./FileManager");
-
+const path = require('path');
 
 const express = require('express');
 const app = express();
@@ -112,18 +110,15 @@ app.post('/getObject', (req, res) => {
   const bucketName = req.body.bucketName;
   const key = req.body.key;
   const csvFilePath = `./temp/${key}`;
+  console.log(csvFilePath)
 
   awsClient.send(new GetObjectCommand({
     Bucket: bucketName,
     Key: key
   }))
-    .then(awsRes => {
-      return streamToString(awsRes.Body);
-    })
-    .then(csvString => {
-      storeCSV(csvString, csvFilePath);
-      res.sendFile(csvFilePath);
-    })
+    .then(awsRes => streamToString(awsRes.Body))
+    .then(csvString => storeCSV(csvString, csvFilePath))
+    .then(() => res.sendFile(path.resolve(csvFilePath)))
     .catch(err => errorHandler(err, res));
 });
 
