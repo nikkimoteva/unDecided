@@ -5,6 +5,7 @@ const {fromCognitoIdentityPool} = require("@aws-sdk/credential-provider-cognito-
 const {CognitoIdentityClient} = require("@aws-sdk/client-cognito-identity");
 const {storeCSV} = require("./FileManager");
 
+
 const express = require('express');
 const app = express();
 const cors = require('cors');
@@ -131,10 +132,8 @@ app.post('/getObject', (req, res) => {
       return streamToString(awsRes.Body);
     })
     .then(csvString => {
-      return storeCSV(csvString, csvFilePath);
-    })
-    .then(() => {
-      res.sendFile(csvFilePath);
+      storeCSV(csvString, csvFilePath);
+      res.send(csvString);
     })
     .catch(err => {
       console.log(err);

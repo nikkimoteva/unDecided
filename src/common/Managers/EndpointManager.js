@@ -14,7 +14,9 @@ export function getJobs(id_token) {
     method: "get",
     url: `${root}/jobs`,
     data: {id_token}
-  });
+  })
+    .then(res => res.data)
+    .catch(err => alert(err));
 }
 
 export function registerAWS(identityPoolId) {
@@ -22,12 +24,14 @@ export function registerAWS(identityPoolId) {
     method: "post",
     url: `${root}/registerAWS`,
     data: {identityPoolId}
-  });
+  })
+    .catch(err => alert(err));
 }
 
 export function listBuckets() {
   return axios.get(`${root}/listBuckets`)
-    .then(res => res.data);
+    .then(res => res.data)
+    .catch(err => alert(err));
 }
 
 export function listObjects(bucketName) {
@@ -37,7 +41,8 @@ export function listObjects(bucketName) {
     url: `${root}/listObjects`,
     data: {bucketName: bucketName}
   })
-    .then(res => res.data);
+    .then(res => res.data)
+    .catch(err => alert(err));
 }
 
 export function getObject(bucketName, key) {
@@ -46,5 +51,6 @@ export function getObject(bucketName, key) {
     url: `${root}/getObject`,
     data: {bucketName, key}
   })
-    .then(res => res.data);
+    .then(res => res.data)
+    .catch(err => alert(err));
 }
