@@ -4,7 +4,7 @@ import {DataGrid} from "@material-ui/data-grid";
 import "./AWSImport.css";
 import {useHistory} from "react-router-dom";
 import AWSImportForm from "./Form";
-import {Grid, Typography} from "@material-ui/core";
+import {Typography} from "@material-ui/core";
 
 
 export default function AWSImportView() {
@@ -46,7 +46,7 @@ export default function AWSImportView() {
 
   function registerAndListBuckets(region, accessKey, secretKey) {
     return registerAWS(region, accessKey, secretKey)
-      .then(_ => {
+      .then(res => {
         setLoading(true);
         return listBuckets();
       })
@@ -83,10 +83,11 @@ export default function AWSImportView() {
       alert("File object must have a '.csv' extension");
     } else {
       getObject(currBucket, key)
-        .then(csvString => {
+        .then(csv => {
+          console.log("Retrieved file");
           history.push({
             pathname: "/console/submitJob",
-            state: {csvString} // can access using props.location.state.csvString
+            state: {csv} // can access using props.location.state.csv
           });
         })
         .catch(err => console.log(err));
@@ -114,5 +115,5 @@ function DataTable(props) {
                    onCellDoubleClick={props.doubleClick}
                    columnBuffer={2}
                    loading={props.loading}
-  />;
+         />;
 }
