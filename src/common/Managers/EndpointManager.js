@@ -19,11 +19,11 @@ export function getJobs(id_token) {
     .catch(err => alert(err));
 }
 
-export function registerAWS(identityPoolId) {
+export function registerAWS(region, accessKeyId, secretAccessKey) {
   return axios({
     method: "post",
     url: `${root}/registerAWS`,
-    data: {identityPoolId}
+    data: {region, credentials: {accessKeyId, secretAccessKey}}
   })
     .catch(err => alert(err));
 }

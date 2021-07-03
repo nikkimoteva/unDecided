@@ -5,7 +5,7 @@ import Jobs from "./Jobs";
 import Profile from "./Profile";
 import JobForm from "./JobForm";
 import Settings from "./Settings";
-import AWSImportView from "./AWSImportView";
+import AWSImportView from "./AWSImport/AWSImportView";
 
 export default function ConsoleRouter() {
   const {path, url} = useRouteMatch();

@@ -13,7 +13,7 @@ const logger = require('morgan');
 const axios = require('axios');
 const port = 3001;
 
-let awsClient;
+let awsClient = null;
 
 app.use(express.json());
 app.use(express.urlencoded({extended: true}));
@@ -23,6 +23,15 @@ app.use(logger('dev'));
 app.get("/test", (req, res) => {
   res.sendStatus(200);
 });
+
+function streamToString (stream) {
+  return new Promise((resolve, reject) => {
+    const chunks = [];
+    stream.on("data", (chunk) => chunks.push(chunk));
+    stream.on("error", reject);
+    stream.on("end", () => resolve(Buffer.concat(chunks).toString("utf8")));
+  });
+}
 
 app.get("/jobs", (req, res) => {
   const userToken = req.body.id_token;
@@ -57,10 +66,7 @@ app.post("/gauth", (req, res) => {
       // TODO store profile information in db
       res.sendStatus(200);
     })
-    .catch(err => {
-      console.log(err);
-      res.sendStatus(401);
-    });
+    .catch(err => errorHandler(err, res));
 });
 
 app.post("/submitJob", (req, res) => {
@@ -73,46 +79,36 @@ app.post("/submitJob", (req, res) => {
 });
 
 app.post('/registerAWS', (req, res) => {
+  const region = req.body.region;
+  const creds = req.body.credentials;
   try {
-    const identityPoolId = req.body.identityPoolId;
-    const region = identityPoolId.split(":")[0];
     awsClient = new S3Client({
-      region,
-      credentials: fromCognitoIdentityPool({
-        client: new CognitoIdentityClient({region}),
-        identityPoolId: identityPoolId,
-      })
+      region: region,
+      credentials: creds
     });
     res.sendStatus(200);
   } catch (err) {
-    console.log(`Error: ${err}`);
-    res.sendStatus(400);
+    errorHandler(err, res);
   }
 });
 
 app.get('/listBuckets', (req, res) => {
+  if (awsClient === null) res.sendStatus(401);
   awsClient.send(new ListBucketsCommand({}))
-    .then(awsRes => {
-      res.json(awsRes.Buckets);
-    })
-    .catch(err => {
-      res.send(err);
-    });
+    .then(awsRes => res.json(awsRes))
+    .catch(err => errorHandler(err, res));
 });
 
 app.post('/listObjects', (req, res) => {
+  if (awsClient === null) res.sendStatus(401);
   const bucketName = req.body.bucketName;
   awsClient.send(new ListObjectsCommand({Bucket: bucketName}))
-    .then(awsRes => {
-      res.send(awsRes.Contents);
-    })
-    .catch(err => {
-      console.log(err);
-      res.send(err);
-    });
+    .then(awsRes => res.send(awsRes.Contents))
+    .catch(err => errorHandler(err, res));
 });
 
 app.post('/getObject', (req, res) => {
+  if (awsClient === null) res.sendStatus(401);
   const bucketName = req.body.bucketName;
   const key = req.body.key;
   const csvFilePath = `./temp/${key}`;
@@ -122,24 +118,20 @@ app.post('/getObject', (req, res) => {
     Key: key
   }))
     .then(awsRes => {
-      const streamToString = (stream) =>
-        new Promise((resolve, reject) => {
-          const chunks = [];
-          stream.on("data", (chunk) => chunks.push(chunk));
-          stream.on("error", reject);
-          stream.on("end", () => resolve(Buffer.concat(chunks).toString("utf8")));
-        });
       return streamToString(awsRes.Body);
     })
     .then(csvString => {
       storeCSV(csvString, csvFilePath);
-      res.send(csvString);
+      res.sendFile(csvFilePath);
     })
-    .catch(err => {
-      console.log(err);
-      res.sendStatus(400);
-    });
+    .catch(err => errorHandler(err, res));
 });
+
+function errorHandler(err, res) {
+  console.log(err);
+  res.status(400);
+  res.send(err);
+}
 
 app.listen(port, () => {
   console.log(`Listening on http://localhost:${port}`);
