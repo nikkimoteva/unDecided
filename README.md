@@ -35,23 +35,23 @@ Csv, ML vision models(images), NLP (Text), Time series data
 
 - Opening page (UI, responsive)
 
-- Menu (Hamburger menu, UI)
+- Header with menu options
 
 - Input CSV, output model
 
-- Job tracking
+- Job tracking implemented in backend
 
-- Accounts
+- Accounts implemented in backend
 
 **3-7 "standard" requirements (will most likely complete)**
 
-- Security
+- OAuth login
 
 - Account page
 
-- Hamburger menu for history/job status tracking
+- History/job status tracking
 
-- Table visualization
+- Table visualization for the csv data
 
 - View previously uploaded data (depending on accounts, can be per browser session or per user)
 
