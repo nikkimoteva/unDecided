@@ -62,7 +62,7 @@ Csv, ML vision models(images), NLP (Text), Time series data
 
 - Take as input images, text, etc.
 
-- Take as input other types of tabular data
+- Integrate other storage solutions into app (e.g. S3, kaggle, etc)
 
 - Fancy data visualization
 
