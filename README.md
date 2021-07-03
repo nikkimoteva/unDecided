@@ -41,7 +41,7 @@ CSV
 
 - Input CSV, connect and submit to ensemble-squared backend, and retrieve and display results to user
 
-- Job tracking
+- Job tracking implemented in backend
 
 - Login
 
