@@ -6,9 +6,6 @@ import {
   setAuthCookie
 } from "./Managers/CookieManager";
 import {validateGoogleUser} from "./Managers/EndpointManager";
-import {GetObjectCommand, ListBucketsCommand, ListObjectsCommand, S3Client} from "@aws-sdk/client-s3";
-import {fromCognitoIdentityPool} from "@aws-sdk/credential-provider-cognito-identity";
-import {CognitoIdentityClient} from "@aws-sdk/client-cognito-identity";
 
 // Source: https://reactrouter.com/web/example/auth-workflow
 
@@ -70,79 +67,6 @@ function useGoogleAuthProvider() {
     user,
     signin,
     signout,
-  };
-}
-
-const awsAuthContext = createContext(undefined);
-
-export function ProvideAWSAuth({children}) {
-  const auth = AWSAuthProvider();
-  return (
-    <awsAuthContext.Provider value={auth}>
-      {children}
-    </awsAuthContext.Provider>
-  );
-}
-
-export function useAWSAuth() {
-  return useContext(awsAuthContext);
-}
-
-function AWSAuthProvider() {
-  const [region, setRegion] = useState('');
-  const [credentials, setCredentials] = useState({});
-
-  // Replace REGION with the appropriate AWS Region, such as 'us-east-1'.
-  const client = new S3Client(fromCognitoIdentityPool({
-    region,
-    credentials: credentials,
-  }));
-
-  function signin(region, credentials) {
-    setRegion(region);
-    setCredentials(credentials);
-  }
-
-  function signout() {
-    setRegion("");
-    setCredentials("");
-  }
-
-  function listBuckets() {
-    client.send(new ListBucketsCommand({}))
-      .then(res => {
-        console.log(res);
-        return res;
-      })
-      .catch(err => {
-        console.log(err);
-      });
-  }
-
-  function listObjects(bucketName) {
-    client.send(new ListObjectsCommand({Bucket: bucketName}))
-      .then(res => {
-        console.log(res);
-        return res;
-      })
-      .catch(err => console.log(err));
-  }
-
-  function getObject(bucketName, key) {
-    client.send(new GetObjectCommand({Bucket: bucketName, Key: key}))
-      .then(res => {
-        console.log(res);
-        return res;
-      })
-      .catch(err => console.log(err));
-  }
-
-  return {
-    signin,
-    signout,
-    listBuckets,
-    listObjects,
-    getObject
   };
 }
 

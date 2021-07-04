@@ -1,5 +1,5 @@
 // const {OAuth2Client} = require('google-auth-library');
-export const googleClientId = "296036318202-uraiim5u0cf5qpqhujl3aaj1kniuu41e.apps.googleusercontent.com";
+const googleClientId = "296036318202-uraiim5u0cf5qpqhujl3aaj1kniuu41e.apps.googleusercontent.com";
 // const client = new OAuth2Client(googleClientId);
 //
 // // not really needed unless we go into actual production.
@@ -45,10 +45,6 @@ function verifyAuth(req) {
       const email = body.email;
       // TODO store profile information in db
       return true;
-    })
-    .catch(err => {
-      console.log(err);
-      return false;
     });
 }
 
