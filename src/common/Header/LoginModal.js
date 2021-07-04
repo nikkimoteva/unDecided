@@ -9,7 +9,7 @@ export default class LoginModal extends React.Component {
         <div style={{height: "50%"}} onClick={this.props.onClose}/>
         <div style={{margin: "auto", display: "table"}} onClick={this.props.onClose}>
           <GoogleLogin
-            clientId="296036318202-uraiim5u0cf5qpqhujl3aaj1kniuu41e.apps.googleusercontent.com"
+            clientId={google_id}
             buttonText="Login with Google"
             onSuccess={this.props.signin}
             onFailure={(res) => console.log(res)}
