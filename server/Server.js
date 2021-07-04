@@ -1,6 +1,8 @@
-// const auth = require("./Auth.js");
-
-const {ListBucketsCommand, ListObjectsCommand, GetObjectCommand, S3Client} = require("@aws-sdk/client-s3");
+const {
+  ListBucketsCommand,
+  ListObjectsCommand,
+  GetObjectCommand,
+  S3Client} = require("@aws-sdk/client-s3");
 const {storeCSV} = require("./FileManager");
 const path = require('path');
 
@@ -39,7 +41,8 @@ app.get("/jobs", (req, res) => {
 });
 
 app.post("/gauth", (req, res) => {
-  const success = auth.verifyAuth(req);
+  const success = auth.verifyAuth(req)
+    .catch(err => errorHandler(err, res));
   const responseCode = (success) ? 200 : 400;
   res.sendStatus(responseCode);
 });
