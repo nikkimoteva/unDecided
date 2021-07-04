@@ -37,25 +37,10 @@ app.get("/jobs", (req, res) => {
 });
 
 app.post("/gauth", (req, res) => {
-  auth.verifyAuth(req)
-    .then(userData => res.send(userData))
+  const success = auth.verifyAuth(req)
     .catch(err => errorHandler(err, res));
-});
-
-app.get("/profile", (req, res) => {
-  const id_token = req.body.id;
-  auth.getUserId(id_token)
-    .then(userId => {
-      // TODO: Implement getUserId
-      return UserModel.find({
-        _id: userId
-      });
-    })
-    .then(users => {
-      const user = users[0];
-      res.json({userName: user.userName, email: user.email, picture: user.picture});
-    })
-    .catch(err => errorHandler(err, res));
+  const responseCode = (success) ? 200 : 400;
+  res.sendStatus(responseCode);
 });
 
 app.post("/submitJob", (req, res) => {
