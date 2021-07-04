@@ -45,10 +45,6 @@ function verifyAuth(req) {
       const email = body.email;
       // TODO store profile information in db
       return true;
-    })
-    .catch(err => {
-      console.log(err);
-      return false;
     });
 }
 
