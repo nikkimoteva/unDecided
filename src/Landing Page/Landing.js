@@ -9,6 +9,9 @@ import Overview from "./Overview";
 import "../common/Button.css";
 import "../App.css";
 import "./Landing.css";
+import {Link, useHistory} from "react-router-dom";
+import {useLoginModalContext} from "../common/LoginModalProvider";
+import {useAuth} from "../common/Auth";
 
 export default function Landing() {
   const [clicked, setClicked] = useState(false);
@@ -21,23 +24,23 @@ export default function Landing() {
   }, [clicked]);
 
   let keywords = ["Automated Machine Learning", "State Of The Art", "Accessible", 
-                  "Exploiting Machine Learning Solutions", "User Friendly", "Quantitative gains", ];   
-                              
-  let buttonSignup = {
-    name: "Get Started",
-    route: "./signup"
-  }
+                  "Exploiting Machine Learning Solutions", "User Friendly", "Quantitative gains",
+                  "Minimal Configuration Necessary", "No ML experience necessary"];
 
-  let buttonDemo = {
-    name: "autoML In Action",
-    route: "./demo"
+  const setLoginModal = useLoginModalContext().setLoginModal;
+  const auth = useAuth();
+  const history = useHistory();
+
+  function handleGetStartedOnClick() {
+    /* eslint-disable no-implicit-coercion, eqeqeq */
+    if (auth.user == null) setLoginModal(true);
+    else history.push("/console");
   }
 
   return (
     <div className="MainPage">
         <div className="HeaderLogo">
-          <img className="initialLogo" src={logo} alt="logo"/>
-          <Typed className="keywords" style={{"color":"#2EFFFF"}}
+          <Typed className="keywords" style={{color:"#DEE"}}
                  strings={keywords}
                  typeSpeed={50}
                  startDelay={500}
@@ -50,13 +53,23 @@ export default function Landing() {
                  loop={true}
           />
           <div className="ButtonUI">
-            <CustomButton data={buttonDemo}/>
-            <CustomButton data={buttonSignup}/>
+            <Button className="CustomButton" component={Link}
+                    to="./demo" variant="contained" color="primary" href="#outlined-buttons"
+            >
+              autoML In Action
+            </Button>
+
+            <Button className="CustomButton" variant="contained"
+                    color="primary" onClick={handleGetStartedOnClick}
+            >
+              Get Started
+            </Button>
+
           </div>
         </div>
         <div className="Comparison">
           <h1 className="title">The Most Advanced Predictive AutoML Engine</h1>
-          <div id="graph" style={{"width": "80%", "margin-left":"10%",}}>
+          <div id="graph" style={{width: "80%", marginLeft: "10%",}}>
             <h3 className="subtitle">Comparison Overview</h3>
             <Overview />
             <h3 className="subtitle">Results</h3>
@@ -73,7 +86,6 @@ export default function Landing() {
           Learn More About Ensemble<sup>2</sup>
         </Button>
         </div>
-      
         <footer className="copywrite">&copy; Copyright, University of British Columbia, 2021</footer>
     </div>
   );

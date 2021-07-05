@@ -1,13 +1,13 @@
 .title {
     font-size: 3.5vw;
     text-align: center;
-    color: #2EFFFF
+    color: #DEE
 }
 
 .subtitle {
     font-size: 2.5vw;
     text-align: center;
-    color: #2EFFFF
+    color: #DEE
 }
 
 .quotes {
@@ -23,17 +23,15 @@
     flex-flow: column wrap;
     justify-content: space-around;
     align-items: center;
-    
-    padding: 0;
+
     margin: 0;
     
     
     background-image: url(../images/background1.jpg);
     background-repeat: no-repeat;
     background-size: cover;
-    padding-bottom: 10%;
-    padding-top: 10%;
-  }
+    padding: 10% 0;
+}
 
 
 .Comparison {
@@ -54,7 +52,7 @@
 
 .copywrite {
     text-align: center;
-    color: #2EFFFF;
+    color: #DEE;
     background-color: #3f50b5
 }
 
@@ -64,12 +62,11 @@
 }
 
 .img {
-    display: relative;
+    display: inherit;
     margin-left: 10%;
     width: 80vw;
     height: 60vh;
     padding-bottom: 5%;
-
 }
 
 .button {
@@ -78,7 +75,7 @@
     width: 50%;
     margin-left: 25vw;
     margin-bottom: 5%;
-    color: #2EFFFF;
+    color: #DEE;
 }
 
 .ensembled {

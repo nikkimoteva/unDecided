@@ -14,7 +14,7 @@ import {validateGoogleUser} from "./Managers/EndpointManager";
  * `authContext`, `ProvideAuth`, `useAuth` and `useProvideAuth`
  * refer to: https://usehooks.com/useAuth/
  */
-const authContext = createContext();
+const authContext = createContext({});
 
 export function ProvideAuth({children}) {
   const auth = useGoogleAuthProvider();
