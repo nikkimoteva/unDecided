@@ -29,11 +29,11 @@ export default function App() {
   return (
     <ThemeProvider theme={theme}> {/*Provides default global theme*/}
       <StylesProvider injectFirst> {/*Makes it so we can override default styles*/}
-        <ProvideAuth> {/*Provides useAuth hook so every component can check for authentication*/}
+        <ProvideGoogleAuth> {/*Provides useAuth hook so every component can check for authentication*/}
           <ProvideLoginModalState>
             <BaseRouter/>
           </ProvideLoginModalState>
-        </ProvideAuth>
+        </ProvideGoogleAuth>
       </StylesProvider>
     </ThemeProvider>
   );
