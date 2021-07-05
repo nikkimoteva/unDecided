@@ -1,6 +1,6 @@
 import React, {useState, useEffect} from 'react';
 import Typed from 'react-typed';
-import CustomButton from "../common/Button"
+import CustomButton from "../common/Button";
 import logo from '../images/logo.png';
 import figure1 from '../images/figure1.jpg';
 import Button from '@material-ui/core/Button';
