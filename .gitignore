@@ -10,5 +10,8 @@ node_modules/
 
 build/
 
+# API secrets and other common info (Note: This cannot be used keeping common secrets with src folder
+common.js
+
 # SDK stuff
 .idea/

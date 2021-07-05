@@ -2,7 +2,7 @@ import React from 'react';
 import "./common/Button.css";
 import {responsiveFontSizes} from "@material-ui/core";
 import {createMuiTheme, StylesProvider, ThemeProvider} from "@material-ui/core/styles";
-import {ProvideAuth} from "./common/Auth";
+import {ProvideGoogleAuth} from "./common/Auth";
 import BaseRouter from "./BaseRouter";
 
 
@@ -28,9 +28,9 @@ export default function App() {
   return (
     <ThemeProvider theme={theme}> {/*Provides default global theme*/}
       <StylesProvider injectFirst> {/*Makes it so we can override default styles*/}
-        <ProvideAuth> {/*Provides useAuth hook so every component can check for authentication*/}
+        <ProvideGoogleAuth> {/*Provides useAuth hook so every component can check for authentication*/}
           <BaseRouter/>
-        </ProvideAuth>
+        </ProvideGoogleAuth>
       </StylesProvider>
     </ThemeProvider>
   );
