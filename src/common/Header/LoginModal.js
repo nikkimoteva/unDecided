@@ -17,6 +17,6 @@ export default class LoginModal extends React.Component {
           />
         </div>
       </DialogContent>
-    )
+    );
   }
 }

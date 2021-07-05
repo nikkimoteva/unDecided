@@ -39,8 +39,8 @@ function useGoogleAuthProvider() {
     console.log(credentials.getAuthResponse());
     const id_token = credentials.getAuthResponse().id_token;
     return validateGoogleUser(id_token)
-      .then(res => {
-        console.log("Stored info in backend")
+      .then(() => {
+        console.log("Stored info in backend");
         addAuthListener(listenerCallback);
         const profile = credentials.getBasicProfile();
         const id = profile.getId(); // Do not send to your backend! Use an ID token instead.
@@ -48,7 +48,7 @@ function useGoogleAuthProvider() {
         const image = profile.getImageUrl();
         const email = profile.getEmail(); // This is null if the 'email' scope is not present.
         setAuthCookie({id, name, image, email});  // theoretically, this should setUser as well, since we added a listener to it
-        setUser({id, name, image, email})
+        setUser({id, name, image, email});
         return Promise.resolve();
       })
       .catch(err => {

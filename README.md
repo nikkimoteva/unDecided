@@ -119,3 +119,4 @@ See Image 1 and Image 2.
   - Install NPM version 7.17 and Yarn version 2.4
 2. Run `yarn install`
 3. Run `yarn start`
+4. Open a new terminal and start the backend server with `yarn server`

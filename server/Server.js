@@ -17,7 +17,7 @@ app.get("/test", (req, res) => {
 });
 
 app.get("/jobs", (req, res) => {
-  const userToken = req.body.userToken;
+  const userToken = req.body.id_token;
   //todo: retrieve jobs given user token
   // res.json(/*jobs*/);
   res.sendStatus(200);
@@ -25,8 +25,6 @@ app.get("/jobs", (req, res) => {
 
 app.post("/gauth", (req, res) => {
   const userToken = req.body.id_token;
-  console.log(userToken)
-
   // not really needed unless we go into actual production.
   // verify(userToken)
   //   .then((userId) => {
@@ -64,8 +62,8 @@ app.post("/submitJob", (req, res) => {
   const dataset = body.dataset;
   // TODO: Store job in db and start it up
   res.sendStatus(200);
-})
+});
 
 app.listen(port, () => {
-  console.log(`Listening on http://localhost:${port}`)
+  console.log(`Listening on http://localhost:${port}`);
 });

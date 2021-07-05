@@ -1,5 +1,5 @@
 import React, {useState} from "react";
-import {Button, Grid, Input, makeStyles, TextField} from "@material-ui/core";
+import {Button, makeStyles, TextField} from "@material-ui/core";
 import {submitJob} from "../common/Managers/EndpointManager";
 
 const useStyles = makeStyles({
@@ -23,11 +23,11 @@ export default function JobForm() {
   const maxJobTimeValue = 20;
 
   const classes = useStyles();
-  const fileInput = React.createRef()
+  const fileInput = React.createRef();
 
   async function submitHandler(event) {
     event.preventDefault();
-    const file = fileInput.current.files[0]
+    const file = fileInput.current.files[0];
     const filename = file.name;
     if (filename.substring(filename.length - 3) === 'csv') {
       await submitJob(jobName, maxJobTime, file);
@@ -70,5 +70,5 @@ export default function JobForm() {
         </Button>
       </div>
     </form>
-  )
+  );
 }

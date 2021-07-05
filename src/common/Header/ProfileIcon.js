@@ -49,5 +49,5 @@ export default function ProfileIcon(props) {
         <MenuItem onClick={props.signout}>Sign out</MenuItem>
       </Menu>
     </div>
-  )
+  );
 }
