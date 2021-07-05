@@ -11,19 +11,8 @@
   color: #61dafb;
 }
 
-.HeaderLogo {
-  display: flex;
-  flex-flow: column wrap;
-  justify-content: space-around;
-  align-items: center;
-  
-  padding: 0;
-  margin: 0;
-
-}
-
 .initialLogo {
-  width: 75%;
+  width: 35%;
   height: 60%;
 }
 
