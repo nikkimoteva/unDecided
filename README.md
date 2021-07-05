@@ -10,12 +10,14 @@ Takes data as input and visualize/process the data as output. Allows users to vi
  
 **What type of data will it store?**
 
-Csv, ML vision models(images), NLP (Text), Time series data
+CSV 
 
 
 **What will users be able to do with this data?**
 
 - Visualize data (Just a table)
+
+- Run a job on the Ensemble-Squared backend
 
 - See a job and its progress
 
@@ -28,52 +30,51 @@ Csv, ML vision models(images), NLP (Text), Time series data
 
 - Fancy data visualization
 
-- Other types of data such as JSON and XML (Right now, only supports CSV)
+- Other types of data such as JSON and XML, as well as ML vision models(images), NLP (Text), Time series data.
 
 
 **3-5 minimal requirements (will definitely complete)**
 
 - Opening page (UI, responsive)
 
-- Menu (Hamburger menu, UI)
+- Header menu
 
-- Input CSV, output model
+- Input CSV, connect and submit to ensemble-squared backend, and retrieve and display results to user
 
 - Job tracking
 
-- Accounts
+- Login
 
 **3-7 "standard" requirements (will most likely complete)**
 
-- Security
+- Profile page
 
-- Account page
+- History/job status tracking
 
-- Hamburger menu for history/job status tracking
-
-- Table visualization
+- Table visualization for the submitted data
 
 - View previously uploaded data (depending on accounts, can be per browser session or per user)
 
-- Job tracking visualization/notification
+- Job tracking visualization/progress (Dashboard)
 
 
 **2-3 stretch requirements (plan to complete at least 1!)**
 
-- Take as input images, text, etc.
+- Multiple OAuth providers
 
-- Take as input other types of tabular data
+- Take as input other types of data
 
-- Fancy data visualization
+- Job notification
+
+- Integrate other storage solutions into app (e.g. S3, kaggle, etc)
 
 **Pick 2 of your minimal requirements and break each of them down into ~2-5 smaller
 tasks!**
 
 - Opening page
   - Create a page for the landing page of the website
-  - Add a page to compare our software to other AutoML solutions, and link to it from home page
+  - Compare our software to other AutoML solutions, and link to it from home page
   - Add a Get Started page and link to it from home page
-  - Add Use Cases page and link to it from home page
 
 - Accounts
   - Structure data in database to store account information
@@ -119,3 +120,5 @@ See Image 1 and Image 2.
   - Install NPM version 7.17 and Yarn version 2.4
 2. Run `yarn install`
 3. Run `yarn start`
+
+**Requirements modified, July 5 - Added new requirements after discussion with AutoML team and modified existing requirements due to changes in design**
