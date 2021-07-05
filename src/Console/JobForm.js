@@ -1,6 +1,7 @@
 import React, {useState} from "react";
 import {Button, makeStyles, TextField} from "@material-ui/core";
 import {submitJob} from "../common/Managers/EndpointManager";
+import {Link} from "react-router-dom";
 
 const useStyles = makeStyles({
   root: {
@@ -42,33 +43,44 @@ export default function JobForm() {
   }
 
   return (
-    <form noValidate>
-      <div>
-        <TextField id="jobName"
-                   label="Job Name"
-                   value={jobName}
-                   variant="outlined"
-                   className={classes.textField}
-                   onChange={(event) => setJobName(event.target.value)}
-        />
-        <TextField
-          id="maxJobTime"
-          label="Max Job Time (Minutes)"
-          type="number"
-          value={maxJobTime}
-          onChange={handleMaxJobTimeChange}
-          margin="normal"
-        />
-        <input type="file" ref={fileInput}/>
-        <Button type="submit"
-                variant="outlined"
-                color="primary"
-                className={classes.button}
-                onClick={submitHandler}
-        >
-          Submit
-        </Button>
-      </div>
-    </form>
+    <div>
+      <form noValidate>
+        <div>
+          <TextField id="jobName"
+                     label="Job Name"
+                     value={jobName}
+                     variant="outlined"
+                     className={classes.textField}
+                     onChange={(event) => setJobName(event.target.value)}
+          />
+          <TextField
+            id="maxJobTime"
+            label="Max Job Time (Minutes)"
+            type="number"
+            value={maxJobTime}
+            onChange={handleMaxJobTimeChange}
+            margin="normal"
+          />
+          <input type="file" ref={fileInput}/>
+          <Button type="submit"
+                  variant="outlined"
+                  color="primary"
+                  className={classes.button}
+                  onClick={submitHandler}
+          >
+            Submit
+          </Button>
+        </div>
+      </form>
+
+      <Button variant="contained"
+              color="secondary"
+              className={classes.button}
+              component={Link}
+              to="/console/import"
+      >
+        Import from AWS S3
+      </Button>
+    </div>
   );
 }
