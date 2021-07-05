@@ -2,11 +2,11 @@ import React, {useState, useEffect} from 'react';
 import Typed from 'react-typed';
 import "../common/Button.css";
 import "../App.css";
-import Button from "../common/Button"
+import Button from "../common/Button";
 import logo from '../logo.png';
 import figure1 from './figure1.jpg';
-import Graph from "./ChooseGraph"
-import "./Graph.css"
+import Graph from "./ChooseGraph";
+import "./Graph.css";
 import ButtonUI from '@material-ui/core/Button';
 import {Link} from "react-router-dom";
 import {
@@ -37,15 +37,15 @@ export default function Landing() {
   let buttonSignup = {
     name: "Get Started",
     route: "./signup"
-  }
-  let accuracy = "accuracy"
+  };
+  let accuracy = "accuracy";
   let rank = "rank";
   let first = "first";
 
   let buttonDemo = {
     name: "autoML In Action",
     route: "./demo"
-  }
+  };
 
   let style = {
     fontWeight: "bolder",
@@ -53,14 +53,14 @@ export default function Landing() {
     width: "50%",
     marginLeft: "25vw",
     marginBottom: "5%"
-  }
+  };
 
   let styleImg = {
     display: "relative",
     marginLeft: "10%",
     width: "80vw",
     height: "60vh"
-  }
+  };
 
   const FadeUp = batch(Fade(), Move(), Sticky());
 

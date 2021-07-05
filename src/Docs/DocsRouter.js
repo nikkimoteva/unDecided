@@ -11,5 +11,5 @@ export default function DocsRouter() {
     <Route path={`${path}/Page2`}><></></Route>
     <Route path={`${path}/Page3`}><></></Route>
     <Route path={path}><h1 style={{textAlign: "center"}}>Docs</h1></Route>  {/*Default route*/}
-  </Switch>
+  </Switch>;
 }

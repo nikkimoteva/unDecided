@@ -1,12 +1,12 @@
 import "../common/Button.css";
 import React from "react";
 import ButtonUI from '@material-ui/core/Button';
-import ChooseGraph from "./ChooseGraph"
+import ChooseGraph from "./ChooseGraph";
 
 function hiddenDev(props) {
     let data = props.data;
     if (document.getElementById("default") !== null) {
-        console.log(1)
+        console.log(1);
         document.getElementById("default").style.display = 'none';
     }
     if (document.getElementById("accuracy") !== null) {
@@ -18,7 +18,7 @@ function hiddenDev(props) {
     if (document.getElementById("first") !== null) {
         document.getElementById("first").style.display = 'none';
     }
-    return (<div id="default"> <ChooseGraph data={data}/></div>)
+    return (<div id="default"> <ChooseGraph data={data}/></div>);
 
 }
 
@@ -31,7 +31,7 @@ export default function Button(props) {
         "marginRight": "10em",
         "width": "15em",
         "height": "5em",
-    }
+    };
 
     return (
         <div>

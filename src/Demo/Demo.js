@@ -20,7 +20,7 @@ import AccountBoxIcon from '@material-ui/icons/AccountBox';
 import ViewWeekIcon from '@material-ui/icons/ViewWeek';
 import SettingsIcon from '@material-ui/icons/Settings';
 import Jobs from './Jobs';
-import Button from "../common/Button"
+import Button from "../common/Button";
 
 const drawerWidth = 240;
 

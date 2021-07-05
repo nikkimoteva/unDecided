@@ -7,7 +7,7 @@ import {makeStyles} from '@material-ui/core/styles';
 import ProfileIcon from "./ProfileIcon";
 import LoginModal from "./LoginModal";
 
-const useStyles = makeStyles((theme) => ({
+const useStyles = makeStyles(() => ({
   root: {
     flexGrow: 1,
   },
@@ -64,7 +64,7 @@ export default function Header() {
         <Button component={Link} to="/console/jobs">Jobs</Button>
         <ProfileIcon signout={logout}/>
       </ButtonGroup>
-    )
+    );
 
   return (
     <>
@@ -88,6 +88,6 @@ export default function Header() {
         <LoginModal signin={login} onClose={closeLoginModal}/>
       </Modal>
     </>
-  )
+  );
 }
 

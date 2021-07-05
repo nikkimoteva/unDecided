@@ -1,4 +1,3 @@
-import CollapsibleTable from "../Demo/Jobs";
 import {Button, makeStyles} from "@material-ui/core";
 import {Link} from "react-router-dom";
 import TableContainer from "@material-ui/core/TableContainer";

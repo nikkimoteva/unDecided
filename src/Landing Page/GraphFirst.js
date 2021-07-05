@@ -27,7 +27,7 @@ const data= [
 
 let style = {
   textAlign: "center"
-}
+};
 
 const tooltipContentBodyStyle = {
   paddingTop: 0,
@@ -73,21 +73,21 @@ export default function GraphFirst() {
     {hover: null,
     tooltipTarget: null,
     tooltipEnabled: true,}
-    )
+    );
 
   const changeHoverFirst = (data) => {
     setStateFirst({
       hover : data,
       tooltipTarget : state.tooltipTarget,
       tooltipEnabled: state.tooltipEnabled});
-  }
+  };
 
   const changeTooltipFirst = (data) => {
     setStateFirst({
       hover : state.hover,
       tooltipTarget : data,
       tooltipEnabled: state.tooltipEnabled});
-  }
+  };
 
   const myHoverChangeFirst = changeHoverFirst.bind(this);
   const myToolTipChangeFirst = changeTooltipFirst.bind(this);

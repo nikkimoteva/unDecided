@@ -18,5 +18,5 @@ export default function ConsoleRouter() {
       <Route path={`${path}/settings`}><Settings/></Route>
       <Route exact path={path}><Dashboard/></Route> {/*Default route*/}
     </Switch>
-  )
+  );
 }

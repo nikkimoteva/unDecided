@@ -1,5 +1,5 @@
 import React from 'react';
-import "./common/Button.css"
+import "./common/Button.css";
 import {responsiveFontSizes} from "@material-ui/core";
 import {createMuiTheme, StylesProvider, ThemeProvider} from "@material-ui/core/styles";
 import {ProvideAuth} from "./common/Auth";
@@ -33,5 +33,5 @@ export default function App() {
         </ProvideAuth>
       </StylesProvider>
     </ThemeProvider>
-  )
+  );
 }

@@ -10,7 +10,7 @@ import React, {lazy, Suspense} from "react";
 export default function BaseRouter() {
 
   // lazy load it because we don't want ppl to have to wait for this to load just to view the page
-  const LazyLoadConsole = lazy(() => import("./Console/ConsoleRouter"))
+  const LazyLoadConsole = lazy(() => import("./Console/ConsoleRouter"));
 
   return (
     <Router>
@@ -26,5 +26,5 @@ export default function BaseRouter() {
         </Suspense>
       </Switch>
     </Router>
-  )
+  );
 }
