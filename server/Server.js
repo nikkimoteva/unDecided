@@ -101,7 +101,7 @@ app.post('/getObject', (req, res) => {
     Key: key
   }))
     .then(awsRes => streamToString(awsRes.Body))
-    .then(csvString => storeCSV(csvString, csvFilePath))
+    .then(csvString => storeCSV(csvString, csvFilePath)) // TODO store in DB
     .then(() => res.sendFile(path.resolve(csvFilePath)))
     .catch(err => errorHandler(err, res));
 });

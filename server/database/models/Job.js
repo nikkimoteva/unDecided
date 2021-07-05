@@ -14,7 +14,7 @@ const jobSchema = new mongoose.Schema({
     default: 10
   },
   dataset: {
-    type: String,
+    type: Array,
     required: true
   }
 });
