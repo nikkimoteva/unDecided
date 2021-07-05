@@ -48,8 +48,8 @@ function useGoogleAuthProvider() {
         return Promise.resolve();
       })
       .catch(err => {
-        console.log(err);
-        return Promise.reject(err);
+        console.error(err);
+        alert("Unable to signin. Check your credentials.");
       });
   }
 

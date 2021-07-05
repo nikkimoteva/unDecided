@@ -2,17 +2,21 @@ const {
   ListBucketsCommand,
   ListObjectsCommand,
   GetObjectCommand,
-  S3Client} = require("@aws-sdk/client-s3");
-const {storeCSV} = require("./FileManager");
+  S3Client
+} = require("@aws-sdk/client-s3");
 const path = require('path');
-
-const auth = require("./Auth.js");
 const express = require('express');
 const app = express();
 const cors = require('cors');
 const logger = require('morgan');
-const port = 3001;
 
+const {storeCSV} = require("./FileManager");
+const auth = require("./Auth.js");
+const JobModel = require("./database/models/Job");
+const UserModel = require("./database/models/User");
+require("./database/Database"); // Initializes DB
+
+const port = 3001;
 let awsClient = null;
 
 app.use(express.json());
@@ -24,36 +28,51 @@ app.get("/test", (req, res) => {
   res.sendStatus(200);
 });
 
-function streamToString (stream) {
-  return new Promise((resolve, reject) => {
-    const chunks = [];
-    stream.on("data", (chunk) => chunks.push(chunk));
-    stream.on("error", reject);
-    stream.on("end", () => resolve(Buffer.concat(chunks).toString("utf8")));
-  });
-}
-
 app.get("/jobs", (req, res) => {
-  const userToken = req.body.id_token;
-  //todo: retrieve jobs given user token
-  // res.json(/*jobs*/);
-  res.sendStatus(200);
+  const id_token = req.body.id_token;
+  auth.getUserId(id_token)
+    .then(userId => JobModel.find({user: userId})) // TODO: Implement getUserId
+    .then(jobs => res.json(jobs))
+    .catch(err => errorHandler(err, res));
 });
 
 app.post("/gauth", (req, res) => {
-  const success = auth.verifyAuth(req)
+  auth.verifyAuth(req)
+    .then(userData => res.send(userData))
     .catch(err => errorHandler(err, res));
-  const responseCode = (success) ? 200 : 400;
-  res.sendStatus(responseCode);
+});
+
+app.get("/profile", (req, res) => {
+  const id_token = req.body.id;
+  auth.getUserId(id_token)
+    .then(userId => {
+      // TODO: Implement getUserId
+      return UserModel.find({
+        _id: userId
+      });
+    })
+    .then(users => {
+      const user = users[0];
+      res.json({userName: user.userName, email: user.email, picture: user.picture});
+    })
+    .catch(err => errorHandler(err, res));
 });
 
 app.post("/submitJob", (req, res) => {
   const body = req.body;
+  const id_token = body.id_token;
   const jobName = body.jobName;
   const maxJobTime = body.maxJobTime;
   const dataset = body.dataset;
-  // TODO: Store job in db and start it up
-  res.sendStatus(200);
+  const job = new JobModel({
+    name: jobName,
+    user: id_token,
+    maxJobTime: maxJobTime,
+    dataset: dataset
+  });
+  JobModel.save(job)
+    .then(_ => res.sendStatus(200))
+    .catch(err => errorHandler(err, res));
 });
 
 app.post('/registerAWS', (req, res) => {
@@ -101,6 +120,15 @@ app.post('/getObject', (req, res) => {
     .then(() => res.sendFile(path.resolve(csvFilePath)))
     .catch(err => errorHandler(err, res));
 });
+
+function streamToString(stream) {
+  return new Promise((resolve, reject) => {
+    const chunks = [];
+    stream.on("data", (chunk) => chunks.push(chunk));
+    stream.on("error", reject);
+    stream.on("end", () => resolve(Buffer.concat(chunks).toString("utf8")));
+  });
+}
 
 function errorHandler(err, res) {
   console.log(err);
