@@ -30,7 +30,9 @@ export default function App() {
     <ThemeProvider theme={theme}> {/*Provides default global theme*/}
       <StylesProvider injectFirst> {/*Makes it so we can override default styles*/}
         <ProvideGoogleAuth> {/*Provides useAuth hook so every component can check for authentication*/}
-          <BaseRouter/>
+          <ProvideLoginModalState>
+            <BaseRouter/>
+          </ProvideLoginModalState>
         </ProvideGoogleAuth>
       </StylesProvider>
     </ThemeProvider>
