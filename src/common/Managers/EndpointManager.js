@@ -9,7 +9,7 @@ export function validateGoogleUser(id_token) {
   return axios.post(`${root}/gauth`,{id_token});
 }
 
-export function submitJob(jobName, maxJobTime, dataset) {
+export function submitJob(id_token, jobName, maxJobTime, dataset) {
   return axios.post(`${root}/submitJob`, {jobName, maxJobTime, dataset});
 }
 

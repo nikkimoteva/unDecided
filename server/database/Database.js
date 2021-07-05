@@ -1,20 +1,25 @@
-let mongoose = require('mongoose');
+const mongoose = require('mongoose');
 
-const server = '127.0.0.1:27017'; // REPLACE WITH YOUR DB SERVER
-const database = 'fcc-Mail';      // REPLACE WITH YOUR DB NAME
+const user = 'blackboxAdmin';
+const password = 'hz2PWdY3ZFaThSr';
+const server = 'cluster0.lwfgf.mongodb.net';
+const database = 'blackboxML';
 
-export default class Database {
+class Database {
   constructor() {
     this._connect();
   }
 
   _connect() {
-    mongoose.connect(`mongodb://${server}/${database}`)
+    mongoose.connect(`mongodb+srv://${user}:${password}@${server}/${database}`, {
+      useNewUrlParser: true,
+      useUnifiedTopology: true
+    })
       .then(() => {
         console.log('Database connection successful');
       })
       .catch(err => {
-        console.error('Database connection error');
+        console.error(err);
       });
   }
 }
