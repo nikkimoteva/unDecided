@@ -11,10 +11,20 @@ const useStyles = makeStyles({
 
   },
   textField: {
+    transform: 'translate(14px, 7px) scale(1)',
+    width: '20ch',
+  },
+  numberTextField: {
+    transform: 'translate(20px, 0px) scale(1)',
+    width: '20ch',
+  },
+  fileField: {
+    transform: 'translate(20px, 15px) scale(1)',
     width: '25ch',
   },
-  longTextField: {
-    width: '50ch',
+
+  submitButton: {
+    transform: 'translate(20px, 15px) scale(1)',
   }
 });
 
@@ -43,6 +53,7 @@ export default function JobForm() {
   }
 
   return (
+
     <div>
       <form noValidate>
         <div>
@@ -82,5 +93,6 @@ export default function JobForm() {
         Import from AWS S3
       </Button>
     </div>
+
   );
 }
