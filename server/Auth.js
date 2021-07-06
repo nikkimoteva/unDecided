@@ -45,7 +45,7 @@ function verifyAuth(req) {
         body = axiosRes.data;
         if (body.aud !== googleClientId) reject("Incorrect aud");
         return UserModel.find({
-          _id: userToken
+          _id: body.email
         });
       })
       .then(users => {

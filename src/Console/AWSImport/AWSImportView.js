@@ -46,6 +46,7 @@ export default function AWSImportView() {
   function registerAndListBuckets(region, accessKey, secretKey) {
     return registerAWS(region, accessKey, secretKey)
       .then(res => {
+        setRows([]);
         setLoading(true);
         return listBuckets();
       })
@@ -64,6 +65,7 @@ export default function AWSImportView() {
 
   function listObjectsOnClick(params, event) {
     const bucketName = params.row.Name;
+    setRows([]);
     setLoading(true);
     setCurrBucket(bucketName);
     listObjects(bucketName)

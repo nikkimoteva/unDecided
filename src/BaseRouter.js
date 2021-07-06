@@ -10,6 +10,7 @@ import React, {lazy, Suspense} from "react";
 export default function BaseRouter() {
 
   // lazy load it because we don't want ppl to have to wait for this to load just to view the page
+  // See https://reactjs.org/docs/code-splitting.html for more info
   const LazyLoadConsole = lazy(() => import("./Console/ConsoleRouter"));
 
   return (
