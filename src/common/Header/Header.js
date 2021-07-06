@@ -1,11 +1,12 @@
-import logo from '../../cropped_logo.png';
-import {AppBar, Button, ButtonGroup, Modal, Toolbar} from "@material-ui/core";
+import logo from '../../images/cropped_logo.png';
+import {AppBar, Button, ButtonGroup, Dialog, DialogTitle, Slide, Toolbar} from "@material-ui/core";
 import {Link, useHistory} from "react-router-dom";
 import {useAuth} from "../Auth";
-import React, {useState} from 'react';
+import React from 'react';
 import {makeStyles} from '@material-ui/core/styles';
 import ProfileIcon from "./ProfileIcon";
 import LoginModal from "./LoginModal";
+import {useLoginModalContext} from "../LoginModalProvider";
 
 const useStyles = makeStyles(() => ({
   root: {
@@ -21,9 +22,14 @@ const useStyles = makeStyles(() => ({
   }
 }));
 
+const Transition = React.forwardRef(function Transition(props, ref) {
+  return <Slide direction="up" ref={ref} {...props} />;
+});
+
+
 export default function Header() {
   const classes = useStyles();
-  const [loginModal, setLoginModal] = useState(false);
+  const {loginModal, setLoginModal} = useLoginModalContext();
 
   const auth = useAuth();
   const history = useHistory();
@@ -48,8 +54,7 @@ export default function Header() {
     history.push('/'); // redirect to main page
   }
 
-  /* eslint-disable no-implicit-coercion, eqeqeq */
-  const headerButtons = (auth.user == null)
+  const headerButtons = (auth.user === "")
     ? (
       <ButtonGroup variant="text" color="inherit" className={classes.toolbarButtons} size="large">
         <Button component={Link} to="/docs">Docs</Button>
@@ -68,9 +73,9 @@ export default function Header() {
 
   return (
     <>
-      <AppBar position="static">
+      <AppBar position="fixed">
         <Toolbar>
-          <div >
+          <div>
             <Link to="/">
               <img src={logo} className={classes.logo} alt="logo"/>
             </Link>
@@ -79,14 +84,16 @@ export default function Header() {
         </Toolbar>
       </AppBar>
 
-      <Modal
+      <Dialog
         open={loginModal}
         onClose={closeLoginModal}
         aria-labelledby="Login Form"
         aria-describedby="Input your login details here"
+        TransitionComponent={Transition}
       >
+        <DialogTitle>Log In</DialogTitle>
         <LoginModal signin={login} onClose={closeLoginModal}/>
-      </Modal>
+      </Dialog>
     </>
   );
 }

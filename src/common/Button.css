@@ -12,3 +12,14 @@
     /* flex-wrap: wrap; */
     justify-content: center;
 }
+
+.CustomButton {
+    font-weight: bolder;
+    margin-left: 5em;
+    margin-right: 5em;
+    width: 12em;
+    height: 3em;
+    color: #2EFFFF;
+    font-weight: bolder;
+    font-size: 1.5em;
+}

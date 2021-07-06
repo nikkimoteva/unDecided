@@ -1,0 +1,83 @@
+.title {
+    font-size: 3.5vw;
+    text-align: center;
+    color: #DEE
+}
+
+.subtitle {
+    font-size: 2.5vw;
+    text-align: center;
+    color: #DEE
+}
+
+.quotes {
+    font-size: 2vw;
+    font-family: serif;
+    font-style: italic;
+    font-weight: bold;
+}
+
+
+.HeaderLogo {
+    display: flex;
+    flex-flow: column wrap;
+    justify-content: space-around;
+    align-items: center;
+
+    margin: 0;
+    
+    
+    background-image: url(../images/background1.jpg);
+    background-repeat: no-repeat;
+    background-size: cover;
+    padding: 10% 0;
+}
+
+
+.Comparison {
+    background-image: url(../images/background2.jpg);
+    background-repeat: no-repeat;
+    background-size: cover;
+    padding-bottom: 5%;
+    padding-top: 5%;
+}
+
+.MoreInfo {
+    background-image: url(../images/background3.jpeg);
+    background-repeat: no-repeat;
+    background-size: cover;
+    padding-bottom: 5%;
+    padding-top: 5%;
+}
+
+.copywrite {
+    text-align: center;
+    color: #DEE;
+    background-color: #3f50b5
+}
+
+.graph {
+    width: 80%; 
+    margin-left:10%;
+}
+
+.img {
+    display: inherit;
+    margin-left: 10%;
+    width: 80vw;
+    height: 60vh;
+    padding-bottom: 5%;
+}
+
+.button {
+    font-weight: bolder;
+    font-size: 1.5em;
+    width: 50%;
+    margin-left: 25vw;
+    margin-bottom: 5%;
+    color: #DEE;
+}
+
+.ensembled {
+    font-weight: bold;
+}

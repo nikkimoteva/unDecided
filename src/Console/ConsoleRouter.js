@@ -5,6 +5,7 @@ import Jobs from "./Jobs";
 import Profile from "./Profile";
 import JobForm from "./JobForm";
 import Settings from "./Settings";
+import AWSImportView from "./AWSImport/AWSImportView";
 
 export default function ConsoleRouter() {
   const {path, url} = useRouteMatch();
@@ -16,6 +17,7 @@ export default function ConsoleRouter() {
       <Route path={`${path}/profile`}><Profile/></Route>
       <Route path={`${path}/submitJob`}><JobForm/></Route>
       <Route path={`${path}/settings`}><Settings/></Route>
+      <Route path={`${path}/import`}><AWSImportView/></Route>
       <Route exact path={path}><Dashboard/></Route> {/*Default route*/}
     </Switch>
   );

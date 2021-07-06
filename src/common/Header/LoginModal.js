@@ -1,10 +1,11 @@
 import GoogleLogin from "react-google-login";
 import React from "react";
+import {DialogContent} from "@material-ui/core";
 
 export default class LoginModal extends React.Component {
   render() {
     return (
-      <>
+      <DialogContent>
         <div style={{height: "50%"}} onClick={this.props.onClose}/>
         <div style={{margin: "auto", display: "table"}} onClick={this.props.onClose}>
           <GoogleLogin
@@ -15,7 +16,7 @@ export default class LoginModal extends React.Component {
             cookiePolicy="http://localhost:3000"
           />
         </div>
-      </>
+      </DialogContent>
     );
   }
 }
