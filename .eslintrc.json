@@ -19,6 +19,7 @@
         "react"
     ],
     "rules": {
+        "consistent-return": "error",
         "eqeqeq": "error",
         "jsx-quotes": ["error", "prefer-double"],
         "no-implicit-coercion": "error",
@@ -27,6 +28,7 @@
         "no-unreachable": "error",
         "no-unused-vars": "warn",
         "no-var": "error",
+        "prefer-const": "error",
         "react/jsx-closing-bracket-location": "warn",
         "react/jsx-fragments": ["error", "syntax"],
         "react/jsx-uses-vars": "warn",
@@ -40,7 +42,9 @@
             "html": true
         }],
         "react/sort-comp": "error",
-        "semi": "warn",
+        "require-atomic-updates": "error", // helps avoids race conditions
+        "require-await": "error",
+        "semi": "error",
         "semi-spacing": "error"
     },
     "settings": {

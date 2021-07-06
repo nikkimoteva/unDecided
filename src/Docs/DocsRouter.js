@@ -3,7 +3,7 @@ import {Switch, Route, useRouteMatch} from "react-router-dom";
 
 
 export default function DocsRouter() {
-  const { path, url } = useRouteMatch();
+  const path = useRouteMatch();
 
   // Use this to create pages based off of /docs part of url
   return <Switch>
