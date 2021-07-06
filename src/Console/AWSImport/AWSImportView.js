@@ -9,7 +9,6 @@ import {Typography} from "@material-ui/core";
 
 export default function AWSImportView() {
   const [rows, setRows] = useState([]);
-  // const [columns, setColumns] = useState([]);
   const [currBucket, setCurrBucket] = useState("");
   const [showBucketsTable, setShowBucketsTable] = useState(true);
   const [isLoading, setLoading] = useState(false);

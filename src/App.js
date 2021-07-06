@@ -4,7 +4,7 @@ import {responsiveFontSizes} from "@material-ui/core";
 import {createMuiTheme, StylesProvider, ThemeProvider} from "@material-ui/core/styles";
 import {ProvideGoogleAuth} from "./common/Auth";
 import BaseRouter from "./BaseRouter";
-import {ProvideLoginModalState, useLoginModalProvider} from "./common/LoginModalProvider";
+import {ProvideLoginModalState} from "./common/LoginModalProvider";
 
 
 export default function App() {
