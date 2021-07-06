@@ -93,8 +93,7 @@ app.post('/getObject', (req, res) => {
   if (awsClient === null) res.sendStatus(401);
   const bucketName = req.body.bucketName;
   const key = req.body.key;
-  const csvFilePath = `./temp/${key}`;
-  console.log(csvFilePath);
+  const csvFilePath = `temp/${key}`;
 
   awsClient.send(new GetObjectCommand({
     Bucket: bucketName,
