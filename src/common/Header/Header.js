@@ -73,7 +73,7 @@ export default function Header() {
 
   return (
     <>
-      <AppBar position="fixed">
+      <AppBar position="static">
         <Toolbar>
           <div>
             <Link to="/">
