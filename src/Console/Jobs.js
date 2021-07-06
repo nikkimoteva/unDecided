@@ -10,10 +10,14 @@ import React from "react";
 
 const useStyles = makeStyles({
   submitJobButton: {
+    float:"left",
     display: "flex",
     justify: "flex-end",
     margin: "auto",
-    width: "20vh"
+    width: "15vh"
+  },
+  jobAttributeColumn: {
+    align:"left",
   },
 });
 
@@ -23,25 +27,26 @@ export default function Jobs(props) {
 
   return (
     <div>
-      <TableContainer component={Paper}>
-        <Table aria-label="collapsible table">
-          <TableHead>
-            <TableRow>
-              <TableCell />
-              <TableCell>Job ID</TableCell>
-              <TableCell align="right">Status</TableCell>
-              <TableCell align="right">Starting Date</TableCell>
-              <TableCell align="right">Finishing Date</TableCell>
-            </TableRow>
-          </TableHead>
-        </Table>
-      </TableContainer>
       <Button variant="contained" color="secondary"
               className={classes.submitJobButton} component={Link}
               to={`${props.url}/submitJob`}
       >
         New Job
       </Button>
+      <TableContainer component={Paper}>
+        <Table aria-label="collapsible table">
+          <TableHead>
+            <TableRow>
+              <TableCell />
+              <TableCell className={classes.jobAttributeColumn}>Job ID</TableCell>
+              <TableCell className={classes.jobAttributeColumn}>Job Name</TableCell>
+              <TableCell className={classes.jobAttributeColumn}>Description</TableCell>
+              <TableCell className={classes.jobAttributeColumn}>Status</TableCell>
+            </TableRow>
+          </TableHead>
+        </Table>
+      </TableContainer>
+      
     </div>
   );
 }
