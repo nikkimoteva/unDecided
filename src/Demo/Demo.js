@@ -79,7 +79,7 @@ const useStyles = makeStyles((theme) => ({
 export default function PersistentDrawerLeft() {
   const classes = useStyles();
   const theme = useTheme();
-  const [open, setOpen] = React.useState(true);
+  const [open, setOpen] = React.useState(false);
 
   const handleDrawerOpen = () => { // We don't use the drawer anymore, but maybe just keep it for now just in case we use it later
     setOpen(true);
