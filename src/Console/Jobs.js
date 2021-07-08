@@ -1,4 +1,4 @@
-import {Button, makeStyles} from "@material-ui/core";
+import {Button, makeStyles, Grid} from "@material-ui/core";
 import {Link} from "react-router-dom";
 import TableContainer from "@material-ui/core/TableContainer";
 import Paper from "@material-ui/core/Paper";
@@ -9,12 +9,16 @@ import TableCell from "@material-ui/core/TableCell";
 import React from "react";
 
 const useStyles = makeStyles({
-  submitJobButton: {
+    jobButtonContainer:{
+      justifyContent: 'center',
+    },
+    newJobButton: {
+    display:"flex",
     float:"left",
-    display: "flex",
     justify: "flex-end",
-    margin: "auto",
-    width: "15vh"
+    margin: "10px",
+    width: "15vh",
+
   },
   jobAttributeColumn: {
     align:"left",
@@ -27,12 +31,16 @@ export default function Jobs(props) {
 
   return (
     <div>
+      <Grid container justify = "center">
+      
+
       <Button variant="contained" color="secondary"
-              className={classes.submitJobButton} component={Link}
+              className={classes.newJobButton} component={Link}
               to={`${props.url}/submitJob`}
       >
         New Job
       </Button>
+      </Grid>
       <TableContainer component={Paper}>
         <Table aria-label="collapsible table">
           <TableHead>
