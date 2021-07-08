@@ -16,7 +16,7 @@ const useStyles = makeStyles({
   },
   numberTextField: {
     transform: 'translate(20px, 0px) scale(1)',
-    width: '20ch',
+    width: '15ch',
   },
   fileField: {
     transform: 'translate(20px, 15px) scale(1)',
@@ -25,6 +25,9 @@ const useStyles = makeStyles({
 
   submitButton: {
     transform: 'translate(20px, 15px) scale(1)',
+  },
+  button: {
+    transform: 'translate(15px, 15px) scale(1)',
   }
 });
 
@@ -71,12 +74,13 @@ export default function JobForm() {
             value={maxJobTime}
             onChange={handleMaxJobTimeChange}
             margin="normal"
+            className={classes.numberTextField}
           />
-          <input type="file" ref={fileInput}/>
+          <input type="file" ref={fileInput} className={classes.fileField}/>
           <Button type="submit"
                   variant="outlined"
                   color="primary"
-                  className={classes.button}
+                  className={classes.submitButton}
                   onClick={submitHandler}
           >
             Submit
