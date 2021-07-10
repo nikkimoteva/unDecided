@@ -40,6 +40,7 @@ export default function Landing() {
   return (
     <div className="MainPage">
         <div className="HeaderLogo">
+          <img className="initialLogo" src = {logo} alt="logo"/>
           <Typed className="keywords" style={{color:"#DEE"}}
                  strings={keywords}
                  typeSpeed={50}
