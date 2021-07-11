@@ -64,6 +64,8 @@ CSV
 
 - Take as input other types of data
 
+- Integrate other storage solutions into app (e.g. S3, kaggle, etc)
+
 - Job notification
 
 - Integrate other storage solutions into app (e.g. S3, kaggle, etc)
