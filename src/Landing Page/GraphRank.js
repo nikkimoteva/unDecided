@@ -25,7 +25,7 @@ const data = [
   {d: "Ensemble2", First: 16, Rank: 2.963, Accuracy: 0.844},
 ];
 
-let style = {
+const style = {
   textAlign: "center"
 };
 
