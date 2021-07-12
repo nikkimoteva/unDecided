@@ -5,6 +5,7 @@ import {PrivateRoute} from "./common/Auth";
 import DocsRouter from "./Docs/DocsRouter";
 import Demo from "./Demo/Demo";
 import Landing from "./Landing Page/Landing";
+import ContactUs from "./ContactUs/contact"
 import React, {lazy, Suspense} from "react";
 
 export default function BaseRouter() {
@@ -24,6 +25,7 @@ export default function BaseRouter() {
           <Route path="/docs"><DocsRouter/></Route>
           <Route path="/demo"><Demo/></Route>
           <Route exact path="/"><Landing/></Route>
+          <Route path="/contactus"><ContactUs/></Route>
         </Suspense>
       </Switch>
     </Router>
