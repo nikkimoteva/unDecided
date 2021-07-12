@@ -1,6 +1,6 @@
 import React, {useState, useEffect} from 'react';
 import Typed from 'react-typed';
-import CustomButton from "../common/Button"
+import CustomButton from "../common/Button";
 import logo from '../images/logo.png';
 import figure1 from '../images/figure1.jpg';
 import Button from '@material-ui/core/Button';
@@ -23,7 +23,7 @@ export default function Landing() {
     }
   }, [clicked]);
 
-  let keywords = ["Automated Machine Learning", "State Of The Art", "Accessible", 
+  const keywords = ["Automated Machine Learning", "State Of The Art", "Accessible", 
                   "Exploiting Machine Learning Solutions", "User Friendly", "Quantitative gains",
                   "Minimal Configuration Necessary", "No ML experience necessary"];
 

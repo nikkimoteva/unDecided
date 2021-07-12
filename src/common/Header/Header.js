@@ -8,7 +8,7 @@ import ProfileIcon from "./ProfileIcon";
 import LoginModal from "./LoginModal";
 import {useLoginModalContext} from "../LoginModalProvider";
 
-const useStyles = makeStyles((theme) => ({
+const useStyles = makeStyles(() => ({
   root: {
     flexGrow: 1,
   },
@@ -54,8 +54,7 @@ export default function Header() {
     history.push('/'); // redirect to main page
   }
 
-  /* eslint-disable no-implicit-coercion, eqeqeq */
-  const headerButtons = (auth.user == null)
+  const headerButtons = (auth.user === "")
     ? (
       <ButtonGroup variant="text" color="inherit" className={classes.toolbarButtons} size="large">
         <Button component={Link} to="/docs">Docs</Button>
@@ -70,11 +69,11 @@ export default function Header() {
         <Button component={Link} to="/console/jobs">Jobs</Button>
         <ProfileIcon signout={logout}/>
       </ButtonGroup>
-    )
+    );
 
   return (
     <>
-      <AppBar position="fixed">
+      <AppBar position="static">
         <Toolbar>
           <div>
             <Link to="/">
@@ -96,6 +95,6 @@ export default function Header() {
         <LoginModal signin={login} onClose={closeLoginModal}/>
       </Dialog>
     </>
-  )
+  );
 }
 

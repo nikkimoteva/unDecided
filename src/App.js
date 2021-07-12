@@ -1,10 +1,10 @@
-import React, {createContext, useState} from 'react';
-import "./common/Button.css"
+import React from 'react';
+import "./common/Button.css";
 import {responsiveFontSizes} from "@material-ui/core";
 import {createMuiTheme, StylesProvider, ThemeProvider} from "@material-ui/core/styles";
-import {ProvideAuth} from "./common/Auth";
+import {ProvideGoogleAuth} from "./common/Auth";
 import BaseRouter from "./BaseRouter";
-import {ProvideLoginModalState, useLoginModalProvider} from "./common/LoginModalProvider";
+import {ProvideLoginModalState} from "./common/LoginModalProvider";
 
 
 export default function App() {
@@ -16,7 +16,7 @@ export default function App() {
       //   type: "dark",
       //   divider: "rgba(255, 255, 255, 0.12)",
     },
-    // fonts and font sizes
+    // fonts and font sizes for Typography components
     typography: {},
     //default component props, like spacing, ripple effect, etc
     props: {},
@@ -29,12 +29,12 @@ export default function App() {
   return (
     <ThemeProvider theme={theme}> {/*Provides default global theme*/}
       <StylesProvider injectFirst> {/*Makes it so we can override default styles*/}
-        <ProvideAuth> {/*Provides useAuth hook so every component can check for authentication*/}
+        <ProvideGoogleAuth> {/*Provides useAuth hook so every component can check for authentication*/}
           <ProvideLoginModalState>
             <BaseRouter/>
           </ProvideLoginModalState>
-        </ProvideAuth>
+        </ProvideGoogleAuth>
       </StylesProvider>
     </ThemeProvider>
-  )
+  );
 }

@@ -17,7 +17,7 @@
 }
 
 .keywords {
-  font-family: "Lucida Console";
+  font-family: "Lucida Console serif", serif;
   font-size: 300%;
   font-weight: bolder;
   padding-top: 3%

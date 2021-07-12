@@ -5,8 +5,8 @@ import "./Button.css";
 
 export default function Buttons(props) {
 
-    let data = props.data;
-    let route = "./" + data.route;
+    const data = props.data;
+    const route = "./" + data.route;
 
     return (
         <div>
