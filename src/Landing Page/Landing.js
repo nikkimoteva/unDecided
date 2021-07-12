@@ -80,18 +80,13 @@ export default function Landing() {
         <div className="MoreInfo">
         <h1 className="title">Accessible Machine Learning for Everyone</h1>
         <img className="img" src={figure1} alt="figure1"/>
-        <Button className="CustomLearnMore" onClick={() => setClicked(true)} variant="contained" color="primary"
+        <Button className="button" onClick={() => setClicked(true)} variant="contained" color="primary"
               href="#outlined-buttons"
         >
-          Learn More About Ensemble Squared
+          Learn More About Ensemble<sup>2</sup>
         </Button>
-        <Button className="CutomContactUs" component={Link}
-                    to="./contactus" variant="contained" color="primary" href="#outlined-buttons"
-            >
-              Contact Us
-            </Button>
         </div>
-        <footer style={{padding: "2% 2%"}} className="copywrite">&copy; Copyright, University of British Columbia, 2021</footer>
+        <footer className="copywrite">&copy; Copyright, University of British Columbia, 2021</footer>
     </div>
   );
 }
