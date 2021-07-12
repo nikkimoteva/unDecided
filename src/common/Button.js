@@ -10,7 +10,7 @@ export default function Buttons(props) {
 
     return (
         <div>
-            <Button component={Link}
+            <Button className="CustomButton" component={Link}
                 to={route} variant="contained" color="primary" href="#outlined-buttons"
             >
                     {data.name}
