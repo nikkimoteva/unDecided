@@ -53,7 +53,6 @@ export default function JobForm() {
   }
 
   return (
-
     <div>
       <form noValidate>
         <div>

@@ -5,15 +5,15 @@ const jobSchema = new mongoose.Schema({
     type: String,
     required: true
   },
-  user: {
+  user: { // keep
     type: String,
     required: true
   },
-  maxJobTime: {
+  maxJobTime: { // keep
     type: Number,
     default: 10
   },
-  dataset: {
+  dataset: { // keep
     type: Array,
     required: true
   }
