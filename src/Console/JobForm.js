@@ -53,34 +53,46 @@ export default function JobForm() {
   }
 
   return (
-    <form noValidate>
-      <div>
-        <TextField id="jobName"
-                   label="Job Name"
-                   value={jobName}
-                   variant="outlined"
-                   className={classes.textField}
-                   onChange={(event) => setJobName(event.target.value)}
-        />
-        <TextField
-          id="maxJobTime"
-          label="Max Job Time (Minutes)"
-          type="number"
-          value={maxJobTime}
-          className={classes.numberTextField}
-          onChange={handleMaxJobTimeChange}
-          margin="normal"
-        />
-        <input type="file" className={classes.fileField} ref={fileInput}/>
-        <Button type="submit"
-                variant="outlined"
-                color="primary"
-                className={classes.submitButton}
-                onClick={submitHandler}
-        >
-          Submit
-        </Button>
-      </div>
-    </form>
+    
+    <div>
+      <form noValidate>
+        <div>
+          <TextField id="jobName"
+                     label="Job Name"
+                     value={jobName}
+                     variant="outlined"
+                     className={classes.textField}
+                     onChange={(event) => setJobName(event.target.value)}
+          />
+          <TextField
+            id="maxJobTime"
+            label="Max Job Time (Minutes)"
+            type="number"
+            value={maxJobTime}
+            onChange={handleMaxJobTimeChange}
+            margin="normal"
+          />
+          <input type="file" ref={fileInput}/>
+          <Button type="submit"
+                  variant="outlined"
+                  color="primary"
+                  className={classes.button}
+                  onClick={submitHandler}
+          >
+            Submit
+          </Button>
+        </div>
+      </form>
+
+      <Button variant="contained"
+              color="secondary"
+              className={classes.button}
+              component={Link}
+              to="/console/import"
+      >
+        Import from AWS S3
+      </Button>
+    </div>
+
   );
 }
