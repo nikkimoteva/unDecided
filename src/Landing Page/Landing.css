@@ -1,7 +1,7 @@
 .title {
     font-size: 3.5vw;
     text-align: center;
-    color: #DEE
+    color: #DEE;
 }
 
 .subtitle {
@@ -43,7 +43,7 @@
 }
 
 .MoreInfo {
-    background-image: url(../images/background3.jpeg);
+    background-image: url(../images/background3.jpg);
     background-repeat: no-repeat;
     background-size: cover;
     padding-bottom: 5%;
@@ -67,15 +67,6 @@
     width: 80vw;
     height: 60vh;
     padding-bottom: 5%;
-}
-
-.button {
-    font-weight: bolder;
-    font-size: 1.5em;
-    width: 50%;
-    margin-left: 25vw;
-    margin-bottom: 5%;
-    color: #DEE;
 }
 
 .ensembled {
