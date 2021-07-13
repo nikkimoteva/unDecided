@@ -87,7 +87,7 @@ export default function Landing() {
         </Button>
         <Button className="CutomContactUs" component={Link}
                     to="./contactus" variant="contained" color="primary" href="#outlined-buttons"
-            >
+        >
               Contact Us
             </Button>
         </div>

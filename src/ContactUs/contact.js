@@ -3,7 +3,7 @@ import { useState } from 'react';
 import { send } from 'emailjs-com';
 import Button from '@material-ui/core/Button';
 import "../common/Button.css";
-import {contactus_user, contactus_service_id, contactus_template_id} from "../common"
+import {contactus_user, contactus_service_id, contactus_template_id} from "../common";
 import { makeStyles } from '@material-ui/core/styles';
 import TextField from '@material-ui/core/TextField';
 import "../common/Button.css";
@@ -48,7 +48,7 @@ export default function ContactUs() {
           message: "",
           email: "",
         });
-        alert("Your enquiry has been sent!")
+        alert("Your enquiry has been sent!");
       })
       .catch((err) => {
         console.log("FAILED...", err);
@@ -71,7 +71,8 @@ export default function ContactUs() {
             label="Name"
             variant="filled" 
             placeholder="Please enter your name"
-            required/>
+            required
+      />
       <br/>
       <TextField TextMode="Email" name="email"
             pattern="[a-zA-Z0-9!#$%&'*+\/=?^_`{|}~.-]+@[a-zA-Z0-9-]+(\.[a-zA-Z0-9-]+)*"
@@ -81,14 +82,15 @@ export default function ContactUs() {
             label="Email"
             variant="filled" 
             placeholder="Please enter your Email"
-            required/>
-      <br/>
+            required
+      />
       <TextField name="subject" value={toSend.subject} onChange={handleChange}
             type="text"
             id="standard-textarea"
             label="Subject"
             variant="filled" 
-            placeholder="Subject"/>
+            placeholder="Subject"
+      />
       <br/>
       <TextField style={{width: "40vw"}} name="message" 
           value={toSend.message} onChange={handleChange}
@@ -99,7 +101,8 @@ export default function ContactUs() {
             multiline
             rows={7}
             variant="filled"
-            required/>
+            required
+      />
       <br/>
       <Button className="CutomSubmitContact" type="submit" value="submit" variant="contained" color="primary">
         Submit
