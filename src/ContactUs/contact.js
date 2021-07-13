@@ -84,6 +84,7 @@ export default function ContactUs() {
             placeholder="Please enter your Email"
             required
       />
+      <br/>
       <TextField name="subject" value={toSend.subject} onChange={handleChange}
             type="text"
             id="standard-textarea"
