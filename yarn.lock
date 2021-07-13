@@ -7133,6 +7133,13 @@ __metadata:
   languageName: node
   linkType: hard
 
+"emailjs-com@npm:^3.2.0":
+  version: 3.2.0
+  resolution: "emailjs-com@npm:3.2.0"
+  checksum: 55526fffe440ecc96018e319d61d17061969b7af1688a3af37d26c892529b56f0dd75e4f7e674e1ee15274968e431c9cb7e3dc17e2fc48b0e19a7f66590471d3
+  languageName: node
+  linkType: hard
+
 "emittery@npm:^0.7.1":
   version: 0.7.2
   resolution: "emittery@npm:0.7.2"
@@ -16234,6 +16241,7 @@ resolve@^2.0.0-next.3:
     cors: ^2.8.5
     csv-string: ^4.0.1
     csvtojson: ^2.0.10
+    emailjs-com: ^3.2.0
     eslint: ^7.29.0
     eslint-config-google: ^0.14.0
     eslint-plugin-react: ^7.24.0
