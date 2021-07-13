@@ -57,6 +57,7 @@ export default function Header() {
   const headerButtons = (auth.user === "")
     ? (
       <ButtonGroup variant="text" color="inherit" className={classes.toolbarButtons} size="large">
+      <Button component={Link} to="/demo">Contact Us</Button>
         <Button component={Link} to="/docs">Docs</Button>
         <Button component={Link} to="/demo">Demo</Button>
         <Button onClick={openLoginModal}>Sign In</Button>
@@ -64,6 +65,7 @@ export default function Header() {
     )
     : (
       <ButtonGroup variant="text" color="inherit" className={classes.toolbarButtons} size="large">
+      <Button component={Link} to="/demo">Contact Us</Button>
         <Button component={Link} to="/docs">Docs</Button>
         <Button component={Link} to="/console">Dashboard</Button>
         <Button component={Link} to="/console/jobs">Jobs</Button>
