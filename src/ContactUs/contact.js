@@ -6,6 +6,7 @@ import {contactus_user, contactus_service_id, contactus_template_id} from "../co
 import { makeStyles } from '@material-ui/core/styles';
 import TextField from '@material-ui/core/TextField';
 import "../common/Button.css";
+import "./contact.css";
 
 
 const useStyles = makeStyles((theme) => ({
@@ -154,14 +155,13 @@ export default function ContactUs() {
             name="from_name"
             value={input.from_name}
             onChange={handleChanges}
-            label="Name"
+            label="Name (*required)"
             variant="filled"
             placeholder="Please enter your name"
           />
 
-          <div className="text-danger">{error.from_name}</div>
+          <div style={{color: "#f50057"}}>{error.from_name}</div>
         </div>
-        <br />
 
         <div className="form-group">
           <TextField
@@ -169,13 +169,12 @@ export default function ContactUs() {
             name="email"
             value={input.email}
             onChange={handleChanges}
-            label="Email"
+            label="Email (*required)"
             variant="filled"
             placeholder="Please enter your Email"
           />
-          <div className="text-danger">{error.email}</div>
+          <div style={{color: "#f50057"}}>{error.email}</div>
         </div>
-        <br />
 
         <div className="form-group">
           <TextField
@@ -188,7 +187,6 @@ export default function ContactUs() {
             variant="filled"
           />
         </div>
-        <br />
 
         <div className="form-group">
           <TextField
@@ -198,14 +196,13 @@ export default function ContactUs() {
             onChange={handleChanges}
             placeholder="Enter message"
             type="text"
-            label="Message"
+            label="Message (*required)"
             multiline
             rows={7}
             variant="filled"
           />
-          <div className="text-danger">{error.message}</div>
+          <div style={{color: "#f50057"}}>{error.message}</div>
         </div>
-        <br />
 
         <Button className="CutomSubmitContact" type="submit" value="submit" variant="contained" color="primary">
           Submit
