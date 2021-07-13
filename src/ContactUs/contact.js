@@ -60,7 +60,7 @@ export default function ContactUs() {
   };
 
   return (
-    <div style={{paddingTop: "max(10vh, 8vw)", textAlign: "center"}}>
+    <div style={{paddingTop: "3vh", paddingBottom: "3vh", textAlign: "center"}}>
     <h1><u>Contact Us</u></h1>
     <p>We are looking forward to read your email! <br/> 
       Please fill out the form below, and our team will get back to you in 1-3 business days.</p>
