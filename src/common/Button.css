@@ -15,11 +15,37 @@
 
 .CustomButton {
     font-weight: bolder;
-    margin-left: 5em;
+    margin-left: 5em; 
     margin-right: 5em;
     width: 12em;
     height: 3em;
-    color: #2EFFFF;
+    color: #DEE;
     font-weight: bolder;
     font-size: 1.5em;
+}
+
+.CustomLearnMore {
+    font-weight: bolder;
+    font-size: 1.5em;
+    width: 50%;
+    height: 3em;
+    margin-left: 25vw;
+    margin-bottom: 5%;
+    color: #DEE;
+}
+
+.CutomContactUs {
+    font-weight: bolder;
+    width: 12em;
+    height: 3em;
+    color: #DEE;
+    font-size: 1.5em;
+    margin-left: 38vw;
+}
+.CutomSubmitContact {
+    font-weight: bolder;
+    width: 7em;
+    height: 2.4em;
+    color: #DEE;
+    font-size: 1em;
 }
