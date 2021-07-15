@@ -24,8 +24,8 @@ export default function BaseRouter() {
           </PrivateRoute>
           <Route path="/docs"><DocsRouter/></Route>
           <Route path="/demo"><Demo/></Route>
+          <Route path="/contact"><ContactUs/></Route>
           <Route exact path="/"><Landing/></Route>
-          <Route path="/contactus"><ContactUs/></Route>
         </Suspense>
       </Switch>
     </Router>

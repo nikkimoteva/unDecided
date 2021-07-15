@@ -5,17 +5,23 @@ const jobSchema = new mongoose.Schema({
     type: String,
     required: true
   },
-  user: { // keep
+  user: {
     type: String,
     required: true
   },
-  maxJobTime: { // keep
+  targetCol: Number,
+  targetName: String,
+  status: {
+    type: String,
+    default: "Running"
+  },
+  maxJobTime: {
     type: Number,
     default: 10
   },
-  dataset: { // keep
-    type: Array,
-    required: true
+  created: {
+    type: Date,
+    default: Date.now()
   }
 });
 
