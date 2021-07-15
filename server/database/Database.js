@@ -1,4 +1,4 @@
-import mongoose from 'mongoose';
+const mongoose = require('mongoose');
 const {user, password, server, database} = require("../../src/common");
 
 class Database {
