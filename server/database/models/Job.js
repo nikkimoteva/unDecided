@@ -16,6 +16,25 @@ const jobSchema = new mongoose.Schema({
   dataset: { // keep
     type: Array,
     required: true
+  },
+  fileHash: {
+    type: String,
+    required: true
+  },
+  status: {
+    type: String,
+    required: true
+  },
+  headers:{
+    type: Array,
+    required: true
+  },
+  target_name: {
+    type: String
+  },
+  timer: {
+    type: Number,
+    default: 0
   }
 });
 
