@@ -6,7 +6,9 @@ import Table from "@material-ui/core/Table";
 import TableHead from "@material-ui/core/TableHead";
 import TableRow from "@material-ui/core/TableRow";
 import TableCell from "@material-ui/core/TableCell";
-import React from "react";
+import React, {useEffect, useState} from "react";
+import {getJobs, deleteJob as deleteJobDB} from "../common/Managers/EndpointManager";
+import {useAuth} from "../common/Auth";
 
 const useStyles = makeStyles({
   submitJobButton: {
@@ -24,6 +26,23 @@ const useStyles = makeStyles({
 
 export default function Jobs(props) {
   const classes = useStyles();
+  const [jobs, setJobs] = useState([]);
+  const auth = useAuth();
+
+  useEffect(() => {
+    getJobs()
+        .then(res => {
+          const gottenJobs = res.data;
+          setJobs(gottenJobs);
+        });
+  }, []);
+
+  function deleteJob(row) {
+    const jobId = jobs[row];
+    deleteJobDB(auth.user, jobId)
+        .then(_ => console.log("Successfully deleted Job"))
+        .catch(err => console.log(err));
+  }
 
   return (
     <div>

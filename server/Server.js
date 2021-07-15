@@ -40,6 +40,14 @@ app.get("/jobs", (req, res) => {
     .catch(err => errorHandler(err, res));
 });
 
+app.delete("/deleteJob", (req, res) => {
+  const id_token = req.body.id_token;
+  const jobId = req.body.jobId;
+  auth.getUserId(id_token)
+      .then(_ => JobModel.deleteOne({_id: jobId}))
+      .catch(err => errorHandler(err, res));
+});
+
 app.post("/gauth", (req, res) => {
   auth.verifyAuth(req)
     .then(userData => res.send(userData))
@@ -67,12 +75,15 @@ app.post("/submitJob", (req, res) => {
   const id_token = body.id_token;
   const jobName = body.jobName;
   const maxJobTime = body.maxJobTime;
+  const targetCol = body.targetCol;
+  const targetColName = body.targetColName;
   const dataset = body.dataset;
   const job = new JobModel({
     name: jobName,
     user: id_token,
+    targetCol: targetCol,
+    targetColName: targetColName,
     maxJobTime: maxJobTime,
-    dataset: dataset
   });
   JobModel.save(job)
     .then(_ => res.sendStatus(200))

@@ -5,7 +5,7 @@ const jobSchema = new mongoose.Schema({
     type: String,
     required: true
   },
-  user: { // keep
+  user: {
     type: String,
     required: true
   },
@@ -19,7 +19,8 @@ const jobSchema = new mongoose.Schema({
   },
   status: {
     type: String,
-    required: true
+    required: true,
+    default: "Running"
   },
   headers:{
     type: Array,
@@ -35,6 +36,10 @@ const jobSchema = new mongoose.Schema({
   target_column: {
     type: Number,
     default : 0
+  },
+  created: {
+    type: Date,
+    default: Date.now()
   }
 });
 
