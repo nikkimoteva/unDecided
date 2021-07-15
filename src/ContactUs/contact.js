@@ -6,7 +6,6 @@ import {contactus_user, contactus_service_id, contactus_template_id} from "../co
 import { makeStyles } from '@material-ui/core/styles';
 import TextField from '@material-ui/core/TextField';
 import "../common/Button.css";
-import "./contact.css";
 
 
 const useStyles = makeStyles((theme) => ({
