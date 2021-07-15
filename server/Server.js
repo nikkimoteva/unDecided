@@ -17,7 +17,7 @@ const UserModel = require("./database/models/User");
 const csv = require('jquery-csv');
 
 const fs = require('fs');
-const { readFilePromise, csvToArrays, csvToObject, arraysToCsv, runPredict } = require("./Util");
+const { readFilePromise, csvToArrays, csvToObject, arraysToCsv, runPredict, trainPipeline } = require("./Util");
 require("./database/Database"); // Initializes DB
 
 const port = 3001;
@@ -122,6 +122,49 @@ app.post('/getObject', (req, res) => {
     .then(csvString => storeCSV(csvString, csvFilePath)) // TODO store in DB
     .then(() => res.sendFile(path.resolve(csvFilePath)))
     .catch(err => errorHandler(err, res));
+});
+
+app.post('/tableView', (req, res) => {
+  const user_email = req.body.email;
+  const target_name = req.body.target;
+  const search_time = req.body.maxJobTime;
+  let nickname = req.body.nickName;
+
+  if (!nickname || nickname.length === 0) {
+    nickname = "auto generated nickname";
+  }
+  const file_name = req.body.fileHash;
+  const train_path = './scratch/users_csv/' + file_name + '.csv';
+
+  readFilePromise(train_path).then(fileContent => {
+    const fileArray = csvToArrays(fileContent);
+    const headers = fileArray[0];
+    const idx = headers.findIndex(target_name);
+    const newJob = new JobModel(
+      {
+        fileHash : file_name,
+        name : nickname,
+        headers: headers,
+        target_column : idx,
+        target_name : target_name,
+        email : user_email,
+        timer : search_time,
+        status : 'SUBMITTED'
+      });
+
+    newJob.save(err => {
+      if (err) {
+        errorHandler(err, res);
+      }
+    });
+    
+    try {
+      trainPipeline();
+
+    } catch (err) {
+      errorHandler(err);
+    }
+  });
 });
 
 app.post('/pipeline', (req, res) => {

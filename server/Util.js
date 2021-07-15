@@ -50,9 +50,17 @@ module.exports = {
 
     runPredict: function (csv_file_name, job_id, timer, target_name, email, job_name) {
        return "/opt/slurm/bin/sbatch --partition=blackboxml --nodelist=chicago\
+       --error=/ubc/cs/research/plai-scratch/BlackBoxML/error_predict.err\
+       --output=/ubc/cs/research/plai-scratch/BlackBoxML/out_predict.out\
+       /ubc/cs/research/plai-scratch/BlackBoxML/bbml-backend-3/ensemble_squared/run-client-produce.sh "
+        + job_id + " " + job_name + " " + csv_file_name + " " + timer + " " + target_name + " " + email;
+    },
+
+    trainPipeline: function (csv_file_name, target_name, email, job_id, timer, job_name) {
+        return "/opt/slurm/bin/sbatch --partition=blackboxml --nodelist=chicago\
         --error=/ubc/cs/research/plai-scratch/BlackBoxML/error.err\
         --output=/ubc/cs/research/plai-scratch/BlackBoxML/out.out\
-        /ubc/cs/research/plai-scratch/BlackBoxML/bbml-backend-3/ensemble_squared/run-client-search.sh."
-        + job_id + job_name + csv_file_name + timer + target_name + email;
+        /ubc/cs/research/plai-scratch/BlackBoxML/bbml-backend-3/ensemble_squared/run-client-search.sh" 
+        + job_id + " " + job_name + " " + csv_file_name + " " + timer + " " + target_name + " " + email;
     }
 };

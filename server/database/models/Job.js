@@ -9,10 +9,6 @@ const jobSchema = new mongoose.Schema({
     type: String,
     required: true
   },
-  maxJobTime: { // keep
-    type: Number,
-    default: 10
-  },
   dataset: { // keep
     type: Array,
     required: true
@@ -34,7 +30,11 @@ const jobSchema = new mongoose.Schema({
   },
   timer: {
     type: Number,
-    default: 0
+    default: 10
+  },
+  target_column: {
+    type: Number,
+    default : 0
   }
 });
 
