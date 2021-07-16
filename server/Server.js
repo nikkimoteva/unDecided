@@ -10,19 +10,21 @@ const app = express();
 const cors = require('cors');
 const logger = require('morgan');
 
-const {storeCSV} = require("./FileManager");
+const { storeCSV } = require("./FileManager");
 const auth = require("./Auth.js");
 const JobModel = require("./database/models/Job");
 const UserModel = require("./database/models/User");
+const csv = require('jquery-csv');
 
 const fs = require('fs');
+const { readFilePromise, csvToArrays, csvToObject, arraysToCsv, runPredict, trainPipeline } = require("./Util");
 require("./database/Database"); // Initializes DB
 
 const port = 3001;
 let awsClient = null;
 
 app.use(express.json());
-app.use(express.urlencoded({extended: true}));
+app.use(express.urlencoded({ extended: true }));
 app.use(cors());
 app.use(logger('dev'));
 
@@ -33,7 +35,7 @@ app.get("/test", (req, res) => {
 app.get("/jobs", (req, res) => {
   const id_token = req.body.id_token;
   auth.getUserId(id_token)
-    .then(userId => JobModel.find({user: userId})) // TODO: Implement getUserId
+    .then(userId => JobModel.find({ user: userId })) // TODO: Implement getUserId
     .then(jobs => res.json(jobs))
     .catch(err => errorHandler(err, res));
 });
@@ -63,7 +65,7 @@ app.get("/profile", (req, res) => {
     })
     .then(users => {
       const user = users[0];
-      res.json({userName: user.userName, email: user.email, picture: user.picture});
+      res.json({ userName: user.userName, email: user.email, picture: user.picture });
     })
     .catch(err => errorHandler(err, res));
 });
@@ -112,7 +114,7 @@ app.get('/listBuckets', (req, res) => {
 app.post('/listObjects', (req, res) => {
   if (awsClient === null) res.sendStatus(401);
   const bucketName = req.body.bucketName;
-  awsClient.send(new ListObjectsCommand({Bucket: bucketName}))
+  awsClient.send(new ListObjectsCommand({ Bucket: bucketName }))
     .then(awsRes => res.send(awsRes.Contents))
     .catch(err => errorHandler(err, res));
 });
@@ -133,10 +135,52 @@ app.post('/getObject', (req, res) => {
     .catch(err => errorHandler(err, res));
 });
 
+app.post('/tableView', (req, res) => {
+  const user_email = req.body.email;
+  const target_name = req.body.target;
+  const search_time = req.body.maxJobTime;
+  let nickname = req.body.nickName;
+
+  if (!nickname || nickname.length === 0) {
+    nickname = "auto generated nickname";
+  }
+  const file_name = req.body.fileHash;
+  const train_path = './scratch/users_csv/' + file_name + '.csv';
+
+  readFilePromise(train_path).then(fileContent => {
+    const fileArray = csvToArrays(fileContent);
+    const headers = fileArray[0];
+    const idx = headers.findIndex(target_name);
+    const newJob = new JobModel(
+      {
+        fileHash : file_name,
+        name : nickname,
+        headers: headers,
+        target_column : idx,
+        target_name : target_name,
+        email : user_email,
+        timer : search_time,
+        status : 'SUBMITTED'
+      });
+
+    newJob.save(err => {
+      if (err) {
+        errorHandler(err, res);
+      }
+    });
+    
+    try {
+      trainPipeline();
+
+    } catch (err) {
+      errorHandler(err);
+    }
+  });
+});
+
 app.post('/pipeline', (req, res) => {
   const search_id = req.body.search_id;
   const email = req.body.email;
-  const target_idx = req.body.target_idx;
   const uploaded_file = req.files.file;
 
   if (uploaded_file.size !== 0) {
@@ -144,17 +188,49 @@ app.post('/pipeline', (req, res) => {
       const test_file_name = makeid(4);
       const folder_path = './scratch/users_csv/' + search_id;
       const test_path = folder_path + '/' + test_file_name + '.csv';
-      
-      fs.writeFile(test_path, uploaded_file, function (err) {
-        if (err) {
-          errorHandler(err, res);
-        }
-        console.log('Results Received');
-      }); 
 
+      storeCSV(uploaded_file, test_path)
+        .then(() => {
+          return readFilePromise(test_path);
+        })
+        .then(fileContent => {
+          return csvToArrays(fileContent);
+          // const testColumns = Object.keys(util.parseCSVToArr(test_path)[0]);
+        })
+        .then(data => {
+          const testColumns = data[0];
+          const job = {}; // TODO: get job from db using search_id
+          const oldColumns = job.headers;
+
+          if (job.status !== 'SUCCESSFUL') {
+            res.status(400);
+            res.send({ 'msg': 'Your job has not completed training! Try again later.' });
+          }
+          if (!(job.targetName in testColumns)) {
+            testColumns.push(job.targetName);
+            data[0] = testColumns;
+            const newFile = csv.fromArrays(data);
+            storeCSV(newFile, test_path)
+              .then(() => {
+                runPredict(test_path, search_id, job.timer, job.target_name, email, job.name);
+                res.status(200);
+                res.send({'msg' : 'Success!'});
+              });
+          }
+          if (oldColumns.length !== testColumns.length) {
+            errorHandler({'msg' : 'csv missing columns'}, res);
+          }
+          else {
+            runPredict(test_path, search_id, job.timer, job.target_name, email, job.name);
+            res.status(200);
+            res.send({'msg' : 'Success!'});
+          }
+        });
     } catch (err) {
       errorHandler(err, res);
     }
+  } else {
+    errorHandler({'msg': 'Uploaded file is empty'}, res);
   }
 });
 
@@ -181,8 +257,8 @@ function makeid(length) {
   let result = '';
   const characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
   const charactersLength = characters.length;
-  for (let i = 0; i < length; i++ ) {
+  for (let i = 0; i < length; i++) {
     result += characters.charAt(Math.floor(Math.random() * charactersLength));
- }
- return result;
+  }
+  return result;
 }
