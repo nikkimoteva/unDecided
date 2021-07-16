@@ -32,10 +32,8 @@ app.get("/test", (req, res) => {
 
 app.post("/jobs", (req, res) => {
   const id_token = req.body.id_token;
-  console.log(id_token)
   JobModel.find({user: id_token})
     .then(jobs =>{
-      console.log(jobs)
       return res.json(jobs)
     })
     .catch(err => errorHandler(err, res));
@@ -88,7 +86,6 @@ app.post("/submitJob", (req, res) => {
   });
   job.save()
     .then(_ => {
-      console.log("saved")
       return res.sendStatus(200)
     })
     .catch(err => errorHandler(err, res));
