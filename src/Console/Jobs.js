@@ -30,14 +30,16 @@ const useStyles = makeStyles({
 
 export default function Jobs(props) {
   const classes = useStyles();
-  const [jobs, setJobs] = useState([]);
+  const [jobs, setJobs] = useState([{name:"Job A", targetColumn: "Column B", status: "done", createdAt:"2021.7.15"}]);
   const auth = useAuth();
 
   useEffect(() => {
     getJobs()
         .then(res => {
+          const fakeJobs = [{name:"Job A", targetColumn: "Column B", status: "done", createdAt:"2021.7.15"}];
           const gottenJobs = res.data;
           setJobs(gottenJobs);
+          setJobs(fakeJobs);
         });
   }, []);
 
@@ -73,7 +75,10 @@ export default function Jobs(props) {
           </TableHead>
         </Table>
       </TableContainer>
-      
+    {jobs.map(data => {
+            return (<div key={1}><h2>hello</h2></div>
+            );
+          })}
     </div>
   );
 }

@@ -83,7 +83,7 @@ app.post("/submitJob", (req, res) => {
     targetColName: targetColName,
     maxJobTime: maxJobTime,
   });
-  JobModel.save(job)
+  job.save()
     .then(_ => res.sendStatus(200))
     .catch(err => errorHandler(err, res));
 });
