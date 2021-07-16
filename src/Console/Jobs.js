@@ -69,6 +69,7 @@ export default function Jobs(props) {
               <TableCell />
               <TableCell className={classes.jobAttributeColumn}>Job ID</TableCell>
               <TableCell className={classes.jobAttributeColumn}>Job Name</TableCell>
+              <TableCell className={classes.jobAttributeColumn}>Target Column</TableCell>
               <TableCell className={classes.jobAttributeColumn}>Description</TableCell>
               <TableCell className={classes.jobAttributeColumn}>Status</TableCell>
             </TableRow>

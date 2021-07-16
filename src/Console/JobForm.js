@@ -46,7 +46,7 @@ export default function JobForm() {
     const file = fileInput.current.files[0];
     const filename = file.name;
     if (filename.substring(filename.length - 3) === 'csv') {
-      submitJob(auth.user, jobName, maxJobTime, file)
+      submitJob(auth.user.id, jobName, maxJobTime, file)
           .then(res => alert("Job successfully submitted"))
           .catch(err => alert("Job failed to submit"));
     } else {
