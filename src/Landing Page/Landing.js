@@ -87,7 +87,7 @@ export default function Landing() {
           Learn More About Ensemble Squared
         </Button>
         <Button className="CutomContactUs" component={Link}
-                    to="./contactus" variant="contained" color="primary" href="#outlined-buttons"
+                    to="./contact" variant="contained" color="primary" href="#outlined-buttons"
         >
               Contact Us
             </Button>
