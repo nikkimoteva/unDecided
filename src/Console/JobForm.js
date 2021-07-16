@@ -2,6 +2,7 @@ import React, {useState} from "react";
 import {Button, makeStyles, TextField} from "@material-ui/core";
 import {submitJob} from "../common/Managers/EndpointManager";
 import {Link} from "react-router-dom";
+import {useAuth} from "../common/Auth.js";
 
 const useStyles = makeStyles({
   root: {
@@ -16,7 +17,7 @@ const useStyles = makeStyles({
   },
   numberTextField: {
     transform: 'translate(20px, 0px) scale(1)',
-    width: '20ch',
+    width: '15ch',
   },
   fileField: {
     transform: 'translate(20px, 15px) scale(1)',
@@ -25,6 +26,9 @@ const useStyles = makeStyles({
 
   submitButton: {
     transform: 'translate(20px, 15px) scale(1)',
+  },
+  button: {
+    transform: 'translate(15px, 15px) scale(1)',
   }
 });
 
@@ -34,6 +38,7 @@ export default function JobForm() {
   const maxJobTimeValue = 20;
 
   const classes = useStyles();
+  const auth = useAuth();
   const fileInput = React.createRef();
 
   function submitHandler(event) {
@@ -41,7 +46,7 @@ export default function JobForm() {
     const file = fileInput.current.files[0];
     const filename = file.name;
     if (filename.substring(filename.length - 3) === 'csv') {
-      submitJob(jobName, maxJobTime, file)
+      submitJob(auth.user, jobName, maxJobTime, file)
           .then(res => alert("Job successfully submitted"))
           .catch(err => alert("Job failed to submit"));
     } else {
@@ -72,12 +77,13 @@ export default function JobForm() {
             value={maxJobTime}
             onChange={handleMaxJobTimeChange}
             margin="normal"
+            className={classes.numberTextField}
           />
-          <input type="file" ref={fileInput}/>
+          <input type="file" ref={fileInput} className={classes.fileField}/>
           <Button type="submit"
                   variant="outlined"
                   color="primary"
-                  className={classes.button}
+                  className={classes.submitButton}
                   onClick={submitHandler}
           >
             Submit
