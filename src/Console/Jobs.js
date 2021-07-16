@@ -52,22 +52,22 @@ export default function Jobs(props) {
         .catch(err => console.log(err));
   }
   const columns = [
-    { field: 'name', headerName: 'Name', width: 120 },
+    { field: 'name', headerName: 'Name', width: 300 },
     {
       field: 'user',
       headerName: 'User',
-      width: 120,
+      width: 300,
     },
     {
       field: 'targetCol',
       headerName: 'Target Column',
-      width: 200,
+      width: 300,
       editable: true,
     },
     {
       field: 'targetName',
       headerName: 'Target Name',
-      width: 200,
+      width: 300,
       editable: true,
     },
     {
