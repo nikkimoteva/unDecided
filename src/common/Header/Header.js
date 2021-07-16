@@ -13,9 +13,9 @@ const useStyles = makeStyles(() => ({
     flexGrow: 1,
   },
   logo: {
-    width: "50px",
-    marginTop: "12px",
-    marginBottom: "12px"
+    width: "70px",
+    marginTop: "5px",
+    marginBottom: "5px"
   },
   toolbarButtons: {
     marginLeft: 'auto'

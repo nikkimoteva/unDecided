@@ -1,4 +1,4 @@
-import {Button, makeStyles} from "@material-ui/core";
+import {Button, makeStyles, Grid} from "@material-ui/core";
 import {Link} from "react-router-dom";
 import TableContainer from "@material-ui/core/TableContainer";
 import Paper from "@material-ui/core/Paper";
@@ -11,12 +11,16 @@ import {getJobs, deleteJob as deleteJobDB} from "../common/Managers/EndpointMana
 import {useAuth} from "../common/Auth";
 
 const useStyles = makeStyles({
-  submitJobButton: {
+    jobButtonContainer:{
+      justifyContent: 'center',
+    },
+    newJobButton: {
+    display:"flex",
     float:"left",
-    display: "flex",
     justify: "flex-end",
-    margin: "auto",
-    width: "15vh"
+    margin: "10px",
+    width: "15vh",
+
   },
   jobAttributeColumn: {
     align:"left",
@@ -26,14 +30,16 @@ const useStyles = makeStyles({
 
 export default function Jobs(props) {
   const classes = useStyles();
-  const [jobs, setJobs] = useState([]);
+  const [jobs, setJobs] = useState([{name:"Job A", targetColumn: "Column B", status: "done", createdAt:"2021.7.15"}]);
   const auth = useAuth();
 
   useEffect(() => {
     getJobs()
         .then(res => {
+          const fakeJobs = [{name:"Job A", targetColumn: "Column B", status: "done", createdAt:"2021.7.15"}];
           const gottenJobs = res.data;
           setJobs(gottenJobs);
+          setJobs(fakeJobs);
         });
   }, []);
 
@@ -46,12 +52,16 @@ export default function Jobs(props) {
 
   return (
     <div>
+      <Grid container justify = "center">
+      
+
       <Button variant="contained" color="secondary"
-              className={classes.submitJobButton} component={Link}
+              className={classes.newJobButton} component={Link}
               to={`${props.url}/submitJob`}
       >
         New Job
       </Button>
+      </Grid>
       <TableContainer component={Paper}>
         <Table aria-label="collapsible table">
           <TableHead>
@@ -65,7 +75,10 @@ export default function Jobs(props) {
           </TableHead>
         </Table>
       </TableContainer>
-      
+    {jobs.map(data => {
+            return (<div key={1}><h2>hello</h2></div>
+            );
+          })}
     </div>
   );
 }
