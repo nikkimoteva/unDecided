@@ -14,6 +14,8 @@ const {storeCSV} = require("./FileManager");
 const auth = require("./Auth.js");
 const JobModel = require("./database/models/Job");
 const UserModel = require("./database/models/User");
+
+const fs = require('fs');
 require("./database/Database"); // Initializes DB
 
 const port = 3001;
@@ -34,6 +36,14 @@ app.get("/jobs", (req, res) => {
     .then(userId => JobModel.find({user: userId})) // TODO: Implement getUserId
     .then(jobs => res.json(jobs))
     .catch(err => errorHandler(err, res));
+});
+
+app.delete("/deleteJob", (req, res) => {
+  const id_token = req.body.id_token;
+  const jobId = req.body.jobId;
+  auth.getUserId(id_token)
+      .then(_ => JobModel.deleteOne({_id: jobId}))
+      .catch(err => errorHandler(err, res));
 });
 
 app.post("/gauth", (req, res) => {
@@ -63,12 +73,15 @@ app.post("/submitJob", (req, res) => {
   const id_token = body.id_token;
   const jobName = body.jobName;
   const maxJobTime = body.maxJobTime;
+  const targetCol = body.targetCol;
+  const targetColName = body.targetColName;
   const dataset = body.dataset;
   const job = new JobModel({
     name: jobName,
     user: id_token,
+    targetCol: targetCol,
+    targetColName: targetColName,
     maxJobTime: maxJobTime,
-    dataset: dataset
   });
   JobModel.save(job)
     .then(_ => res.sendStatus(200))
@@ -120,6 +133,31 @@ app.post('/getObject', (req, res) => {
     .catch(err => errorHandler(err, res));
 });
 
+app.post('/pipeline', (req, res) => {
+  const search_id = req.body.search_id;
+  const email = req.body.email;
+  const target_idx = req.body.target_idx;
+  const uploaded_file = req.files.file;
+
+  if (uploaded_file.size !== 0) {
+    try {
+      const test_file_name = makeid(4);
+      const folder_path = './scratch/users_csv/' + search_id;
+      const test_path = folder_path + '/' + test_file_name + '.csv';
+      
+      fs.writeFile(test_path, uploaded_file, function (err) {
+        if (err) {
+          errorHandler(err, res);
+        }
+        console.log('Results Received');
+      }); 
+
+    } catch (err) {
+      errorHandler(err, res);
+    }
+  }
+});
+
 function streamToString(stream) {
   return new Promise((resolve, reject) => {
     const chunks = [];
@@ -138,3 +176,13 @@ function errorHandler(err, res) {
 app.listen(port, () => {
   console.log(`Listening on http://localhost:${port}`);
 });
+
+function makeid(length) {
+  let result = '';
+  const characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
+  const charactersLength = characters.length;
+  for (let i = 0; i < length; i++ ) {
+    result += characters.charAt(Math.floor(Math.random() * charactersLength));
+ }
+ return result;
+}

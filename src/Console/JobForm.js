@@ -39,12 +39,14 @@ export default function JobForm() {
   const classes = useStyles();
   const fileInput = React.createRef();
 
-  async function submitHandler(event) {
+  function submitHandler(event) {
     event.preventDefault();
     const file = fileInput.current.files[0];
     const filename = file.name;
     if (filename.substring(filename.length - 3) === 'csv') {
-      await submitJob(jobName, maxJobTime, file);
+      submitJob(jobName, maxJobTime, file)
+          .then(res => alert("Job successfully submitted"))
+          .catch(err => alert("Job failed to submit"));
     } else {
       alert("File type is not csv");
     }
@@ -56,7 +58,6 @@ export default function JobForm() {
   }
 
   return (
-
     <div>
       <form noValidate>
         <div>

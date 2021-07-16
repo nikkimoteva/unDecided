@@ -16,7 +16,7 @@ export default function App() {
       //   type: "dark",
       //   divider: "rgba(255, 255, 255, 0.12)",
     },
-    // fonts and font sizes
+    // fonts and font sizes for Typography components
     typography: {},
     //default component props, like spacing, ripple effect, etc
     props: {},

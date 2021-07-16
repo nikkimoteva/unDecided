@@ -9,6 +9,10 @@ export function validateGoogleUser(id_token) {
   return axios.post(`${root}/gauth`,{id_token});
 }
 
+/*
+* Main endpoints
+*/
+
 export function submitJob(id_token, jobName, maxJobTime, dataset) {
   return axios.post(`${root}/submitJob`, {jobName, maxJobTime, dataset});
 }
@@ -18,9 +22,20 @@ export function getJobs(id_token) {
     method: "get",
     url: `${root}/jobs`,
     data: {id_token}
-  })
-    .then(res => res.data);
+  });
 }
+
+export function deleteJob(id_token, jobId) {
+  return axios({
+    method: "delete",
+    url: `${root}/deleteJob`,
+    data: {id_token, jobId}
+  });
+}
+
+/*
+* AWS endpoints
+*/
 
 export function registerAWS(region, accessKeyId, secretAccessKey) {
   return axios({
