@@ -27,6 +27,11 @@ const useStyles = makeStyles({
   jobAttributeColumn: {
     align:"left",
   },
+  jobTable:{
+    height:"650px"
+    // display:"block",
+    // overflow:"auto"
+  }
 });
 
 
@@ -38,10 +43,8 @@ export default function Jobs(props) {
   useEffect(() => {
     getJobs(auth.user.id)
         .then(res => {
-          const fakeJobs = [{name:"Job A",user: "UA", targetCol: "Column B",targetName: "TA", status: "Running", maxJobTime:10, createdAt:new Date()}];
           const gottenJobs = res.data;
           setJobs(gottenJobs);
-          // setJobs(fakeJobs);
         });
   }, []);
 
@@ -99,11 +102,11 @@ export default function Jobs(props) {
       </Button>
       </Grid>
      
-    <div style={{ height: 800, width: '100%' }}>
+    <div className={classes.jobTable}>
       <DataGrid
         rows={rows}
         columns={columns}
-        pageSize={5}
+        pageSize={10}
         checkboxSelection
         disableSelectionOnClick
       />
