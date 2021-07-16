@@ -44,8 +44,8 @@ app.delete("/deleteJob", (req, res) => {
   const id_token = req.body.id_token;
   const jobId = req.body.jobId;
   auth.getUserId(id_token)
-      .then(_ => JobModel.deleteOne({_id: jobId}))
-      .catch(err => errorHandler(err, res));
+    .then(_ => JobModel.deleteOne({ _id: jobId }))
+    .catch(err => errorHandler(err, res));
 });
 
 app.post("/gauth", (req, res) => {
@@ -81,9 +81,9 @@ app.post("/submitJob", (req, res) => {
   const job = new JobModel({
     name: jobName,
     user: id_token,
-    targetCol: targetCol,
-    targetColName: targetColName,
-    maxJobTime: maxJobTime,
+    target_column: targetCol,
+    target_name: targetColName,
+    timer: maxJobTime,
   });
   job.save()
     .then(_ => res.sendStatus(200))
@@ -153,14 +153,14 @@ app.post('/tableView', (req, res) => {
     const idx = headers.findIndex(target_name);
     const newJob = new JobModel(
       {
-        fileHash : file_name,
-        name : nickname,
+        fileHash: file_name,
+        name: nickname,
         headers: headers,
-        target_column : idx,
-        target_name : target_name,
-        email : user_email,
-        timer : search_time,
-        status : 'SUBMITTED'
+        target_column: idx,
+        target_name: target_name,
+        email: user_email,
+        timer: search_time,
+        status: 'SUBMITTED'
       });
 
     newJob.save(err => {
@@ -168,10 +168,10 @@ app.post('/tableView', (req, res) => {
         errorHandler(err, res);
       }
     });
-    
+
     try {
       trainPipeline();
-
+      res.status(200);
     } catch (err) {
       errorHandler(err);
     }
@@ -183,54 +183,54 @@ app.post('/pipeline', (req, res) => {
   const email = req.body.email;
   const uploaded_file = req.files.file;
 
-  if (uploaded_file.size !== 0) {
-    try {
-      const test_file_name = makeid(4);
-      const folder_path = './scratch/users_csv/' + search_id;
-      const test_path = folder_path + '/' + test_file_name + '.csv';
+  if (uploaded_file.size === 0) {
+    errorHandler({ 'msg': 'Uploaded file is empty' }, res);
+  }
 
-      storeCSV(uploaded_file, test_path)
-        .then(() => {
-          return readFilePromise(test_path);
-        })
-        .then(fileContent => {
-          return csvToArrays(fileContent);
-          // const testColumns = Object.keys(util.parseCSVToArr(test_path)[0]);
-        })
-        .then(data => {
-          const testColumns = data[0];
-          const job = {}; // TODO: get job from db using search_id
-          const oldColumns = job.headers;
+  try {
+    const test_file_name = makeid(4);
+    const folder_path = './scratch/users_csv/' + search_id;
+    const test_path = folder_path + '/' + test_file_name + '.csv';
 
-          if (job.status !== 'SUCCESSFUL') {
-            res.status(400);
-            res.send({ 'msg': 'Your job has not completed training! Try again later.' });
-          }
-          if (!(job.targetName in testColumns)) {
-            testColumns.push(job.targetName);
-            data[0] = testColumns;
-            const newFile = csv.fromArrays(data);
-            storeCSV(newFile, test_path)
-              .then(() => {
-                runPredict(test_path, search_id, job.timer, job.target_name, email, job.name);
-                res.status(200);
-                res.send({'msg' : 'Success!'});
-              });
-          }
-          if (oldColumns.length !== testColumns.length) {
-            errorHandler({'msg' : 'csv missing columns'}, res);
-          }
-          else {
-            runPredict(test_path, search_id, job.timer, job.target_name, email, job.name);
-            res.status(200);
-            res.send({'msg' : 'Success!'});
-          }
-        });
-    } catch (err) {
-      errorHandler(err, res);
-    }
-  } else {
-    errorHandler({'msg': 'Uploaded file is empty'}, res);
+    storeCSV(uploaded_file, test_path)
+      .then(() => {
+        return readFilePromise(test_path);
+      })
+      .then(fileContent => {
+        return csvToArrays(fileContent);
+        // const testColumns = Object.keys(util.parseCSVToArr(test_path)[0]);
+      })
+      .then(data => {
+        const testColumns = data[0];
+        const job = {}; // TODO: get job from db using search_id
+        const oldColumns = job.headers;
+
+        if (job.status !== 'SUCCESSFUL') {
+          res.status(400);
+          res.send({ 'msg': 'Your job has not completed training! Try again later.' });
+        }
+        if (!(job.targetName in testColumns)) {
+          testColumns.push(job.targetName);
+          data[0] = testColumns;
+          const newFile = csv.fromArrays(data);
+          storeCSV(newFile, test_path)
+            .then(() => {
+              runPredict(test_path, search_id, job.timer, job.target_name, email, job.name);
+              res.status(200);
+              res.send({ 'msg': 'Success!' });
+            });
+        }
+        if (oldColumns.length !== testColumns.length) {
+          errorHandler({ 'msg': 'csv missing columns' }, res);
+        }
+        else {
+          runPredict(test_path, search_id, job.timer, job.target_name, email, job.name);
+          res.status(200);
+          res.send({ 'msg': 'Success!' });
+        }
+      });
+  } catch (err) {
+    errorHandler(err, res);
   }
 });
 
