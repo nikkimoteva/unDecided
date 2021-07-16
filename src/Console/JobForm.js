@@ -1,7 +1,7 @@
 import React, {useState} from "react";
 import {Button, makeStyles, TextField} from "@material-ui/core";
 import {submitJob} from "../common/Managers/EndpointManager";
-import {Link} from "react-router-dom";
+import {Link, useHistory} from "react-router-dom";
 import {useAuth} from "../common/Auth.js";
 
 const useStyles = makeStyles({
@@ -41,13 +41,15 @@ export default function JobForm() {
   const auth = useAuth();
   const fileInput = React.createRef();
 
+  const history = useHistory();
+
   function submitHandler(event) {
     event.preventDefault();
     const file = fileInput.current.files[0];
     const filename = file.name;
     if (filename.substring(filename.length - 3) === 'csv') {
-      submitJob(auth.user, jobName, maxJobTime, file)
-          .then(res => alert("Job successfully submitted"))
+      submitJob(auth.user.id, jobName, maxJobTime, file)
+          .then(res => history.push('/console/jobs'))
           .catch(err => alert("Job failed to submit"));
     } else {
       alert("File type is not csv");

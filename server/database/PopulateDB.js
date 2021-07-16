@@ -71,5 +71,5 @@ UserModel.insertMany(users, {ordered: false})
   .then(ids => UserModel.updateOne({_id: "testUser1"}, {jobIDs: ids}))
   .then(_ => JobModel.find({user: "testUser2"}, '_id'))
   .then(ids => UserModel.updateOne({_id: "testUser2"}, {jobIDs: ids}))
-  .then(_ => {console.log("Successfully inserted dummy values"); process.exit(0)})
+  .then(_ => {console.log("Successfully inserted dummy values"); process.exit(0);})
   .catch(err => {console.log(err); process.exit(1);});

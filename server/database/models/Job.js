@@ -11,11 +11,11 @@ const jobSchema = new mongoose.Schema({
   },
   dataset: { // keep
     type: Array,
-    required: true
+    // required: true
   },
   fileHash: {
     type: String,
-    required: true
+    // required: true
   },
   status: {
     type: String,
@@ -24,7 +24,7 @@ const jobSchema = new mongoose.Schema({
   },
   headers:{
     type: Array,
-    required: true
+    // required: true
   },
   target_name: {
     type: String
