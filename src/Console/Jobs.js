@@ -9,6 +9,8 @@ import TableCell from "@material-ui/core/TableCell";
 import React, {useEffect, useState} from "react";
 import {getJobs, deleteJob as deleteJobDB} from "../common/Managers/EndpointManager";
 import {useAuth} from "../common/Auth";
+import { DataGrid } from '@material-ui/data-grid';
+
 
 const useStyles = makeStyles({
     jobButtonContainer:{
@@ -30,16 +32,16 @@ const useStyles = makeStyles({
 
 export default function Jobs(props) {
   const classes = useStyles();
-  const [jobs, setJobs] = useState([{name:"Job A", targetColumn: "Column B", status: "done", createdAt:"2021.7.15"}]);
+  const [jobs, setJobs] = useState([]);
   const auth = useAuth();
 
   useEffect(() => {
-    getJobs()
+    getJobs(auth.user.id)
         .then(res => {
-          const fakeJobs = [{name:"Job A", targetColumn: "Column B", status: "done", createdAt:"2021.7.15"}];
+          const fakeJobs = [{name:"Job A",user: "UA", targetCol: "Column B",targetName: "TA", status: "Running", maxJobTime:10, createdAt:new Date()}];
           const gottenJobs = res.data;
           setJobs(gottenJobs);
-          setJobs(fakeJobs);
+          // setJobs(fakeJobs);
         });
   }, []);
 
@@ -49,7 +51,41 @@ export default function Jobs(props) {
         .then(_ => console.log("Successfully deleted Job"))
         .catch(err => console.log(err));
   }
+  const columns = [
+    { field: 'name', headerName: 'Name', width: 120 },
+    {
+      field: 'user',
+      headerName: 'User',
+      width: 120,
+    },
+    {
+      field: 'targetCol',
+      headerName: 'Target Column',
+      width: 200,
+      editable: true,
+    },
+    {
+      field: 'targetName',
+      headerName: 'Target Name',
+      width: 200,
+      editable: true,
+    },
+    {
+      field: 'status',
+      headerName: 'Status',
+      description: 'This column has a value getter and is not sortable.',
+      sortable: false,
+      width: 120,
+      
+    },
+  ];
 
+  const rows = jobs;
+  rows.forEach( function(data) {
+    console.log(data);
+    data.id = data._id;
+    // delete data._id;
+  });
   return (
     <div>
       <Grid container justify = "center">
@@ -62,24 +98,16 @@ export default function Jobs(props) {
         New Job
       </Button>
       </Grid>
-      <TableContainer component={Paper}>
-        <Table aria-label="collapsible table">
-          <TableHead>
-            <TableRow>
-              <TableCell />
-              <TableCell className={classes.jobAttributeColumn}>Job ID</TableCell>
-              <TableCell className={classes.jobAttributeColumn}>Job Name</TableCell>
-              <TableCell className={classes.jobAttributeColumn}>Target Column</TableCell>
-              <TableCell className={classes.jobAttributeColumn}>Description</TableCell>
-              <TableCell className={classes.jobAttributeColumn}>Status</TableCell>
-            </TableRow>
-          </TableHead>
-        </Table>
-      </TableContainer>
-    {jobs.map(data => {
-            return (<div key={1}><h2>hello</h2></div>
-            );
-          })}
+     
+    <div style={{ height: 800, width: '100%' }}>
+      <DataGrid
+        rows={rows}
+        columns={columns}
+        pageSize={5}
+        checkboxSelection
+        disableSelectionOnClick
+      />
+    </div>
     </div>
   );
 }

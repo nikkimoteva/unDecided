@@ -30,11 +30,14 @@ app.get("/test", (req, res) => {
   res.sendStatus(200);
 });
 
-app.get("/jobs", (req, res) => {
+app.post("/jobs", (req, res) => {
   const id_token = req.body.id_token;
-  auth.getUserId(id_token)
-    .then(userId => JobModel.find({user: userId})) // TODO: Implement getUserId
-    .then(jobs => res.json(jobs))
+  console.log(id_token)
+  JobModel.find({user: id_token})
+    .then(jobs =>{
+      console.log(jobs)
+      return res.json(jobs)
+    })
     .catch(err => errorHandler(err, res));
 });
 
@@ -84,7 +87,10 @@ app.post("/submitJob", (req, res) => {
     maxJobTime: maxJobTime,
   });
   job.save()
-    .then(_ => res.sendStatus(200))
+    .then(_ => {
+      console.log("saved")
+      return res.sendStatus(200)
+    })
     .catch(err => errorHandler(err, res));
 });
 
