@@ -9,30 +9,30 @@ const jobSchema = new mongoose.Schema({
     type: String,
     required: true
   },
-  dataset: { // keep
-    type: Array,
-    required: true
-  },
-  fileHash: {
-    type: String,
-    required: true
-  },
+  // dataset: { // keep
+  //   type: Array,
+  //   required: true
+  // },
+  // fileHash: {
+  //   type: String,
+  //   required: true
+  // },
   status: {
     type: String,
     required: true,
     default: "Running"
   },
-  headers:{
-    type: Array,
-    required: true
-  },
+  // headers:{
+  //   type: Array,
+  //   required: true
+  // },
   target_name: {
     type: String
   },
-  timer: {
-    type: Number,
-    default: 10
-  },
+  // timer: {
+  //   type: Number,
+  //   default: 10
+  // },
   target_column: {
     type: Number,
     default : 0
