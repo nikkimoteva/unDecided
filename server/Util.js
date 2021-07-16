@@ -16,7 +16,7 @@ module.exports = {
 
     csvToObject: function (fileContent) {
         return new Promise((resolve, reject) => {
-            csv.toArrays(fileContent, {}, (err, data) => {
+            csv.toObects(fileContent, {}, (err, data) => {
                 if (err) {
                     reject(err); 
                 }
@@ -36,6 +36,16 @@ module.exports = {
         });
     },
 
+    objectsToCsv: function (arr) {
+        return new Promise((resolve, reject) => {
+            csv.fromObjects(arr, {}, (err, result) => {
+                if (err) {
+                    reject(err); 
+                }
+                resolve(result);
+            });
+        });
+    },
 
     readFilePromise: function (filePath) {
         return new Promise((resolve, reject) => {
