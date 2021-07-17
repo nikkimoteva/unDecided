@@ -11,24 +11,13 @@
   color: #61dafb;
 }
 
-.HeaderLogo {
-  display: flex;
-  flex-flow: column wrap;
-  justify-content: space-around;
-  align-items: center;
-  
-  padding: 0;
-  margin: 0;
-
-}
-
 .initialLogo {
-  width: 75%;
+  width: 35%;
   height: 60%;
 }
 
 .keywords {
-  font-family: "Lucida Console";
+  font-family: "Lucida Console serif", serif;
   font-size: 300%;
   font-weight: bolder;
   padding-top: 3%

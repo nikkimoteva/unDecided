@@ -1,27 +1,20 @@
-import "./Button.css";
 import React from "react";
-import ButtonUI from '@material-ui/core/Button';
+import Button from '@material-ui/core/Button';
 import {Link} from "react-router-dom";
+import "./Button.css";
 
+export default function Buttons(props) {
 
-export default function Button(props) {
-    let data = props.data;
-    let route = "./" + data.route;
-    let style = {
-        fontWeight: "bolder",
-        marginLeft: "10em",
-        marginRight: "10em",
-        width: "15em",
-        height: "5em",
-    }
+    const data = props.data;
+    const route = "./" + data.route;
 
     return (
         <div>
-            <ButtonUI style={style} component={Link}
-                    to={route} variant="outlined" color="primary" href="#outlined-buttons"
+            <Button component={Link}
+                to={route} variant="contained" color="primary" href="#outlined-buttons"
             >
-                        {data.name}
-            </ButtonUI>
+                    {data.name}
+            </Button>
         </div>
     );
 }

@@ -1,0 +1,11 @@
+.MuiDataGrid-cell {
+    user-select: none
+}
+
+.MuiDataGrid-cell:hover {
+    cursor: pointer
+}
+
+.MuiDataGrid-columnHeader--sortable:hover {
+    cursor: default
+}
