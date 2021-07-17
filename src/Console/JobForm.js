@@ -1,4 +1,4 @@
-import React, {useState} from "react";
+import React, {useEffect, useState} from "react";
 import {Button, makeStyles, TextField} from "@material-ui/core";
 import {submitJob} from "../common/Managers/EndpointManager";
 import {Link, useHistory} from "react-router-dom";
@@ -32,7 +32,7 @@ const useStyles = makeStyles({
   }
 });
 
-export default function JobForm() {
+export default function JobForm(props) {
   const [jobName, setJobName] = useState("");
   const [maxJobTime, setMaxJobTime] = useState(10);
   const maxJobTimeValue = 20;
@@ -45,12 +45,12 @@ export default function JobForm() {
 
   function submitHandler(event) {
     event.preventDefault();
-    const file = fileInput.current.files[0];
+    const file = (history.location.state?.csv === undefined) ? fileInput.current.files[0] : history.location.state.csv;
     const filename = file.name;
     if (filename.substring(filename.length - 3) === 'csv') {
-      submitJob(auth.user.id, jobName, maxJobTime, file)
-          .then(res => history.push('/console/jobs'))
-          .catch(err => alert("Job failed to submit"));
+      submitJob(auth.user.email, jobName, maxJobTime, file)
+        .then(res => history.push('/console/jobs'))
+        .catch(err => alert("Job failed to submit"));
     } else {
       alert("File type is not csv");
     }
@@ -81,7 +81,9 @@ export default function JobForm() {
             margin="normal"
             className={classes.numberTextField}
           />
+          {history.location.state === undefined &&
           <input type="file" ref={fileInput} className={classes.fileField}/>
+          }
           <Button type="submit"
                   variant="outlined"
                   color="primary"

@@ -16,9 +16,8 @@ const JobModel = require("./database/models/Job");
 const UserModel = require("./database/models/User");
 const csv = require('jquery-csv');
 
-const fs = require('fs');
 const { readFilePromise, csvToArrays, csvToObject, arraysToCsv, runPredict, trainPipeline } = require("./Util");
-require("./database/Database"); // Initializes DB
+require("./database/Database"); // Initializes DB connection
 
 const port = 3001;
 let awsClient = null;
