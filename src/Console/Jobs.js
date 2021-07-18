@@ -23,7 +23,9 @@ const useStyles = makeStyles({
     align: "left",
   },
   jobTable: {
-    height: "650px"
+    height: "650px",
+    width: "95%",
+    margin: "0 auto",
     // display:"block",
     // overflow:"auto"
   }
@@ -60,27 +62,37 @@ export default function Jobs(props) {
   }
 
   const columns = [
-    {field: 'name', headerName: 'Name', width: 300},
+    {
+      field: 'name',
+      headerName: 'Name', 
+      width: 300,
+      flex: 1,
+      headerAlign: 'center',
+    },
     {
       field: 'user',
       headerName: 'User',
       flex: 1,
+      headerAlign: 'center',
     },
     {
       field: 'target_column',
       headerName: 'Target Column',
       flex: 1,
+      headerAlign: 'center',
     },
     {
       field: 'target_name',
       headerName: 'Target Name',
       flex: 1,
+      headerAlign: 'center',
     },
     {
       field: 'status',
       headerName: 'Status',
       description: 'This column has a value getter and is not sortable.',
       flex: 1,
+      headerAlign: 'center',
     },
   ];
 
@@ -108,6 +120,7 @@ export default function Jobs(props) {
         Delete
       </Button>
       <DataGrid
+
         rows={rows}
         columns={columns}
         pageSize={10}
