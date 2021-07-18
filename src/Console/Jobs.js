@@ -70,19 +70,16 @@ export default function Jobs(props) {
       field: 'target_column',
       headerName: 'Target Column',
       flex: 1,
-      editable: true,
     },
     {
       field: 'target_name',
       headerName: 'Target Name',
       flex: 1,
-      editable: true,
     },
     {
       field: 'status',
       headerName: 'Status',
       description: 'This column has a value getter and is not sortable.',
-      sortable: false,
       flex: 1,
     },
   ];
