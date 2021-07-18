@@ -38,6 +38,7 @@ const useStyles = makeStyles({
 export default function Jobs(props) {
   const classes = useStyles();
   const [jobs, setJobs] = useState([]);
+  const [selectionModel, setSelectionModel] = useState([]);
   const auth = useAuth();
 
   useEffect(() => {
@@ -45,13 +46,21 @@ export default function Jobs(props) {
         .then(res => {
           const gottenJobs = res.data;
           setJobs(gottenJobs);
+
         });
   }, []);
 
-  function deleteJob(row) {
-    const jobId = jobs[row];
-    deleteJobDB(auth.user, jobId)
-        .then(_ => console.log("Successfully deleted Job"))
+  function deleteJob() {
+    const jobId = selectionModel[0];
+    console.log(jobId);
+    deleteJobDB(auth.user.id, selectionModel[0])
+        .then(res => {
+          getJobs(auth.user.id)
+          .then(res => {
+            const gottenJobs = res.data;
+            setJobs(gottenJobs);
+          });
+        })
         .catch(err => console.log(err));
   }
   const columns = [
@@ -62,13 +71,13 @@ export default function Jobs(props) {
       width: 300,
     },
     {
-      field: 'targetCol',
+      field: 'targe_column',
       headerName: 'Target Column',
       width: 300,
       editable: true,
     },
     {
-      field: 'targetName',
+      field: 'target_name',
       headerName: 'Target Name',
       width: 300,
       editable: true,
@@ -85,9 +94,7 @@ export default function Jobs(props) {
 
   const rows = jobs;
   rows.forEach( function(data) {
-    console.log(data);
     data.id = data._id;
-    // delete data._id;
   });
   return (
     <div>
@@ -103,12 +110,29 @@ export default function Jobs(props) {
       </Grid>
      
     <div className={classes.jobTable}>
+      <Button variant="contained" color="primary" onClick={deleteJob}>
+        Delete
+      </Button>
       <DataGrid
         rows={rows}
         columns={columns}
         pageSize={10}
         checkboxSelection
-        disableSelectionOnClick
+        selectionModel={selectionModel}
+        onSelectionModelChange={(selection) => {
+          const newSelectionModel = selection.selectionModel;
+
+          if (newSelectionModel.length > 1) {
+            const selectionSet = new Set(selectionModel);
+            const result = newSelectionModel.filter(
+              (s) => !selectionSet.has(s)
+            );
+
+            setSelectionModel(result);
+          } else {
+            setSelectionModel(newSelectionModel);
+          }
+        }}
       />
     </div>
     </div>

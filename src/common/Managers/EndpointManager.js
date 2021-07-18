@@ -18,17 +18,18 @@ export function submitJob(id_token, jobName, maxJobTime, dataset) {
 }
 
 export function getJobs(id_token) {
-  console.log(id_token);
-
   return axios.post(`${root}/jobs`, {id_token});
 
 }
 
 export function deleteJob(id_token, jobId) {
+  const d = {id_token, jobId};
+  console.log(d);
+
   return axios({
     method: "delete",
     url: `${root}/deleteJob`,
-    data: {id_token, jobId}
+    data: d
   });
 }
 
