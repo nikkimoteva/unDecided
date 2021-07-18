@@ -88,7 +88,7 @@ export default function AWSImportView() {
           console.log("Retrieved file");
           history.push({
             pathname: "/console/submitJob",
-            state: {csv} // can access using props.location.state.csv
+            state: {csv} // can access using history.location.state.csv
           });
         })
         .catch(err => console.log(err));

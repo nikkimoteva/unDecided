@@ -51,8 +51,6 @@ export default function ContactUs() {
     });
 
     setToSend({ ...toSend, [event.target.name]: event.target.value });
-    console.log(input);
-    console.log(toSend);
   }
 
   function handleSubmit(event) {
@@ -79,12 +77,12 @@ export default function ContactUs() {
           console.log("FAILED...", err);
         });
 
-      setToSend({
-        from_name: "",
-        subject: "",
-        message: "",
-        email: "",
-      });
+      // setToSend({
+      //   from_name: "",
+      //   subject: "",
+      //   message: "",
+      //   email: "",
+      // });
     }
   }
   
@@ -95,16 +93,13 @@ export default function ContactUs() {
   function validate() {
     const errors = {};
     let isValid = true;
-    console.log(1);
 
     if (!input.from_name) {
-      console.log(2);
       isValid = false;
       errors["from_name"] = "Please enter your name.";
     }
 
     if (!input.email) {
-      console.log(3);
       isValid = false;
       errors["email"] = "Please enter your email address.";
     }
@@ -114,14 +109,12 @@ export default function ContactUs() {
         /^(("[\w-\s]+")|([\w-]+(?:\.[\w-]+)*)|("[\w-\s]+")([\w-]+(?:\.[\w-]+)*))(@((?:[\w-]+\.)*\w[\w-]{0,66})\.([a-z]{2,6}(?:\.[a-z]{2})?)$)|(@\[?((25[0-5]\.|2[0-4][0-9]\.|1[0-9]{2}\.|[0-9]{1,2}\.))((25[0-5]|2[0-4][0-9]|1[0-9]{2}|[0-9]{1,2})\.){2}(25[0-5]|2[0-4][0-9]|1[0-9]{2}|[0-9]{1,2})\]?$)/i
       );
       if (!pattern.test(input["email"])) {
-        console.log(4);
         isValid = false;
         errors["email"] = "Please enter a valid email address.";
       }
     }
 
     if (!input.message) {
-      console.log(5);
       isValid = false;
       errors["message"] = "Please enter your message.";
     }

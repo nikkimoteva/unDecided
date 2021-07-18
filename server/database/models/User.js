@@ -7,11 +7,7 @@ const userSchema = new mongoose.Schema({
     required: true
   },
   email: String,
-  picture: String,
-  jobIDs: {
-    type: Array,
-    default: []
-  }
+  picture: String
 });
 
 module.exports = mongoose.model('user', userSchema);
