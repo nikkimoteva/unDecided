@@ -32,9 +32,11 @@ const useStyles = makeStyles({
 export default function Jobs(props) {
   const classes = useStyles();
   const [jobs, setJobs] = useState([]);
+  const [selectionModel, setSelectionModel] = useState([]);
   const auth = useAuth();
 
   useEffect(() => {
+
     getJobs(auth.user.email)
       .then(res => {
         const gottenJobs = res.data;
@@ -42,8 +44,8 @@ export default function Jobs(props) {
       });
   }, []);
 
-  function deleteJob(row) {
-    const jobId = jobs[row];
+  function deleteJob() {
+    const jobId = selectionModel[0];
     deleteJobDB(auth.user.email, jobId)
       .then(_ => {
         console.log("Successfully deleted Job");
@@ -87,9 +89,7 @@ export default function Jobs(props) {
   const rows = jobs;
   console.log(jobs);
   rows.forEach(function (data) {
-    console.log(data);
     data.id = data._id;
-    // delete data._id;
   });
   return (
     <div>
@@ -104,15 +104,34 @@ export default function Jobs(props) {
         </Button>
       </Grid>
 
-      <div className={classes.jobTable}>
-        <DataGrid
-          rows={rows}
-          columns={columns}
-          pageSize={10}
-          checkboxSelection
-          disableSelectionOnClick
-        />
-      </div>
+     
+    <div className={classes.jobTable}>
+      <Button variant="contained" color="primary" onClick={deleteJob}>
+        Delete
+      </Button>
+      <DataGrid
+        rows={rows}
+        columns={columns}
+        pageSize={10}
+        checkboxSelection
+        selectionModel={selectionModel}
+        onSelectionModelChange={(selection) => {
+          const newSelectionModel = selection.selectionModel;
+
+          if (newSelectionModel.length > 1) {
+            const selectionSet = new Set(selectionModel);
+            const result = newSelectionModel.filter(
+              (s) => !selectionSet.has(s)
+            );
+
+            setSelectionModel(result);
+          } else {
+            setSelectionModel(newSelectionModel);
+          }
+        }}
+      />
+    </div>
+
     </div>
   );
 }
