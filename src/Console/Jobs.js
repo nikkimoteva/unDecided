@@ -26,6 +26,7 @@ const useStyles = makeStyles({
     height: "650px",
     width: "95%",
     margin: "0 auto",
+
     // display:"block",
     // overflow:"auto"
   }
@@ -67,32 +68,27 @@ export default function Jobs(props) {
       headerName: 'Name', 
       width: 300,
       flex: 1,
-      headerAlign: 'center',
     },
     {
       field: 'user',
       headerName: 'User',
       flex: 1,
-      headerAlign: 'center',
     },
     {
       field: 'target_column',
       headerName: 'Target Column',
       flex: 1,
-      headerAlign: 'center',
     },
     {
       field: 'target_name',
       headerName: 'Target Name',
       flex: 1,
-      headerAlign: 'center',
     },
     {
       field: 'status',
       headerName: 'Status',
       description: 'This column has a value getter and is not sortable.',
       flex: 1,
-      headerAlign: 'center',
     },
   ];
 
