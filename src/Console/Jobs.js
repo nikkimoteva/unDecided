@@ -138,15 +138,15 @@ function Row(props) {
           <Collapse in={open} timeout="auto" unmountOnExit>
             <Box margin={1}>
               <Typography variant="h6" gutterBottom component="div">
-                Stats
+                Predictions
               </Typography>
               <Table size="small" aria-label="purchases">
 
                 <TableHead>
                   <TableRow>
-                    <TableCell>Total Ram</TableCell>
-                    <TableCell align="right">Average Ram Usage</TableCell>
-                    <TableCell align="right">Percentage Processed</TableCell>
+                    <TableCell align="center">Prediction Name</TableCell>
+                    <TableCell align="center">Status</TableCell>
+                    <TableCell align="center">Time Created</TableCell>
                   </TableRow>
                 </TableHead>
                 {/*<TableBody>
@@ -201,6 +201,7 @@ function Row(props) {
               <TableCell align="right">Status</TableCell>
               <TableCell align="right">Starting Date</TableCell>
               <TableCell align="right">Target Column</TableCell>
+              <TableCell align="left">Actions</TableCell>
             </TableRow>
           </TableHead>
           <TableBody>
