@@ -11,7 +11,7 @@ const cors = require('cors');
 const logger = require('morgan');
 
 const { storeCSV } = require("./FileManager");
-const auth = require("./Auth.js");
+const auth = require("./UserAuth/Auth.js");
 const JobModel = require("./database/models/Job");
 const UserModel = require("./database/models/User");
 const csv = require('jquery-csv');

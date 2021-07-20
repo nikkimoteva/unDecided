@@ -49,3 +49,14 @@
     color: #DEE;
     font-size: 1em;
 }
+
+
+.CutomSubmitAuth {
+    font-weight: bolder;
+    width: 7em;
+    height: 2.4em;
+    color: #DEE;
+    font-size: 1em;
+    display: block;
+    margin: auto;
+}

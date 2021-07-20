@@ -19,7 +19,7 @@ const googleClientId = "296036318202-uraiim5u0cf5qpqhujl3aaj1kniuu41e.apps.googl
 // exports.verify = verify;
 
 const axios = require('axios');
-const UserModel = require('./database/models/User');
+const UserModel = require('../database/models/User');
 
 function verifyAuth(req) {
   const userToken = req.body.id_token;

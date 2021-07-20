@@ -6,8 +6,12 @@ const userSchema = new mongoose.Schema({
     type: String,
     required: true
   },
-  email: String,
-  picture: String
+  name: String,
+  // emailSalt: String,
+  // emailHash: String,
+  salt: String,
+  passwordHash: String,
+  // picture: String
 });
 
 module.exports = mongoose.model('user', userSchema);
