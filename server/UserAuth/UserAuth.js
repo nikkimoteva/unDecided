@@ -2,7 +2,7 @@ const bcrypt = require('bcrypt');
 const UserModel = require('../database/models/User');
 const saltRounds = 10;
 
-export function addPassword(name, username, password) {
+function addUser(name, username, password) {
     let saltGen;
     bcrypt.genSalt(saltRounds, function(err, salt) {
         if (err) {
@@ -29,7 +29,7 @@ export function addPassword(name, username, password) {
     });
 }
 
-export function validatePassword(username, password) {
+function validatePassword(username, password) {
     UserModel.find({username}, function(err, user) {
         if (err) {
             console.log(err);
@@ -49,4 +49,9 @@ export function validatePassword(username, password) {
             }
         });
     });
+}
+
+module.exports = {
+    addUser: addUser,
+    validatePassword: validatePassword
 }
