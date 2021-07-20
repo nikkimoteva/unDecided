@@ -61,13 +61,53 @@ function createData(job, stat, finish, end) {
   return data;
 }
 
+
+
+export default function Jobs(props) {
+  const classes = useStyles();
+  const [jobs, setJobs] = useState([]);
+  const [selectionModel, setSelectionModel] = useState([]);
+  const auth = useAuth();
+
+  useEffect(() => {
+
+    getJobs(auth.user.email)
+      .then(res => {
+        const gottenJobs = res.data;
+        setJobs(gottenJobs);
+      });
+  }, []);
+
+
+
 function Row(props) {
+
   const { row } = props;
   const [open, setOpen] = React.useState(false);
   const classes = useRowStyles();
 
+  function deleteJob() {
+    const jobId = row.id;
+    deleteJobDB(auth.user.email, jobId)
+      .then(_ => {
+        console.log("Successfully deleted Job");
+        return getJobs(auth.user.email);
+      })
+      .then(res => {
+        const gottenJobs = res.data;
+        setJobs(gottenJobs);
+      })
+      .catch(err => console.log(err));
+  }
+
+  function newPrediction() {
+    console.log("supposed to create prediction");
+    //stub
+  }
+
   return (
     <>
+
       <TableRow className={classes.root}>
         <TableCell>
           <IconButton aria-label="expand row" size="small" onClick={() => setOpen(!open)}>
@@ -80,15 +120,28 @@ function Row(props) {
         <TableCell align="right">{row.status}</TableCell>
         <TableCell align="right">{row.created}</TableCell>
         <TableCell align="right">{row.targetColumn}</TableCell>
+        <Button variant="contained" color="secondary"
+          className={classes.newJobButton} onClick={deleteJob} name = {row.name}>
+          Delete
+        </Button>
+        <Button variant="contained" color="secondary"
+          className={classes.newJobButton} onClick={newPrediction} name = {row.id}>
+          New Prediction
+        </Button>
+
+
       </TableRow>
+
       <TableRow>
         <TableCell style={{ paddingBottom: 0, paddingTop: 0 }} colSpan={6}>
+
           <Collapse in={open} timeout="auto" unmountOnExit>
             <Box margin={1}>
               <Typography variant="h6" gutterBottom component="div">
                 Stats
               </Typography>
               <Table size="small" aria-label="purchases">
+
                 <TableHead>
                   <TableRow>
                     <TableCell>Total Ram</TableCell>
@@ -110,42 +163,13 @@ function Row(props) {
               </Table>
             </Box>
           </Collapse>
+
         </TableCell>
       </TableRow>
+
     </>
   );
 }
-
-export default function Jobs(props) {
-  const classes = useStyles();
-  const [jobs, setJobs] = useState([]);
-  const [selectionModel, setSelectionModel] = useState([]);
-  const auth = useAuth();
-
-  useEffect(() => {
-
-    getJobs(auth.user.email)
-      .then(res => {
-        const gottenJobs = res.data;
-        setJobs(gottenJobs);
-      });
-  }, []);
-
-  function deleteJob() {
-    const jobId = selectionModel[0];
-    deleteJobDB(auth.user.email, jobId)
-      .then(_ => {
-        console.log("Successfully deleted Job");
-        return getJobs(auth.user.email);
-      })
-      .then(res => {
-        const gottenJobs = res.data;
-        setJobs(gottenJobs);
-      })
-      .catch(err => console.log(err));
-  }
-
-
 
 
   const rows = jobs;
