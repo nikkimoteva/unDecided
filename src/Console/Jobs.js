@@ -50,22 +50,13 @@ const useStyles = makeStyles({
   }
 });
 
-function createData(job, stat, finish, end) {
-  
-  const data = {
-    job, stat, finish, end,
-    history: [
-        {Total_Ram: "32GB", Average_Ram_Usage: "21.4GB", Percentage_Processed: "99.9%"},
-    ],
-  };
-  return data;
-}
 
 
 
 export default function Jobs(props) {
   const classes = useStyles();
   const [jobs, setJobs] = useState([]);
+  const [predictions, setPredictions] = useState([]);
   const [selectionModel, setSelectionModel] = useState([]);
   const auth = useAuth();
 
@@ -80,108 +71,111 @@ export default function Jobs(props) {
 
 
 
-function Row(props) {
+  function Row(props) {
 
-  const { row } = props;
-  const [open, setOpen] = React.useState(false);
-  const classes = useRowStyles();
+    const { row } = props;
+    const [open, setOpen] = React.useState(false);
+    const classes = useRowStyles();
 
-  function deleteJob() {
-    const jobId = row.id;
-    deleteJobDB(auth.user.email, jobId)
-      .then(_ => {
-        console.log("Successfully deleted Job");
-        return getJobs(auth.user.email);
-      })
-      .then(res => {
-        const gottenJobs = res.data;
-        setJobs(gottenJobs);
-      })
-      .catch(err => console.log(err));
-  }
+    function deleteJob() {
+      const jobId = row.id;
+      deleteJobDB(auth.user.email, jobId)
+        .then(_ => {
+          console.log("Successfully deleted Job");
+          return getJobs(auth.user.email);
+        })
+        .then(res => {
+          const gottenJobs = res.data;
+          setJobs(gottenJobs);
+        })
+        .catch(err => console.log(err));
+    }
 
-  function newPrediction() {
-    console.log("supposed to create prediction");
-    //stub
-  }
+    function newPrediction() {
+      console.log("supposed to create prediction");
+      //stub
+    }
 
-  return (
-    <>
+    function openButtonOnClick(){
+      setOpen(!open);
+    }
 
-      <TableRow className={classes.root}>
-        <TableCell>
-          <IconButton aria-label="expand row" size="small" onClick={() => setOpen(!open)}>
-            {open ? <KeyboardArrowUpIcon /> : <KeyboardArrowDownIcon />}
-          </IconButton>
-        </TableCell>
-        <TableCell component="th" scope="row">
-          {row.name}
-        </TableCell>
-        <TableCell align="right">{row.status}</TableCell>
-        <TableCell align="right">{row.created}</TableCell>
-        <TableCell align="right">{row.targetColumn}</TableCell>
-        <Button variant="contained" color="secondary"
-          className={classes.newJobButton} onClick={deleteJob} name = {row.name}>
-          Delete
-        </Button>
-        <Button variant="contained" color="secondary"
-          className={classes.newJobButton} onClick={newPrediction} name = {row.id}>
-          New Prediction
-        </Button>
+    return (
+      <>
+
+        <TableRow className={classes.root}>
+          <TableCell>
+            <IconButton aria-label="expand row" size="small" onClick={openButtonOnClick}>
+              {open ? <KeyboardArrowUpIcon /> : <KeyboardArrowDownIcon />}
+            </IconButton>
+          </TableCell>
+          <TableCell component="th" scope="row">
+            {row.name}
+          </TableCell>
+          <TableCell align="right">{row.status}</TableCell>
+          <TableCell align="right">{row.created}</TableCell>
+          <TableCell align="right">{row.targetColumn}</TableCell>
+          <Button variant="contained" color="secondary"
+            className={classes.newJobButton} onClick={deleteJob} name = {row.name}>
+            Delete
+          </Button>
+          <Button variant="contained" color="secondary"
+            className={classes.newJobButton} onClick={newPrediction} name = {row.id}>
+            New Prediction
+          </Button>
 
 
-      </TableRow>
+        </TableRow>
 
-      <TableRow>
-        <TableCell style={{ paddingBottom: 0, paddingTop: 0 }} colSpan={6}>
+        <TableRow>
+          <TableCell style={{ paddingBottom: 0, paddingTop: 0 }} colSpan={6}>
 
-          <Collapse in={open} timeout="auto" unmountOnExit>
-            <Box margin={1}>
-              <Typography variant="h6" gutterBottom component="div">
-                Predictions
-              </Typography>
-              <Table size="small" aria-label="purchases">
+            <Collapse in={open} timeout="auto" unmountOnExit>
+              <Box margin={1}>
+                <Typography variant="h6" gutterBottom component="div">
+                  Predictions
+                </Typography>
+                <Table size="small" aria-label="purchases">
 
-                <TableHead>
-                  <TableRow>
-                    <TableCell align="center">Prediction Name</TableCell>
-                    <TableCell align="center">Status</TableCell>
-                    <TableCell align="center">Time Created</TableCell>
-                  </TableRow>
-                </TableHead>
-                {/*<TableBody>
-                  {row.history.map((historyRow) => (
-                    <TableRow key={historyRow.date}>
-                      <TableCell component="th" scope="row">
-                        {historyRow.Total_Ram}
-                      </TableCell>
-                      <TableCell align="right">{historyRow.Average_Ram_Usage}</TableCell>
-                      <TableCell align="right">{historyRow.Percentage_Processed}</TableCell>
+                  <TableHead>
+                    <TableRow>
+                      <TableCell align="center">Prediction Name</TableCell>
+                      <TableCell align="center">Status</TableCell>
+                      <TableCell align="center">Time Created</TableCell>
                     </TableRow>
-                  ))}
-                </TableBody>*/}
-              </Table>
-            </Box>
-          </Collapse>
+                  </TableHead>
+                  <TableBody>
+                    {row.predictions.map((prediction) => (
+                      <TableRow key={prediction.date}>
+                        <TableCell align="center">
+                          {prediction.name}
+                        </TableCell>
+                        <TableCell align="center">{prediction.status}</TableCell>
+                        <TableCell align="center">{prediction.time_created}</TableCell>
+                      </TableRow>
+                    ))}
+                  </TableBody>
+                </Table>
+              </Box>
+            </Collapse>
 
-        </TableCell>
-      </TableRow>
+          </TableCell>
+        </TableRow>
 
-    </>
-  );
-}
+      </>
+    );
+  }
 
 
   const rows = jobs;
   console.log(jobs);
   rows.forEach(function (data) {
     data.id = data._id;
+    data.predictions=[{name:"p1",status:"running",time_created:"2021.7.20"}];
   });
   return (
     <div>
       <Grid container justify="center">
-
-
         <Button variant="contained" color="secondary"
                 className={classes.newJobButton} component={Link}
                 to={`${props.url}/submitJob`}
@@ -190,31 +184,28 @@ function Row(props) {
         </Button>
       </Grid>
 
-     
-    <Box className={classes.jobTable}>
-      <TableContainer component={Paper}>
-        <Table aria-label="collapsible table">
-          <TableHead>
-            <TableRow>
-              <TableCell />
-              <TableCell>Job Name</TableCell>
-              <TableCell align="right">Status</TableCell>
-              <TableCell align="right">Starting Date</TableCell>
-              <TableCell align="right">Target Column</TableCell>
-              <TableCell align="left">Actions</TableCell>
-            </TableRow>
-          </TableHead>
-          <TableBody>
-            {rows.map((row) => (
-              <Row key={row.id} row={row} />
-            ))}
-          </TableBody>
-        </Table>
-      </TableContainer>
+      <Box className={classes.jobTable}>
+        <TableContainer component={Paper}>
+          <Table aria-label="collapsible table">
+            <TableHead>
+              <TableRow>
+                <TableCell />
+                <TableCell>Job Name</TableCell>
+                <TableCell align="right">Status</TableCell>
+                <TableCell align="right">Starting Date</TableCell>
+                <TableCell align="right">Target Column</TableCell>
+                <TableCell align="left">Actions</TableCell>
+              </TableRow>
+            </TableHead>
+            <TableBody>
+              {rows.map((row) => (
+                <Row key={row.id} row={row} />
+              ))}
+            </TableBody>
+          </Table>
+        </TableContainer>
 
-    </Box>
-
-
+      </Box>
     </div>
   );
 }
