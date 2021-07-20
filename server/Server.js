@@ -16,7 +16,7 @@ const JobModel = require("./database/models/Job");
 const UserModel = require("./database/models/User");
 const csv = require('jquery-csv');
 
-const { readFilePromise, csvToArrays, csvToObject, arraysToCsv, runPredict, trainPipeline } = require("./Util");
+const { readFilePromise, csvToArrays, csvToObject, arraysToCsv, runPredict, trainPipeline } = require("../src/Util");
 require("./database/Database"); // Initializes DB connection
 
 const port = 3001;
@@ -76,14 +76,14 @@ app.post("/submitJob", (req, res) => {
   const id_token = body.id_token;
   const jobName = body.jobName;
   const maxJobTime = body.maxJobTime;
-  const targetCol = body.targetCol;
-  const targetColName = body.targetColName;
+  const targetColumn = body.targetColumn;
+  const targetColumnName = body.targetColumnName;
   const dataset = body.dataset;
   const job = new JobModel({
     name: jobName,
     user: id_token,
-    target_column: targetCol,
-    target_name: targetColName,
+    target_column: targetColumn,
+    target_name: targetColumnName,
     timer: maxJobTime,
   });
   job.save()
