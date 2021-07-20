@@ -4,7 +4,25 @@ import React, {useEffect, useState} from "react";
 import {getJobs, deleteJob as deleteJobDB} from "../common/Managers/EndpointManager";
 import {useAuth} from "../common/Auth";
 import {DataGrid} from '@material-ui/data-grid';
-
+import Collapse from '@material-ui/core/Collapse';
+import IconButton from '@material-ui/core/IconButton';
+import Table from '@material-ui/core/Table';
+import TableBody from '@material-ui/core/TableBody';
+import TableCell from '@material-ui/core/TableCell';
+import TableContainer from '@material-ui/core/TableContainer';
+import TableHead from '@material-ui/core/TableHead';
+import TableRow from '@material-ui/core/TableRow';
+import Typography from '@material-ui/core/Typography';
+import Paper from '@material-ui/core/Paper';
+import KeyboardArrowDownIcon from '@material-ui/icons/KeyboardArrowDown';
+import KeyboardArrowUpIcon from '@material-ui/icons/KeyboardArrowUp';
+const useRowStyles = makeStyles({
+  root: {
+    '& > *': {
+      borderBottom: 'unset',
+    },
+  },
+});
 
 
 const useStyles = makeStyles({
@@ -32,6 +50,71 @@ const useStyles = makeStyles({
   }
 });
 
+function createData(job, stat, finish, end) {
+  
+  const data = {
+    job, stat, finish, end,
+    history: [
+        {Total_Ram: "32GB", Average_Ram_Usage: "21.4GB", Percentage_Processed: "99.9%"},
+    ],
+  };
+  return data;
+}
+
+function Row(props) {
+  const { row } = props;
+  const [open, setOpen] = React.useState(false);
+  const classes = useRowStyles();
+
+  return (
+    <>
+      <TableRow className={classes.root}>
+        <TableCell>
+          <IconButton aria-label="expand row" size="small" onClick={() => setOpen(!open)}>
+            {open ? <KeyboardArrowUpIcon /> : <KeyboardArrowDownIcon />}
+          </IconButton>
+        </TableCell>
+        <TableCell component="th" scope="row">
+          {row.name}
+        </TableCell>
+        <TableCell align="right">{row.status}</TableCell>
+        <TableCell align="right">{row.created}</TableCell>
+        <TableCell align="right">{row.targetColumn}</TableCell>
+      </TableRow>
+      <TableRow>
+        <TableCell style={{ paddingBottom: 0, paddingTop: 0 }} colSpan={6}>
+          <Collapse in={open} timeout="auto" unmountOnExit>
+            <Box margin={1}>
+              <Typography variant="h6" gutterBottom component="div">
+                Stats
+              </Typography>
+              <Table size="small" aria-label="purchases">
+                <TableHead>
+                  <TableRow>
+                    <TableCell>Total Ram</TableCell>
+                    <TableCell align="right">Average Ram Usage</TableCell>
+                    <TableCell align="right">Percentage Processed</TableCell>
+                  </TableRow>
+                </TableHead>
+                {/*<TableBody>
+                  {row.history.map((historyRow) => (
+                    <TableRow key={historyRow.date}>
+                      <TableCell component="th" scope="row">
+                        {historyRow.Total_Ram}
+                      </TableCell>
+                      <TableCell align="right">{historyRow.Average_Ram_Usage}</TableCell>
+                      <TableCell align="right">{historyRow.Percentage_Processed}</TableCell>
+                    </TableRow>
+                  ))}
+                </TableBody>*/}
+              </Table>
+            </Box>
+          </Collapse>
+        </TableCell>
+      </TableRow>
+    </>
+  );
+}
 
 export default function Jobs(props) {
   const classes = useStyles();
@@ -62,35 +145,8 @@ export default function Jobs(props) {
       .catch(err => console.log(err));
   }
 
-  const columns = [
-    {
-      field: 'name',
-      headerName: 'Name', 
-      width: 300,
-      flex: 1,
-    },
-    {
-      field: 'user',
-      headerName: 'User',
-      flex: 1,
-    },
-    {
-      field: 'target_column',
-      headerName: 'Target Column',
-      flex: 1,
-    },
-    {
-      field: 'target_name',
-      headerName: 'Target Name',
-      flex: 1,
-    },
-    {
-      field: 'status',
-      headerName: 'Status',
-      description: 'This column has a value getter and is not sortable.',
-      flex: 1,
-    },
-  ];
+
+
 
   const rows = jobs;
   console.log(jobs);
@@ -112,33 +168,27 @@ export default function Jobs(props) {
 
      
     <Box className={classes.jobTable}>
-      <Button variant="contained" color="primary" onClick={deleteJob}>
-        Delete
-      </Button>
-      <DataGrid
+      <TableContainer component={Paper}>
+        <Table aria-label="collapsible table">
+          <TableHead>
+            <TableRow>
+              <TableCell />
+              <TableCell>Job Name</TableCell>
+              <TableCell align="right">Status</TableCell>
+              <TableCell align="right">Starting Date</TableCell>
+              <TableCell align="right">Target Column</TableCell>
+            </TableRow>
+          </TableHead>
+          <TableBody>
+            {rows.map((row) => (
+              <Row key={row.id} row={row} />
+            ))}
+          </TableBody>
+        </Table>
+      </TableContainer>
 
-        rows={rows}
-        columns={columns}
-        pageSize={10}
-        checkboxSelection
-        autoheight
-        selectionModel={selectionModel}
-        onSelectionModelChange={(selection) => {
-          const newSelectionModel = selection.selectionModel;
-
-          if (newSelectionModel.length > 1) {
-            const selectionSet = new Set(selectionModel);
-            const result = newSelectionModel.filter(
-              (s) => !selectionSet.has(s)
-            );
-
-            setSelectionModel(result);
-          } else {
-            setSelectionModel(newSelectionModel);
-          }
-        }}
-      />
     </Box>
+
 
     </div>
   );
