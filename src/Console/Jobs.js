@@ -100,7 +100,7 @@ export default function Jobs(props) {
 
     function openButtonOnClick(){
       setOpen(!open);
-      submitPrediction(auth.user.email, "hello");
+      submitPrediction(auth.user.email, "hello", row.id);
     }
 
     return (
