@@ -26,6 +26,11 @@ export function getJobs(id_token) {
 
 }
 
+export function getPredictions(id_token,jobID) {
+  return axios.post(`${root}/predictions`, {id_token,jobID});
+
+}
+
 export function deleteJob(id_token, jobId) {
   const d = {id_token, jobId};
   console.log(d);

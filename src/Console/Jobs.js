@@ -16,7 +16,7 @@ import Typography from '@material-ui/core/Typography';
 import Paper from '@material-ui/core/Paper';
 import KeyboardArrowDownIcon from '@material-ui/icons/KeyboardArrowDown';
 import KeyboardArrowUpIcon from '@material-ui/icons/KeyboardArrowUp';
-import {submitPrediction} from "../common/Managers/EndpointManager";
+import {submitPrediction, getPredictions} from "../common/Managers/EndpointManager";
 
 const useRowStyles = makeStyles({
   root: {
@@ -76,7 +76,7 @@ export default function Jobs(props) {
   function Row(props) {
 
     const { row } = props;
-    const [open, setOpen] = React.useState(false);
+    const [rowState, setRowState] = React.useState({open:false,predictions:[]});
     const classes = useRowStyles();
 
     function deleteJob() {
@@ -94,14 +94,20 @@ export default function Jobs(props) {
     }
 
     function newPrediction() {
-      console.log("supposed to create prediction");
-      //stub
+      submitPrediction(auth.user.email, row.name, row.id);
     }
 
     function openButtonOnClick(){
-      setOpen(!open);
-      submitPrediction(auth.user.email, "hello", row.id);
+
+      getPredictions(auth.user.email,row.id)
+      .then(res => {
+        const gottenPredictions = res.data;
+        setRowState({open:!rowState.open,predictions:gottenPredictions});
+
+      });
+
     }
+
 
     return (
       <>
@@ -109,7 +115,7 @@ export default function Jobs(props) {
         <TableRow className={classes.root}>
           <TableCell>
             <IconButton aria-label="expand row" size="small" onClick={openButtonOnClick}>
-              {open ? <KeyboardArrowUpIcon /> : <KeyboardArrowDownIcon />}
+              {rowState.open ? <KeyboardArrowUpIcon /> : <KeyboardArrowDownIcon />}
             </IconButton>
           </TableCell>
           <TableCell component="th" scope="row">
@@ -118,14 +124,15 @@ export default function Jobs(props) {
           <TableCell align="right">{row.status}</TableCell>
           <TableCell align="right">{row.created}</TableCell>
           <TableCell align="right">{row.targetColumn}</TableCell>
-          <Button variant="contained" color="secondary"
+          <TableCell align="right"><Button variant="contained" color="secondary"
             className={classes.newJobButton} onClick={deleteJob} name = {row.name}>
             Delete
           </Button>
           <Button variant="contained" color="secondary"
             className={classes.newJobButton} onClick={newPrediction} name = {row.id}>
             New Prediction
-          </Button>
+          </Button></TableCell>
+          
 
 
         </TableRow>
@@ -133,7 +140,7 @@ export default function Jobs(props) {
         <TableRow>
           <TableCell style={{ paddingBottom: 0, paddingTop: 0 }} colSpan={6}>
 
-            <Collapse in={open} timeout="auto" unmountOnExit>
+            <Collapse in={rowState.open} timeout="auto" unmountOnExit>
               <Box margin={1}>
                 <Typography variant="h6" gutterBottom component="div">
                   Predictions
@@ -148,13 +155,13 @@ export default function Jobs(props) {
                     </TableRow>
                   </TableHead>
                   <TableBody>
-                    {row.predictions.map((prediction) => (
+                    {rowState.predictions.map((prediction) => (
                       <TableRow key={prediction.date}>
                         <TableCell align="center">
                           {prediction.name}
                         </TableCell>
                         <TableCell align="center">{prediction.status}</TableCell>
-                        <TableCell align="center">{prediction.time_created}</TableCell>
+                        <TableCell align="center">{prediction.created}</TableCell>
                       </TableRow>
                     ))}
                   </TableBody>
@@ -171,7 +178,6 @@ export default function Jobs(props) {
 
 
   const rows = jobs;
-  console.log(jobs);
   rows.forEach(function (data) {
     data.id = data._id;
     data.predictions=[{name:"p1",status:"running",time_created:"2021.7.20"}];
@@ -197,7 +203,7 @@ export default function Jobs(props) {
                 <TableCell align="right">Status</TableCell>
                 <TableCell align="right">Starting Date</TableCell>
                 <TableCell align="right">Target Column</TableCell>
-                <TableCell align="left">Actions</TableCell>
+                <TableCell align="center">Actions</TableCell>
               </TableRow>
             </TableHead>
             <TableBody>
