@@ -13,6 +13,7 @@ const logger = require('morgan');
 const { storeCSV } = require("./FileManager");
 const auth = require("./Auth.js");
 const JobModel = require("./database/models/Job");
+const PredictionModel = require("./database/models/Prediction");
 const UserModel = require("./database/models/User");
 const csv = require('jquery-csv');
 
@@ -36,6 +37,17 @@ app.post("/jobs", (req, res) => {
   JobModel.find({user: id_token})
     .then(jobs =>{
       return res.json(jobs);
+    })
+
+    .catch(err => errorHandler(err, res));
+});
+
+app.post("/predictions", (req, res) => {
+  const id_token = req.body.id_token;
+  const jobID = req.body.jobID;
+  PredictionModel.find({user: id_token, jobID: jobID})
+    .then(predictions =>{
+      return res.json(predictions);
     })
 
     .catch(err => errorHandler(err, res));
@@ -93,6 +105,24 @@ app.post("/submitJob", (req, res) => {
     })
     .catch(err => errorHandler(err, res));
 });
+
+app.post("/submitPrediction", (req, res) => {
+  const body = req.body;
+  const id_token = body.id_token;
+  const predictionName = body.predictionName;
+  const jobID = body.jobID;
+  const prediction = new PredictionModel({
+    name: predictionName,
+    user: id_token,
+    jobID:jobID
+  });
+  prediction.save()
+    .then(_ => {
+      return res.sendStatus(200);
+    })
+    .catch(err => errorHandler(err, res));
+});
+
 
 app.post('/registerAWS', (req, res) => {
   const region = req.body.region;

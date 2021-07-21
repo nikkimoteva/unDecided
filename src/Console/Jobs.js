@@ -94,7 +94,15 @@ export default function Jobs(props) {
     }
 
     function newPrediction() {
-      submitPrediction(auth.user.email, row.name, row.id);
+      submitPrediction(auth.user.email, `${row.name} prediction`, row.id)
+        .then(res => {
+          getPredictions(auth.user.email,row.id)
+          .then(res => {
+            const gottenPredictions = res.data;
+            setRowState({open:rowState.open,predictions:gottenPredictions});
+
+          });
+        });
     }
 
     function openButtonOnClick(){
@@ -124,7 +132,7 @@ export default function Jobs(props) {
           <TableCell align="right">{row.status}</TableCell>
           <TableCell align="right">{row.created}</TableCell>
           <TableCell align="right">{row.targetColumn}</TableCell>
-          <TableCell align="right"><Button variant="contained" color="secondary"
+          <TableCell align="center"><Button variant="contained" color="secondary"
             className={classes.newJobButton} onClick={deleteJob} name = {row.name}>
             Delete
           </Button>
