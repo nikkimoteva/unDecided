@@ -17,6 +17,10 @@ export function submitJob(id_token, jobName, maxJobTime, dataset) {
   return axios.post(`${root}/submitJob`, {id_token, jobName, maxJobTime, dataset});
 }
 
+export function submitPrediction(id_token, predictionName) {
+  return axios.post(`${root}/submitPrediction`, {id_token, predictionName});
+}
+
 export function getJobs(id_token) {
   return axios.post(`${root}/jobs`, {id_token});
 

@@ -16,6 +16,8 @@ import Typography from '@material-ui/core/Typography';
 import Paper from '@material-ui/core/Paper';
 import KeyboardArrowDownIcon from '@material-ui/icons/KeyboardArrowDown';
 import KeyboardArrowUpIcon from '@material-ui/icons/KeyboardArrowUp';
+import {submitPrediction} from "../common/Managers/EndpointManager";
+
 const useRowStyles = makeStyles({
   root: {
     '& > *': {
@@ -98,6 +100,7 @@ export default function Jobs(props) {
 
     function openButtonOnClick(){
       setOpen(!open);
+      submitPrediction(auth.user.email, "hello");
     }
 
     return (
