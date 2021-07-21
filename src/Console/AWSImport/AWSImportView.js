@@ -4,16 +4,14 @@ import {DataGrid} from "@material-ui/data-grid";
 import "./AWSImport.css";
 import {useHistory} from "react-router-dom";
 import AWSImportForm from "./Form";
-import {Typography} from "@material-ui/core";
+import {DialogContent, Typography} from "@material-ui/core";
 
 
-export default function AWSImportView() {
+export default function AWSImportView(props) {
   const [rows, setRows] = useState([]);
   const [currBucket, setCurrBucket] = useState("");
   const [showBucketsTable, setShowBucketsTable] = useState(true);
   const [isLoading, setLoading] = useState(false);
-
-  const history = useHistory();
 
   const objectTableFields = [
     {field: 'Key', headerName: 'Key', width: 300},
@@ -86,17 +84,15 @@ export default function AWSImportView() {
       getObject(currBucket, key)
         .then(csv => {
           console.log("Retrieved file");
-          history.push({
-            pathname: "/console/submitJob",
-            state: {csv} // can access using history.location.state.csv
-          });
+          props.setFile(csv);
+          props.closeModal();
         })
         .catch(err => console.log(err));
     }
   }
 
   return (
-    <div>
+    <DialogContent>
       <AWSImportForm onSubmit={registerAndListBuckets}/>
       <Typography variant="h4" style={{textAlign: "center", marginBottom: "20px"}}>{tableTitle}</Typography>
       <div style={{height: 600, width: '100%'}} hidden={!showBucketsTable}>
@@ -105,7 +101,7 @@ export default function AWSImportView() {
       <div style={{height: 600, width: '100%'}} hidden={showBucketsTable}>
         <DataTable rows={rows} columns={objectTableFields} doubleClick={getObjectOnClick} loading={isLoading}/>
       </div>
-    </div>
+    </DialogContent>
   );
 }
 

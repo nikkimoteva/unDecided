@@ -1,7 +1,7 @@
 import React, {useEffect, useState} from "react";
 import {Button, Dialog, DialogTitle, Hidden, makeStyles, MenuItem, Slide, TextField} from "@material-ui/core";
 import {submitJob} from "../common/Managers/EndpointManager";
-import {Link, useHistory} from "react-router-dom";
+import {useHistory} from "react-router-dom";
 import {useAuth} from "../common/Auth.js";
 import {csvToArrays} from "../Util";
 import AWSImportView from "./AWSImport/AWSImportView";
@@ -31,9 +31,6 @@ const useStyles = makeStyles((theme) => ({
 
 export default function JobForm() {
   const [jobName, setJobName] = useState("");
-  const [maxJobTime, setMaxJobTime] = useState(10);
-  const [timeOption, setTimeOption] = useState(1);
-  const [targetColumn, setTargetColumn] = useState("");
   const [header, setHeader] = useState([]);
   const [CSV, setCSV] = useState("");
 
@@ -42,36 +39,7 @@ export default function JobForm() {
 
   const classes = useStyles();
   const auth = useAuth();
-  const history = useHistory();
   const fileInput = React.createRef();
-
-  // checks to see if we got a file from AWS when page loads
-  // useEffect(() => {
-  //   const awsFile = history.location.state?.csv;
-  //   if (awsFile !== undefined) {
-  //     updateHeaderFields(awsFile)
-  //       .then(() => {
-  //         setCSV(awsFile);
-  //         setDataImportSuccess(true);
-  //       })
-  //       .catch(err => setDataImportSuccess(false));
-  //   }
-  // }, []);
-
-  // Useful constants
-  const minJobTimeValue = 5;
-  const maxJobTimeValue = 2880; // 48 hours
-  const jobTimeOptions = [
-    {name: "minutes", value: 1},
-    {name: "hours", value: 60}
-  ];
-  const jobTime = maxJobTime * timeOption;
-
-  // Functions
-  function handleMaxJobTimeChange(event) {
-    const newValue = event.target.value;
-    if (!isNaN(newValue)) setMaxJobTime(newValue);
-  }
 
   function openModal() {
     setShowModal(true);
@@ -113,22 +81,14 @@ export default function JobForm() {
       });
   }
 
-  function isInvalidForm() {
-    return (maxJobTime <= maxJobTimeValue && jobTime >= minJobTimeValue)
-      || jobName.length === 0
-      || targetColumn.length === 0;
-  }
-
   function submitHandler(event) {
     event.preventDefault();
     if (CSV !== undefined && CSV.name.substring(CSV.name.length - 3) !== 'csv') {
       alert("File name must be a csv");
-    } else if (isInvalidForm()) {
-      alert("Form invalid. Try again.");
+    } else if (jobName.length === 0) {
+      alert("Job Name cannot be empty.");
     } else {
-      submitJob(auth.user.email, jobName, maxJobTime, targetColumn, CSV)
-        .then(res => history.push('/console/jobs'))
-        .catch(err => alert("Job failed to submit"));
+      // TODO
     }
   }
 
@@ -146,7 +106,7 @@ export default function JobForm() {
           </Hidden>
           <Hidden smUp={dataImportSuccess === undefined || dataImportSuccess}>
             <ClearIcon color="error"/>
-            <p style={{color: "red"}}>Failed to import data. Try again</p>
+            <p style={{color: "red"}}>Failed to import prediction data. Try again</p>
           </Hidden>
         </div>
 
@@ -162,52 +122,6 @@ export default function JobForm() {
               style={{width: "52vh"}}
               onChange={(event) => setJobName(event.target.value)}
             />
-          </div>
-
-          {/*Job Time*/}
-          <div>
-            <TextField
-              id="maxJobTime"
-              label="Max Job Time"
-              variant="outlined"
-              value={maxJobTime}
-              onChange={handleMaxJobTimeChange}
-              margin="normal"
-            />
-            <TextField
-              select
-              variant="outlined"
-              value={timeOption}
-              onChange={(event) => setTimeOption(parseInt(event.target.value))}
-            >
-              {
-                jobTimeOptions.map((option) => (
-                  <MenuItem key={option.name} value={option.value}>{option.name}</MenuItem>
-                ))
-              }
-            </TextField>
-          </div>
-
-          {/*Target Column*/}
-          <div>
-            <Hidden smUp={header.length === 0}>
-              <TextField
-                select
-                id="columnName"
-                label="Target Column"
-                variant="outlined"
-                margin="normal"
-                onChange={(event) => setTargetColumn(event.target.value)}
-              >
-                {
-                  header.map((field) => (
-                    <MenuItem key={field.col} value={field.name}>
-                      {field.name}
-                    </MenuItem>
-                  ))
-                }
-              </TextField>
-            </Hidden>
           </div>
 
           <Hidden smUp={header.length !== 0}>
@@ -256,7 +170,6 @@ export default function JobForm() {
         <DialogTitle>Import from AWS</DialogTitle>
         <AWSImportView closeModal={closeModal} setFile={setCSV}/>
       </Dialog>
-
     </>
   );
 }

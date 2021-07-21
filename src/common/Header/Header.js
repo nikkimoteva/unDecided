@@ -22,11 +22,6 @@ const useStyles = makeStyles(() => ({
   }
 }));
 
-const Transition = React.forwardRef(function Transition(props, ref) {
-  return <Slide direction="up" ref={ref} {...props} />;
-});
-
-
 export default function Header() {
   const classes = useStyles();
   const {loginModal, setLoginModal} = useLoginModalContext();
@@ -53,6 +48,10 @@ export default function Header() {
     auth.signout();
     history.push('/'); // redirect to main page
   }
+
+  const SlideUpTransition = React.forwardRef(function Transition(props, ref) {
+    return <Slide direction="up" ref={ref} {...props} />;
+  });
 
   const headerButtons = (auth.user === "")
     ? (
@@ -91,7 +90,7 @@ export default function Header() {
         onClose={closeLoginModal}
         aria-labelledby="Login Form"
         aria-describedby="Input your login details here"
-        TransitionComponent={Transition}
+        TransitionComponent={SlideUpTransition}
       >
         <DialogTitle>Log In</DialogTitle>
         <LoginModal signin={login} onClose={closeLoginModal}/>
@@ -99,4 +98,3 @@ export default function Header() {
     </>
   );
 }
-
