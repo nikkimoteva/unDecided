@@ -113,19 +113,30 @@ export default function JobForm() {
       });
   }
 
-  function isInvalidForm() {
-    return (maxJobTime <= maxJobTimeValue && jobTime >= minJobTimeValue)
-      || jobName.length === 0
-      || targetColumn.length === 0;
+  function validateFormData() {
+    if (CSV === "") {
+      alert("You must upload a csv file to train on.");
+      return false;
+    } else if (CSV.name.substring(CSV.name.length - 3) !== 'csv') {
+      alert("File name must have a .csv extension");
+      return false;
+    } else if (jobName.length === 0) {
+      alert("Job name cannot be empty");
+      return false;
+    } else if (maxJobTime > maxJobTimeValue || jobTime < minJobTimeValue) {
+      alert("Max Job Time must be between 10 minutes and 48 hours");
+      return false;
+    } else if (targetColumn.length === 0) {
+      alert("You must select a target column from the dropdown");
+      return false;
+    } else {
+      return true;
+    }
   }
 
   function submitHandler(event) {
     event.preventDefault();
-    if (CSV !== undefined && CSV.name.substring(CSV.name.length - 3) !== 'csv') {
-      alert("File name must be a csv");
-    } else if (isInvalidForm()) {
-      alert("Form invalid. Try again.");
-    } else {
+    if (validateFormData()) {
       submitJob(auth.user.email, jobName, maxJobTime, targetColumn, CSV)
         .then(res => history.push('/console/jobs'))
         .catch(err => alert("Job failed to submit"));
@@ -254,7 +265,7 @@ export default function JobForm() {
         TransitionComponent={SlideUpTransition}
       >
         <DialogTitle>Import from AWS</DialogTitle>
-        <AWSImportView closeModal={closeModal} setFile={setCSV}/>
+        <AWSImportView closeModal={closeModal} setFile={setCSV} setDataImportSuccess={setDataImportSuccess}/>
       </Dialog>
 
     </>

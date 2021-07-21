@@ -2,13 +2,12 @@ import {registerAWS, listBuckets, listObjects, getObject} from "../../common/Man
 import {useState} from "react";
 import {DataGrid} from "@material-ui/data-grid";
 import "./AWSImport.css";
-import {useHistory} from "react-router-dom";
 import AWSImportForm from "./Form";
-import {DialogContent, Typography} from "@material-ui/core";
-
+import {DialogContent, TextField, Typography} from "@material-ui/core";
 
 export default function AWSImportView(props) {
   const [rows, setRows] = useState([]);
+  const [rowsToShow, setRowsToShow] = useState([]);
   const [currBucket, setCurrBucket] = useState("");
   const [showBucketsTable, setShowBucketsTable] = useState(true);
   const [isLoading, setLoading] = useState(false);
@@ -34,6 +33,13 @@ export default function AWSImportView(props) {
     });
   }
 
+  function onSearchChange(event) {
+    const newSearch = event.target.value;
+    if (newSearch === "") setRowsToShow(rows);
+    else if (showBucketsTable) setRowsToShow(rows.filter(row => row.Name.toLowerCase().includes(newSearch.toLowerCase())));
+    else setRowsToShow(rows.filter(row => row.Key.toLowerCase().includes(newSearch.toLowerCase())));
+  }
+
   function parseObject(obj) {
     const size = parseFloat(obj.Size);
     let sizeInMiB = size / 1048576.;
@@ -54,7 +60,9 @@ export default function AWSImportView(props) {
         const bucketJSONs = buckets.map((bucket) => {
           return {Name: bucket.Name, Owner: owner, CreationDate: bucket.CreationDate};
         });
-        setRows(createRows(bucketJSONs));
+        const rows = createRows(bucketJSONs);
+        setRows(rows);
+        setRowsToShow(rows);
         setShowBucketsTable(true);
       })
       .catch(err => console.log(err))
@@ -70,7 +78,9 @@ export default function AWSImportView(props) {
       .then(res => {
         const objects = (res !== "") ? res : []; // avoids errors when there are no objects in bucket
         const jsons = objects.map(obj => parseObject(obj));
-        setRows(createRows(jsons));
+        const rows = createRows(jsons);
+        setRows(rows);
+        setRowsToShow(rows);
         setShowBucketsTable(false);
       })
       .catch(err => console.log(err))
@@ -85,22 +95,31 @@ export default function AWSImportView(props) {
       getObject(currBucket, key)
         .then(csv => {
           console.log("Retrieved file");
+          console.log(csv);
           props.setFile(csv);
-          props.closeModal();
+          props.setDataImportSuccess(true);
         })
-        .catch(err => console.log(err));
+        .catch(err => {
+          console.log(err);
+          props.setDataImportSuccess(false);
+        })
+        .finally(() => props.closeModal());
     }
   }
 
   return (
     <DialogContent>
       <AWSImportForm onSubmit={registerAndListBuckets}/>
+      <br/><br/>
       <Typography variant="h4" style={{textAlign: "center", marginBottom: "20px"}}>{tableTitle}</Typography>
+      <div style={{display: "flex", justifyContent: "end"}}>
+        <TextField onChange={onSearchChange} label="Search" type="search"/>
+      </div>
       <div style={{height: 600, width: '100%'}} hidden={!showBucketsTable}>
-        <DataTable rows={rows} columns={bucketsTableFields} doubleClick={listObjectsOnClick} loading={isLoading}/>
+        <DataTable rows={rowsToShow} columns={bucketsTableFields} doubleClick={listObjectsOnClick} loading={isLoading}/>
       </div>
       <div style={{height: 600, width: '100%'}} hidden={showBucketsTable}>
-        <DataTable rows={rows} columns={objectTableFields} doubleClick={getObjectOnClick} loading={isLoading}/>
+        <DataTable rows={rowsToShow} columns={objectTableFields} doubleClick={getObjectOnClick} loading={isLoading}/>
       </div>
     </DialogContent>
   );
@@ -113,5 +132,5 @@ function DataTable(props) {
                    onCellDoubleClick={props.doubleClick}
                    columnBuffer={2}
                    loading={props.loading}
-         />;
+  />;
 }
