@@ -49,16 +49,16 @@ export default function AWSImportView(props) {
         return listBuckets();
       })
       .then(res => {
-        const buckets = res.Buckets;
+        const buckets = (res.Buckets !== undefined) ? res.Buckets : [];
         const owner = res.Owner.DisplayName;
         const bucketJSONs = buckets.map((bucket) => {
           return {Name: bucket.Name, Owner: owner, CreationDate: bucket.CreationDate};
         });
         setRows(createRows(bucketJSONs));
         setShowBucketsTable(true);
-        setLoading(false);
       })
-      .catch(err => console.log(err));
+      .catch(err => console.log(err))
+      .finally(() => setLoading(false));
   }
 
   function listObjectsOnClick(params, event) {
@@ -67,13 +67,14 @@ export default function AWSImportView(props) {
     setLoading(true);
     setCurrBucket(bucketName);
     listObjects(bucketName)
-      .then(objects => {
+      .then(res => {
+        const objects = (res !== "") ? res : []; // avoids errors when there are no objects in bucket
         const jsons = objects.map(obj => parseObject(obj));
         setRows(createRows(jsons));
         setShowBucketsTable(false);
-        setLoading(false);
       })
-      .catch(err => console.log(err));
+      .catch(err => console.log(err))
+      .finally(() => setLoading(false));
   }
 
   function getObjectOnClick(params, event) {
