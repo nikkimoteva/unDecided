@@ -89,7 +89,7 @@ export default function TrainJobForm() {
 
   function onFilePicked() {
     const file = fileInput.current.files[0];
-    if (file.name.substring(file.name.length - 3) !== 'csv') alert("File name must have a .csv extension");
+    if (file.name.substring(file.name.length - 4) !== '.csv') alert("File name must have a .csv extension");
     else {
       getFileObjectContent(file)
         .then(csvString => updateCSVState(csvString))

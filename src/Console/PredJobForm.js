@@ -4,6 +4,8 @@ import {useAuth} from "../common/Auth.js";
 import AWSImportView from "./AWSImport/AWSImportView";
 import DoneIcon from '@material-ui/icons/Done';
 import ClearIcon from '@material-ui/icons/Clear';
+import {useHistory} from "react-router-dom";
+import {submitJob} from "../common/Managers/EndpointManager";
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -26,11 +28,15 @@ const useStyles = makeStyles((theme) => ({
   }
 }));
 
-export default function JobForm() {
+/**
+ *
+ * @param props.header should contain the header of the train job
+ *
+ */
+export default function JobForm(props) {
   const [jobName, setJobName] = useState("");
   const [maxJobTime, setMaxJobTime] = useState(10);
   const [timeOption, setTimeOption] = useState(1);
-  const [header, setHeader] = useState([]);
   const [CSV, setCSV] = useState("");
 
   const [showModal, setShowModal] = useState(false);
@@ -38,6 +44,7 @@ export default function JobForm() {
 
   const classes = useStyles();
   const auth = useAuth();
+  const history = useHistory();
   const fileInput = React.createRef();
 
   // Useful constants
@@ -72,20 +79,30 @@ export default function JobForm() {
     });
   }
 
+  function isEqualArrays(arr1, arr2) {
+    if (arr1.length !== arr2.length) return false;
+    for (let i = 0; i < arr1.length; i++) {
+      if (arr1[i] !== arr2[i]) return false;
+    }
+    return true;
+  }
+
   // converts array of fields into array of json objects
   function updateCSVState(csvString) {
     setCSV(csvString);
     const header = csvString.split('\n')[0];
     const fields = header.split(',');
-    setDataImportSuccess(true);
-    setHeader(fields.map((field, ind) => {
-      return {name: field, col: ind};
-    }));
+    if (!isEqualArrays(fields, props.header)) {
+      alert("The prediction dataset must have the same columns as the training dataset");
+      setDataImportSuccess(false);
+    } else {
+      setDataImportSuccess(true);
+    }
   }
 
   function onFilePicked() {
     const file = fileInput.current.files[0];
-    if (file.name.substring(file.name.length - 3) !== 'csv') alert("File name must have a .csv extension");
+    if (file.name.substring(file.name.length - 4) !== '.csv') alert("File name must have a .csv extension");
     else {
       getFileObjectContent(file)
         .then(csvString => updateCSVState(csvString))
@@ -96,14 +113,26 @@ export default function JobForm() {
     }
   }
 
+  function validateFormData() {
+    if (CSV === "") {
+      alert("You must upload a csv file to train on.");
+      return false;
+      // } else
+    } else if (jobName.length === 0) {
+      alert("Job name cannot be empty");
+      return false;
+    } else if (maxJobTime > maxJobTimeValue || jobTime < minJobTimeValue) {
+      alert("Max Job Time must be between 10 minutes and 48 hours");
+      return false;
+    } else {
+      return true;
+    }
+  }
+
   function submitHandler(event) {
     event.preventDefault();
-    if (CSV !== undefined && CSV.name.substring(CSV.name.length - 3) !== 'csv') {
-      alert("File name must be a csv");
-    } else if (jobName.length === 0) {
-      alert("Job Name cannot be empty.");
-    } else {
-      // TODO
+    if (validateFormData()) {
+      //TODO
     }
   }
 
@@ -163,7 +192,7 @@ export default function JobForm() {
             </TextField>
           </div>
 
-          <Hidden smUp={header.length !== 0}>
+          <Hidden smUp={dataImportSuccess}>
             {/*File Input Element*/}
             <label htmlFor="fileInput">
               <input type="file"
