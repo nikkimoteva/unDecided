@@ -1,9 +1,8 @@
-import React, {useEffect, useState} from "react";
+import React, {useState} from "react";
 import {Button, Dialog, DialogTitle, Hidden, makeStyles, MenuItem, Slide, TextField} from "@material-ui/core";
 import {submitJob} from "../common/Managers/EndpointManager";
-import {Link, useHistory} from "react-router-dom";
+import {useHistory} from "react-router-dom";
 import {useAuth} from "../common/Auth.js";
-import {csvToArrays} from "../Util";
 import AWSImportView from "./AWSImport/AWSImportView";
 import DoneIcon from '@material-ui/icons/Done';
 import ClearIcon from '@material-ui/icons/Clear';
@@ -29,7 +28,7 @@ const useStyles = makeStyles((theme) => ({
   }
 }));
 
-export default function JobForm() {
+export default function TrainJobForm() {
   const [jobName, setJobName] = useState("");
   const [maxJobTime, setMaxJobTime] = useState(10);
   const [timeOption, setTimeOption] = useState(1);
@@ -44,19 +43,6 @@ export default function JobForm() {
   const auth = useAuth();
   const history = useHistory();
   const fileInput = React.createRef();
-
-  // checks to see if we got a file from AWS when page loads
-  // useEffect(() => {
-  //   const awsFile = history.location.state?.csv;
-  //   if (awsFile !== undefined) {
-  //     updateHeaderFields(awsFile)
-  //       .then(() => {
-  //         setCSV(awsFile);
-  //         setDataImportSuccess(true);
-  //       })
-  //       .catch(err => setDataImportSuccess(false));
-  //   }
-  // }, []);
 
   // Useful constants
   const minJobTimeValue = 5;
@@ -81,16 +67,6 @@ export default function JobForm() {
     setShowModal(false);
   }
 
-  function onFilePicked() {
-    const file = fileInput.current.files[0];
-    updateHeaderFields(file)
-      .then(() => {
-        setCSV(file);
-        setDataImportSuccess(true);
-      })
-      .catch(err => setDataImportSuccess(false));
-  }
-
   function getFileObjectContent(file) {
     return new Promise((resolve, reject) => {
       const reader = new FileReader();
@@ -100,26 +76,35 @@ export default function JobForm() {
     });
   }
 
-  // gets the header strings if file has been provided, otherwise returns empty list
-  function updateHeaderFields(file) {
-    return getFileObjectContent(file)
-      .then(res => csvToArrays(res))
-      .then(arr => {
-        const headerFields = arr[0].map((field, ind) => {
-          return {name: field, col: ind};
+  // converts array of fields into array of json objects
+  function updateCSVState(csvString) {
+    setCSV(csvString);
+    const header = csvString.split('\n')[0];
+    const fields = header.split(',');
+    setDataImportSuccess(true);
+    setHeader(fields.map((field, ind) => {
+      return {name: field, col: ind};
+    }));
+  }
+
+  function onFilePicked() {
+    const file = fileInput.current.files[0];
+    if (file.name.substring(file.name.length - 3) !== 'csv') alert("File name must have a .csv extension");
+    else {
+      getFileObjectContent(file)
+        .then(csvString => updateCSVState(csvString))
+        .catch(err => {
+          console.log(err);
+          setDataImportSuccess(false);
         });
-        console.log(headerFields);
-        setHeader(headerFields);
-      });
+    }
   }
 
   function validateFormData() {
     if (CSV === "") {
       alert("You must upload a csv file to train on.");
       return false;
-    } else if (CSV.name.substring(CSV.name.length - 3) !== 'csv') {
-      alert("File name must have a .csv extension");
-      return false;
+    // } else
     } else if (jobName.length === 0) {
       alert("Job name cannot be empty");
       return false;
@@ -137,7 +122,7 @@ export default function JobForm() {
   function submitHandler(event) {
     event.preventDefault();
     if (validateFormData()) {
-      submitJob(auth.user.email, jobName, maxJobTime, targetColumn, CSV)
+      submitJob(auth.user.email, jobName, jobTime, targetColumn, CSV)
         .then(res => history.push('/console/jobs'))
         .catch(err => alert("Job failed to submit"));
     }
@@ -265,9 +250,10 @@ export default function JobForm() {
         TransitionComponent={SlideUpTransition}
       >
         <DialogTitle>Import from AWS</DialogTitle>
-        <AWSImportView closeModal={closeModal} setFile={setCSV} setDataImportSuccess={setDataImportSuccess}/>
+        <AWSImportView closeModal={closeModal} setFile={setCSV} setDataImportSuccess={setDataImportSuccess}
+                       updateCSVState={updateCSVState}
+        />
       </Dialog>
-
     </>
   );
 }

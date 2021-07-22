@@ -3,7 +3,14 @@ import {useState} from "react";
 import {DataGrid} from "@material-ui/data-grid";
 import "./AWSImport.css";
 import AWSImportForm from "./Form";
-import {DialogContent, TextField, Typography} from "@material-ui/core";
+import {DialogContent, makeStyles, TextField, Typography} from "@material-ui/core";
+
+const useStyles = makeStyles((theme) => ({
+  dataGridDiv: {
+    height: "400px",
+    width: '100%'
+  }
+}));
 
 export default function AWSImportView(props) {
   const [rows, setRows] = useState([]);
@@ -11,6 +18,8 @@ export default function AWSImportView(props) {
   const [currBucket, setCurrBucket] = useState("");
   const [showBucketsTable, setShowBucketsTable] = useState(true);
   const [isLoading, setLoading] = useState(false);
+
+  const classes = useStyles();
 
   const objectTableFields = [
     {field: 'Key', headerName: 'Key', width: 300},
@@ -43,7 +52,8 @@ export default function AWSImportView(props) {
   function parseObject(obj) {
     const size = parseFloat(obj.Size);
     let sizeInMiB = size / 1048576.;
-    if (sizeInMiB < 10) sizeInMiB = sizeInMiB.toFixed(1);
+    const numDigitsAfterDecimal = (sizeInMiB < 10) ? 1 : 0;
+    sizeInMiB = sizeInMiB.toFixed(numDigitsAfterDecimal);
     return {Key: obj.Key, Owner: obj.Owner.DisplayName, LastModified: obj.LastModified, Size: sizeInMiB};
   }
 
@@ -65,13 +75,16 @@ export default function AWSImportView(props) {
         setRowsToShow(rows);
         setShowBucketsTable(true);
       })
-      .catch(err => console.log(err))
+      .catch(err => {
+        alert("Unable to get buckets. Check that the provided keys are correct, and that the associated user has S3 Read privileges");
+        console.log(err);
+      })
       .finally(() => setLoading(false));
   }
 
   function listObjectsOnClick(params, event) {
     const bucketName = params.row.Name;
-    setRows([]);
+    setRowsToShow([]);
     setLoading(true);
     setCurrBucket(bucketName);
     listObjects(bucketName)
@@ -81,10 +94,15 @@ export default function AWSImportView(props) {
         const rows = createRows(jsons);
         setRows(rows);
         setRowsToShow(rows);
-        setShowBucketsTable(false);
       })
-      .catch(err => console.log(err))
-      .finally(() => setLoading(false));
+      .catch(err => {
+        console.log(err);
+        alert("Failed to retrieve data from objects. Check that the region selected matches the bucket region");
+      })
+      .finally(() => {
+        setLoading(false);
+        setShowBucketsTable(false);
+      });
   }
 
   function getObjectOnClick(params, event) {
@@ -92,18 +110,23 @@ export default function AWSImportView(props) {
     if (key.slice(-4) !== ".csv") {
       alert("File object must have a '.csv' extension");
     } else {
+      setLoading(true);
+      setRowsToShow([]);
       getObject(currBucket, key)
-        .then(csv => {
+        .then(csvString => {
           console.log("Retrieved file");
-          console.log(csv);
-          props.setFile(csv);
-          props.setDataImportSuccess(true);
+          props.updateCSVState(csvString);
         })
         .catch(err => {
           console.log(err);
+          alert("Failed to retrieve file from S3");
           props.setDataImportSuccess(false);
         })
-        .finally(() => props.closeModal());
+        .finally(() => {
+          setLoading(false);
+          props.closeModal();
+          console.log("error here i think");
+        });
     }
   }
 
@@ -115,22 +138,26 @@ export default function AWSImportView(props) {
       <div style={{display: "flex", justifyContent: "end"}}>
         <TextField onChange={onSearchChange} label="Search" type="search"/>
       </div>
-      <div style={{height: 600, width: '100%'}} hidden={!showBucketsTable}>
-        <DataTable rows={rowsToShow} columns={bucketsTableFields} doubleClick={listObjectsOnClick} loading={isLoading}/>
+      <div className={classes.dataGridDiv} hidden={!showBucketsTable}>
+        <CustomDataGrid rows={rowsToShow} columns={bucketsTableFields} doubleClick={listObjectsOnClick}
+                        loading={isLoading}
+        />
       </div>
-      <div style={{height: 600, width: '100%'}} hidden={showBucketsTable}>
-        <DataTable rows={rowsToShow} columns={objectTableFields} doubleClick={getObjectOnClick} loading={isLoading}/>
+      <div className={classes.dataGridDiv} hidden={showBucketsTable}>
+        <CustomDataGrid rows={rowsToShow} columns={objectTableFields} doubleClick={getObjectOnClick}
+                        loading={isLoading}
+        />
       </div>
     </DialogContent>
   );
 }
 
-function DataTable(props) {
+function CustomDataGrid(props) {
   return <DataGrid rows={props.rows}
                    columns={props.columns}
                    pageSize={10}
                    onCellDoubleClick={props.doubleClick}
                    columnBuffer={2}
                    loading={props.loading}
-  />;
+         />;
 }
