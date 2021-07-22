@@ -17,7 +17,6 @@ export default function ConsoleRouter() {
       <Route path={`${path}/profile`}><Profile/></Route>
       <Route path={`${path}/submitJob`}><TrainJobForm/></Route>
       <Route path={`${path}/settings`}><Settings/></Route>
-      <Route path={`${path}/import`}><AWSImportView/></Route>
       <Route exact path={path}><Dashboard/></Route> {/*Default route*/}
     </Switch>
   );

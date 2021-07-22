@@ -22,6 +22,10 @@ const useStyles = makeStyles(() => ({
   }
 }));
 
+const SlideUpTransition = React.forwardRef(function Transition(props, ref) {
+  return <Slide direction="up" ref={ref} {...props} />;
+});
+
 export default function Header() {
   const classes = useStyles();
   const {loginModal, setLoginModal} = useLoginModalContext();
@@ -48,10 +52,6 @@ export default function Header() {
     auth.signout();
     history.push('/'); // redirect to main page
   }
-
-  const SlideUpTransition = React.forwardRef(function Transition(props, ref) {
-    return <Slide direction="up" ref={ref} {...props} />;
-  });
 
   const headerButtons = (auth.user === "")
     ? (

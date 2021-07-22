@@ -5,7 +5,6 @@ import AWSImportView from "./AWSImport/AWSImportView";
 import DoneIcon from '@material-ui/icons/Done';
 import ClearIcon from '@material-ui/icons/Clear';
 import {useHistory} from "react-router-dom";
-import {submitJob} from "../common/Managers/EndpointManager";
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -28,10 +27,12 @@ const useStyles = makeStyles((theme) => ({
   }
 }));
 
+const SlideUpTransition = React.forwardRef(function Transition(props, ref) {
+  return <Slide direction="up" ref={ref} {...props} />;
+});
+
 /**
- *
  * @param props.header should contain the header of the train job
- *
  */
 export default function JobForm(props) {
   const [jobName, setJobName] = useState("");
@@ -135,10 +136,6 @@ export default function JobForm(props) {
       //TODO
     }
   }
-
-  const SlideUpTransition = React.forwardRef(function Transition(props, ref) {
-    return <Slide direction="up" ref={ref} {...props} />;
-  });
 
   return (
     <>

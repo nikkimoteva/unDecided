@@ -1,5 +1,15 @@
 import React, {useState} from "react";
-import {Button, Dialog, DialogTitle, Hidden, makeStyles, MenuItem, Slide, TextField} from "@material-ui/core";
+import {
+  Button,
+  Dialog,
+  DialogContent,
+  DialogTitle,
+  Hidden,
+  makeStyles,
+  MenuItem,
+  Slide,
+  TextField
+} from "@material-ui/core";
 import {submitJob} from "../common/Managers/EndpointManager";
 import {useHistory} from "react-router-dom";
 import {useAuth} from "../common/Auth.js";
@@ -27,6 +37,11 @@ const useStyles = makeStyles((theme) => ({
     display: "none"
   }
 }));
+
+const SlideUpTransition = React.forwardRef(function Transition(props, ref) {
+  return <Slide direction="up" ref={ref} {...props} />;
+});
+
 
 export default function TrainJobForm() {
   const [jobName, setJobName] = useState("");
@@ -127,10 +142,6 @@ export default function TrainJobForm() {
         .catch(err => alert("Job failed to submit"));
     }
   }
-
-  const SlideUpTransition = React.forwardRef(function Transition(props, ref) {
-    return <Slide direction="up" ref={ref} {...props} />;
-  });
 
   return (
     <>
@@ -248,6 +259,7 @@ export default function TrainJobForm() {
         aria-labelledby="Import from AWS Form"
         aria-describedby="Input your AWS User details here"
         TransitionComponent={SlideUpTransition}
+        keepMounted
       >
         <DialogTitle>Import from AWS</DialogTitle>
         <AWSImportView closeModal={closeModal} setFile={setCSV} setDataImportSuccess={setDataImportSuccess}
