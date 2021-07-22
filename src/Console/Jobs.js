@@ -24,6 +24,9 @@ const useRowStyles = makeStyles({
       borderBottom: 'unset',
     },
   },
+  jobActionButton: {
+    margin: "3px",
+  },
 });
 
 
@@ -37,7 +40,6 @@ const useStyles = makeStyles({
     justify: "flex-end",
     margin: "10px",
     width: "15vh",
-
   },
   jobAttributeColumn: {
     align: "left",
@@ -116,7 +118,6 @@ export default function Jobs(props) {
 
     }
 
-
     return (
       <>
 
@@ -132,12 +133,12 @@ export default function Jobs(props) {
           <TableCell align="right">{row.status}</TableCell>
           <TableCell align="right">{row.created}</TableCell>
           <TableCell align="right">{row.targetColumn}</TableCell>
-          <TableCell align="center"><Button variant="contained" color="secondary"
-            className={classes.newJobButton} onClick={deleteJob} name = {row.name}>
+          <TableCell align="center"><Button variant="contained" 
+            className={classes.jobActionButton} onClick={deleteJob} color="primary" name = {row.name}>
             Delete
           </Button>
-          <Button variant="contained" color="secondary"
-            className={classes.newJobButton} onClick={newPrediction} name = {row.id}>
+          <Button variant="contained" 
+            className={classes.jobActionButton} onClick={row.status==="Running"?null:newPrediction} color={row.status==="Running"?"grey":"primary"} name = {row.id}>
             New Prediction
           </Button></TableCell>
           
