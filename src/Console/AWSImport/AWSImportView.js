@@ -59,6 +59,7 @@ export default function AWSImportView(props) {
   function registerAndListBuckets(region, accessKey, secretKey) {
     return registerAWS(region, accessKey, secretKey)
       .then(res => {
+        updateRows([]);
         setIsLoadingList(true);
         return listBuckets();
       })
@@ -67,8 +68,8 @@ export default function AWSImportView(props) {
         const owner = res.Owner.DisplayName;
         const rows = getBucketRows(buckets, owner);
         setTableFields(bucketsTableFields);
-        updateRows(rows);
         setShowBucketsTable(true);
+        updateRows(rows);
       })
       .catch(err => {
         alert("Unable to get buckets. Check that the provided keys are correct, and that the associated user has S3 Read privileges");
@@ -79,14 +80,13 @@ export default function AWSImportView(props) {
 
   function listObjectsOnClick(params, event) {
     const bucketName = params.row.Name;
-    updateRows(rows);
+    updateRows([]);
     setCurrBucket(bucketName);
     setIsLoadingList(true);
     listObjects(bucketName)
       .then(res => {
         const objects = (res !== "") ? res : []; // avoids errors when there are no objects in bucket
         const rows = getObjectRows(objects);
-        console.log(rows);
         setTableFields(objectTableFields);
         updateRows(rows);
       })

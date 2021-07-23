@@ -70,7 +70,6 @@ export default function TrainJobForm() {
     {name: "minutes", value: 1},
     {name: "hours", value: 60}
   ];
-  const jobTime = maxJobTime * timeOption;
 
   // Functions
   function handleMaxJobTimeChange(event) {
@@ -133,7 +132,7 @@ export default function TrainJobForm() {
     }
   }
 
-  function validateFormData() {
+  function validateFormData(jobTime) {
     if (CSV === "") {
       alert("You must upload a csv file to train on.");
       return false;
@@ -154,6 +153,7 @@ export default function TrainJobForm() {
 
   function submitHandler(event) {
     event.preventDefault();
+    const jobTime = maxJobTime * timeOption;
     if (validateFormData()) {
       submitJob(auth.user.email, jobName, jobTime, targetColumn, CSV)
         .then(res => history.push('/console/jobs'))
