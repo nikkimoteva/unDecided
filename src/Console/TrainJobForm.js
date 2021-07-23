@@ -1,6 +1,6 @@
 import React, {useState} from "react";
 import {
-  Button,
+  Button, CircularProgress,
   Dialog,
   DialogContent,
   DialogTitle,
@@ -51,6 +51,10 @@ export default function TrainJobForm() {
   const [header, setHeader] = useState([]);
   const [CSV, setCSV] = useState("");
 
+  const [isLoadingFile, setIsLoadingFile] = useState(false);
+  const [loadingValue, setLoadingValue] = useState(0);
+  const [progressBarType, setProgressBarType] = useState('determinate');
+
   const [showModal, setShowModal] = useState(false);
   const [dataImportSuccess, setDataImportSuccess] = useState(undefined);
 
@@ -87,6 +91,11 @@ export default function TrainJobForm() {
       const reader = new FileReader();
       reader.readAsText(file);
       reader.onload = () => resolve(reader.result);
+      reader.onprogress = (progress) => {
+        // Note: We only update if we got to the next percentage point. Otherwise, too many state updates slow down file loading
+        const newProgressValue = Math.round(progress.loaded/progress.total * 100.);
+        if (newProgressValue !== loadingValue) setLoadingValue(newProgressValue);
+      };
       reader.onerror = (err) => reject(err);
     });
   }
@@ -96,22 +105,31 @@ export default function TrainJobForm() {
     setCSV(csvString);
     const header = csvString.split('\n')[0];
     const fields = header.split(',');
-    setDataImportSuccess(true);
+    console.log(fields);
     setHeader(fields.map((field, ind) => {
       return {name: field, col: ind};
     }));
+    setTargetColumn(fields[fields.length - 1]); // Default to last column, as usually the last one is the target col
+    setDataImportSuccess(true);
   }
 
   function onFilePicked() {
+    console.log("file picked");
     const file = fileInput.current.files[0];
     if (file.name.substring(file.name.length - 4) !== '.csv') alert("File name must have a .csv extension");
     else {
+      setDataImportSuccess(undefined); // Set both so success/fail messages go away
+      setIsLoadingFile(true);
+      setProgressBarType('determinate');
       getFileObjectContent(file)
-        .then(csvString => updateCSVState(csvString))
+        .then(csvString => {
+          updateCSVState(csvString);
+        })
         .catch(err => {
           console.log(err);
           setDataImportSuccess(false);
-        });
+        })
+        .finally(() => setIsLoadingFile(false));
     }
   }
 
@@ -147,6 +165,10 @@ export default function TrainJobForm() {
     <>
       <div className={classes.rootDiv}>
         <div>
+          <div hidden={!isLoadingFile}>
+            <p>Loading Dataset </p>
+            <CircularProgress variant={progressBarType} value={loadingValue} />
+          </div>
           <Hidden smUp={dataImportSuccess === undefined || !dataImportSuccess}>
             <DoneIcon color="primary"/>
             <p style={{color: "green"}}>Successfully imported</p>
@@ -158,6 +180,25 @@ export default function TrainJobForm() {
         </div>
 
         <form className={classes.root}>
+          <Hidden smUp={dataImportSuccess || isLoadingFile}>
+            {/*File Input Element*/}
+            <label htmlFor="fileInput">
+              <input type="file"
+                     accept=".csv"
+                     ref={fileInput}
+                     className={classes.fileInput}
+                     id="fileInput"
+                     name="File Input"
+                     onChange={onFilePicked}
+              />
+              <Button color="primary" variant="outlined" component="span">
+                Upload CSV
+              </Button>
+            </label>
+
+            {/*AWS Import button*/}
+            <Button variant="outlined" color="secondary" onClick={openModal}>Import from AWS S3</Button>
+          </Hidden>
 
           {/*Job Name*/}
           <div>
@@ -197,9 +238,10 @@ export default function TrainJobForm() {
 
           {/*Target Column*/}
           <div>
-            <Hidden smUp={header.length === 0}>
+            <Hidden smUp={!dataImportSuccess}>
               <TextField
                 select
+                value={targetColumn}
                 id="columnName"
                 label="Target Column"
                 variant="outlined"
@@ -216,26 +258,6 @@ export default function TrainJobForm() {
               </TextField>
             </Hidden>
           </div>
-
-          <Hidden smUp={header.length !== 0}>
-            {/*File Input Element*/}
-            <label htmlFor="fileInput">
-              <input type="file"
-                     accept=".csv"
-                     ref={fileInput}
-                     className={classes.fileInput}
-                     id="fileInput"
-                     name="File Input"
-                     onChange={onFilePicked}
-              />
-              <Button color="primary" variant="outlined" component="span">
-                Upload CSV
-              </Button>
-            </label>
-
-            {/*AWS Import button*/}
-            <Button variant="outlined" color="secondary" onClick={openModal}>Import from AWS S3</Button>
-          </Hidden>
 
           {/*Submit button*/}
           <div>
@@ -263,7 +285,8 @@ export default function TrainJobForm() {
       >
         <DialogTitle>Import from AWS</DialogTitle>
         <AWSImportView closeModal={closeModal} setFile={setCSV} setDataImportSuccess={setDataImportSuccess}
-                       updateCSVState={updateCSVState}
+                       updateCSVState={updateCSVState} setIsLoadingFile={setIsLoadingFile} setLoadingValue={setLoadingValue}
+                       setProgressBarType={setProgressBarType}
         />
       </Dialog>
     </>

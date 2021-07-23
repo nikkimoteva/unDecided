@@ -46,7 +46,7 @@ export default function AWSImportForm(props) {
   return (
     <FormControl style={{display: "flex"}}>
       <InputLabel id="region-select">S3 Bucket Region</InputLabel>
-      <Select id="region-select" value={region} onChange={handleRegionChange} margin="normal">
+      <Select id="region-select" value={region} onChange={handleRegionChange}>
         {regions.map(region => (
           <MenuItem key={region} value={region}>{region}</MenuItem>
         ))}
