@@ -2,7 +2,6 @@ import React, {useState} from "react";
 import {
   Button, CircularProgress,
   Dialog,
-  DialogContent,
   DialogTitle,
   Hidden,
   makeStyles,
@@ -38,6 +37,14 @@ const useStyles = makeStyles((theme) => ({
   }
 }));
 
+// Useful constants
+const minJobTimeValue = 5;
+const maxJobTimeValue = 2880; // 48 hours
+const jobTimeOptions = [
+  {name: "minutes", value: 1},
+  {name: "hours", value: 60}
+];
+
 const SlideUpTransition = React.forwardRef(function Transition(props, ref) {
   return <Slide direction="up" ref={ref} {...props} />;
 });
@@ -62,14 +69,6 @@ export default function TrainJobForm() {
   const auth = useAuth();
   const history = useHistory();
   const fileInput = React.createRef();
-
-  // Useful constants
-  const minJobTimeValue = 5;
-  const maxJobTimeValue = 2880; // 48 hours
-  const jobTimeOptions = [
-    {name: "minutes", value: 1},
-    {name: "hours", value: 60}
-  ];
 
   // Functions
   function handleMaxJobTimeChange(event) {

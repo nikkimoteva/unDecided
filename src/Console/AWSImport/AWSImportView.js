@@ -130,7 +130,7 @@ export default function AWSImportView(props) {
   }
 
   return (
-    <DialogContent>
+    <DialogContent style={{height: "100vh"}}>
       <AWSImportForm onSubmit={registerAndListBuckets}/>
       <br/><br/>
       <Typography variant="h4" style={{textAlign: "center", marginBottom: "20px"}}>{tableTitle}</Typography>

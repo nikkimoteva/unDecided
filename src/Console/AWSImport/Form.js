@@ -1,35 +1,51 @@
 import {useState} from "react";
-import {Button, FormControl, InputLabel, MenuItem, Select, TextField} from "@material-ui/core";
+import {Button, MenuItem, TextField} from "@material-ui/core";
+import {makeStyles} from "@material-ui/core/styles";
+
+const useStyles = makeStyles(() => ({
+  formDiv: {
+    display: "flex",
+    alignContent: "center",
+    justifyContent: "center",
+    margin: "20px"
+  },
+  formElem: {
+    width: "300px",
+    margin: "0 20px"
+  }
+}));
+
+const regions = [
+  'us-east-2',
+  'us-east-1',
+  'us-west-1',
+  'us-west-2',
+  'af-south-1',
+  'ap-east-1',
+  'ap-northeast-3',
+  'ap-northeast-2',
+  'ap-southeast-1',
+  'ap-southeast-2',
+  'ap-northeast-1',
+  'ca-central-1',
+  'cn-north-1',
+  'cn-northwest-1',
+  'eu-central-1',
+  'eu-west-1',
+  'eu-west-2',
+  'eu-south-1',
+  'eu-west-3',
+  'eu-north-1',
+  'me-south-1',
+  'sa-east-1'
+];
 
 export default function AWSImportForm(props) {
-  const [region, setRegion] = useState("");
+  const [region, setRegion] = useState(regions[0]);
   const [accessKey, setAccessKey] = useState("");
   const [secretKey, setSecretKey] = useState("");
 
-  const regions = [
-    'us-east-2',
-    'us-east-1',
-    'us-west-1',
-    'us-west-2',
-    'af-south-1',
-    'ap-east-1',
-    'ap-northeast-3',
-    'ap-northeast-2',
-    'ap-southeast-1',
-    'ap-southeast-2',
-    'ap-northeast-1',
-    'ca-central-1',
-    'cn-north-1',
-    'cn-northwest-1',
-    'eu-central-1',
-    'eu-west-1',
-    'eu-west-2',
-    'eu-south-1',
-    'eu-west-3',
-    'eu-north-1',
-    'me-south-1',
-    'sa-east-1'
-  ];
+  const classes = useStyles();
 
   function handleRegionChange(event) {
     setRegion(event.target.value);
@@ -44,34 +60,46 @@ export default function AWSImportForm(props) {
   }
 
   return (
-    <FormControl style={{display: "flex"}}>
-      <InputLabel id="region-select">S3 Bucket Region</InputLabel>
-      <Select id="region-select" value={region} onChange={handleRegionChange}>
-        {regions.map(region => (
-          <MenuItem key={region} value={region}>{region}</MenuItem>
-        ))}
-      </Select>
-      <TextField
-        value={accessKey}
-        onChange={handleAccessKeyChange}
-        label="Access Key"
-        margin="normal"
-      />
-      <TextField
-        margin="normal"
-        value={secretKey}
-        onChange={handleSecretKeyChange}
-        label="Secret Key"
-        type="password"
-      />
-      <Button type="submit"
-              variant="outlined"
-              color="primary"
-              onClick={() => props.onSubmit(region, accessKey, secretKey)}
-              disabled={region === "" || accessKey === "" || secretKey === ""}
-      >
-        Use credentials
-      </Button>
-    </FormControl>
+    <form>
+      <div className={classes.formDiv}>
+        <TextField
+          select
+          className={classes.formElem}
+          id="region-select"
+          value={region}
+          onChange={handleRegionChange}
+          label="S3 Bucket Region"
+        >
+          {
+            regions.map(region => <MenuItem key={region} value={region}>{region}</MenuItem>)
+          }
+        </TextField>
+        <TextField
+          value={accessKey}
+          onChange={handleAccessKeyChange}
+          label="Access Key"
+          className={classes.formElem}
+        />
+        <TextField
+          value={secretKey}
+          onChange={handleSecretKeyChange}
+          label="Secret Key"
+          type="password"
+          className={classes.formElem}
+        />
+      </div>
+
+      <div className={classes.formDiv}>
+        <Button
+          variant="contained"
+          color="primary"
+          onClick={() => props.onSubmit(region, accessKey, secretKey)}
+          disabled={region === "" || accessKey === "" || secretKey === ""}
+          className={classes.formElem}
+        >
+          Use Credentials
+        </Button>
+      </div>
+    </form>
   );
 }
