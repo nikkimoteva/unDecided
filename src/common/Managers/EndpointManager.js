@@ -13,8 +13,8 @@ export function validateGoogleUser(id_token) {
 * Main endpoints
 */
 
-export function submitJob(id_token, jobName, maxJobTime, dataset) {
-  return axios.post(`${root}/submitJob`, {id_token, jobName, maxJobTime, dataset});
+export function submitJob(id_token, jobName, maxJobTime, targetColumn, targetColumnName, dataset) {
+  return axios.post(`${root}/submitJob`, {id_token, jobName, maxJobTime, targetColumn, targetColumnName, dataset});
 }
 
 export function submitPrediction(id_token, predictionName,jobID) {
