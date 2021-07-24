@@ -33,11 +33,18 @@ export function getPredictions(id_token,jobID) {
 
 export function deleteJob(id_token, jobId) {
   const d = {id_token, jobId};
-  console.log(d);
-
   return axios({
     method: "delete",
     url: `${root}/deleteJob`,
+    data: d
+  });
+}
+
+export function deletePrediction(id_token, predictionID) {
+  const d = {id_token, predictionID};
+  return axios({
+    method: "delete",
+    url: `${root}/deletePrediction`,
     data: d
   });
 }

@@ -17,7 +17,7 @@ const PredictionModel = require("./database/models/Prediction");
 const UserModel = require("./database/models/User");
 const csv = require('jquery-csv');
 
-const { readFilePromise, csvToArrays, csvToObject, arraysToCsv, runPredict, trainPipeline } = require("../src/Util");
+const { readFilePromise, csvToArrays, csvToObject, arraysToCsv, runPredict, trainPipeline } = require("Util");
 require("./database/Database"); // Initializes DB connection
 
 const port = 3001;
@@ -120,6 +120,15 @@ app.post("/submitPrediction", (req, res) => {
     .then(_ => {
       return res.sendStatus(200);
     })
+    .catch(err => errorHandler(err, res));
+});
+
+app.delete("/deletePrediction", (req, res) => {
+  const id_token = req.body.id_token;
+  const predictionID = req.body.predictionID;
+  auth.getUserId(id_token)
+    .then(_ => PredictionModel.deleteOne({ _id: predictionID })
+      .then(_ => res.sendStatus(200)))
     .catch(err => errorHandler(err, res));
 });
 

@@ -16,7 +16,7 @@ import Typography from '@material-ui/core/Typography';
 import Paper from '@material-ui/core/Paper';
 import KeyboardArrowDownIcon from '@material-ui/icons/KeyboardArrowDown';
 import KeyboardArrowUpIcon from '@material-ui/icons/KeyboardArrowUp';
-import {submitPrediction, getPredictions} from "../common/Managers/EndpointManager";
+import {submitPrediction, getPredictions, deletePrediction as deletePredictionDB} from "../common/Managers/EndpointManager";
 
 const useRowStyles = makeStyles({
   root: {
@@ -75,6 +75,8 @@ export default function Jobs(props) {
 
 
 
+  
+
   function Row(props) {
 
     const { row } = props;
@@ -105,6 +107,37 @@ export default function Jobs(props) {
 
           });
         });
+    }
+
+    function SubRow(props) {
+
+      props.id = props._id;
+
+      function deletePrediction() {
+        const predictionID = props.id;
+        deletePredictionDB(auth.user.email, predictionID).
+        then(_=>{
+          getPredictions(auth.user.email,row.id)
+          .then(res => {
+            const gottenPredictions = res.data;
+            setRowState({open:rowState.open,predictions:gottenPredictions});
+
+          });
+        });
+        
+      }
+      return(<TableRow key={props.date}>
+                          <TableCell align="center">
+                            {props.name}
+                          </TableCell>
+                          <TableCell align="center">{props.status}</TableCell>
+                          <TableCell align="center">{props.created}</TableCell>
+                          <TableCell align="center"><Button variant="contained" 
+                            className={classes.jobActionButton} onClick={deletePrediction} color="primary">
+                            Delete
+                          </Button>
+                          </TableCell>
+                        </TableRow>);
     }
 
     function openButtonOnClick(){
@@ -165,13 +198,7 @@ export default function Jobs(props) {
                   </TableHead>
                   <TableBody>
                     {rowState.predictions.map((prediction) => (
-                      <TableRow key={prediction.date}>
-                        <TableCell align="center">
-                          {prediction.name}
-                        </TableCell>
-                        <TableCell align="center">{prediction.status}</TableCell>
-                        <TableCell align="center">{prediction.created}</TableCell>
-                      </TableRow>
+                      SubRow(prediction)
                     ))}
                   </TableBody>
                 </Table>
