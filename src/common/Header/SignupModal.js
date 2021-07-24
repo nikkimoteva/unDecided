@@ -4,6 +4,8 @@ import Button from '@material-ui/core/Button';
 import { makeStyles } from '@material-ui/core/styles';
 import TextField from '@material-ui/core/TextField';
 import "../Button.css";
+import {useAuth} from "../Auth";
+import {useHistory} from "react-router-dom";
 
 
 const useStyles = makeStyles((theme) => ({
@@ -20,17 +22,25 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 export default function Signup() {
+
+  const auth = useAuth();
+  const history = useHistory();
+
+
   const classes = useStyles();
   const [user, setUser] = useState({
     name: "",
     email: "",
     password: "",
+    //confirm password
+    cpass: "",
   });
 
   const [error, setError] = useState({
     name: "",
     email: "",
     password: "",
+    cpass: "",
   });
 
   function handleChange(event) {
@@ -38,8 +48,6 @@ export default function Signup() {
       ...user, 
       [event.target.name]: event.target.value
     });
-
-    // setToSend({ ...toSend, [event.target.name]: event.target.value });
   }
 
   function handleSubmit(event) {
@@ -48,24 +56,27 @@ export default function Signup() {
     if (validate()) {
         // make call to userauth.js
         // redirect to login / auto login
-    //   send(
-    //     contactus_service_id,
-    //     contactus_template_id,
-    //     toSend,
-    //     contactus_user
-    //   )
-    //     .then((response) => {
-    //       console.log("SUCCESS!", response.status, response.text);
-    //       setUser({
-    //         name: "",
-    //         email: "",
-    //         password: "",
-    //       });
-    //       alert("Please login to access your account!");
-    //     })
-    //     .catch((err) => {
-    //       console.log("FAILED...", err);
-    //     });
+
+      auth.signup(user.name, user.email, user.password)
+        // userAuth.addUser(user.name, user.email, user.password)
+        .then ((res) => {
+          console.log("hereeeeeee");
+          console.log(res);
+          if (!res) {
+            console.log("error in signing up");
+          } else {
+            history.push('/console');
+            setUser( {
+              name: "",
+              email: "",
+              password: "",
+              cpass: "",
+            });
+          }
+        })
+        .catch ((err) => {
+          console.log ("FAILED...", err);
+        });
     }
   }
   
@@ -107,10 +118,21 @@ export default function Signup() {
         errors["password"] = "The password should be at least 8 characters long.";
     }
 
+    if (!user.cpass) {
+      isValid = false;
+      errors["cpass"] = "Please re-enter your password.";
+    }
+
+    if (user.password && user.cpass && user.password !== user.cpass) {
+      isValid = false;
+      errors["cpass"] = "The passwords do not match.";
+    }
+
     setError({
       name: errors["name"],
       email: errors["email"],
-      password: errors["password"]
+      password: errors["password"],
+      cpass: errors["cpass"]
     });
 
     return isValid;
@@ -125,9 +147,9 @@ export default function Signup() {
             name="name"
             value={user.name}
             onChange={handleChanges}
-            label="Name (*required)"
+            label="Name"
             variant="filled"
-            placeholder="Please enter your name."
+            placeholder="Please enter your name"
           />
 
           <div style={{color: "#f50057"}}>{error.name}</div>
@@ -139,7 +161,7 @@ export default function Signup() {
             name="email"
             value={user.email}
             onChange={handleChanges}
-            label="Email (*required)"
+            label="Email"
             variant="filled"
             placeholder="Please enter your Email"
           />
@@ -151,12 +173,25 @@ export default function Signup() {
             name="password"
             value={user.password}
             onChange={handleChanges}
-            placeholder="At least 8 characters."
-            type="text"
-            label="Password (*required)"
+            placeholder="At least 8 characters"
+            type="password"
+            label="Password"
             variant="filled"
           />
           <div style={{color: "#f50057"}}>{error.password}</div>
+        </div>
+
+        <div className="form-group">
+          <TextField
+            name="cpass"
+            value={user.cpass}
+            onChange={handleChanges}
+            placeholder="Please re-enter your password"
+            type="password"
+            label="Confirm Password"
+            variant="filled"
+          />
+          <div style={{color: "#f50057"}}>{error.cpass}</div>
         </div>
 
         <Button className="CutomSubmitAuth" type="submit" value="submit" variant="contained" color="primary">

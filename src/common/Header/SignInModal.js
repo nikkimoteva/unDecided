@@ -60,25 +60,23 @@ export default function SignIn() {
 
     if (validate()) {
         // make call to userauth.js
-        // redirect to login / auto login
-    //   send(
-    //     contactus_service_id,
-    //     contactus_template_id,
-    //     toSend,
-    //     contactus_user
-    //   )
-    //     .then((response) => {
-    //       console.log("SUCCESS!", response.status, response.text);
-    //       setUser({
-    //         name: "",
-    //         email: "",
-    //         password: "",
-    //       });
-    //       alert("Please login to access your account!");
-    //     })
-    //     .catch((err) => {
-    //       console.log("FAILED...", err);
-    //     });
+        // login
+      auth.signin(user.email, user.password)
+      .then ((res) => {
+        if (res) {
+          history.push('/console');
+          console.log("successfully logged in");
+          setUser( {
+            email: "",
+            password: "",
+          });
+        } else {
+          alert("Username or password is incorrect. Please try again.");
+        }
+      })
+      .catch ((err) => {
+        console.log ("FAILED...", err);
+      });
     }
   }
   
@@ -139,7 +137,7 @@ export default function SignIn() {
             value={user.password}
             onChange={handleChanges}
             placeholder="Please enter your password"
-            type="text"
+            type="password"
             label="Password"
             variant="filled"
           />
@@ -149,7 +147,7 @@ export default function SignIn() {
           Submit
         </Button>
           <Divider/>
-        <LoginModal signin={login} />
+        {/* <LoginModal signin={login} /> */}
       </form>
     </div>
   );

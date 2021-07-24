@@ -6,6 +6,8 @@ import {
   setAuthCookie
 } from "./Managers/CookieManager";
 import {validateGoogleUser} from "./Managers/EndpointManager";
+import {validateUser} from "./Managers/EndpointManager";
+import {addUser} from "./Managers/EndpointManager";
 
 // Source: https://reactrouter.com/web/example/auth-workflow
 
@@ -33,7 +35,46 @@ function useGoogleAuthProvider() {
   const [user, setUser] = useState(getAuthCookie());  // when users refresh, immediately loads auth cookie
   addAuthListener(listenerCallback);
 
-  function signin(credentials) {
+  function signup(name, email, password) { 
+    console.log("Sign up");
+    return addUser(name, email, password)
+    .then (() => {
+      //login
+      console.log("stored info in the backend");
+      setAuthCookie({name, email});  // theoretically, this should setUser as well, since we added a listener to it
+      setUser({name, email});
+      return Promise.resolve();
+    })
+    .catch(err => {
+      console.error(err);
+      alert("Unable to signup. Please try again");
+    });
+  }
+
+  function signin(email, password) {
+    console.log("Sign in");
+    return validateUser(email, password)
+    .then ((usr) => {
+      //login
+      console.log(usr.data);
+      if (usr.status === 200) {
+        console.log("password has been validated");
+        setAuthCookie({name: usr.data.name, email: usr.data.userName});
+        setUser({name, email});
+        return Promise.resolve();
+      }
+      else {
+        return usr;
+      }
+    })
+    .catch(err => {
+      console.error(err);
+      // alert("Unable to signin. Check your credentials.");
+    });
+
+  }
+
+  function signinGoogle(credentials) {
     console.log("Signing in with Gauth");
     const id_token = credentials.getAuthResponse().id_token;
     return validateGoogleUser(id_token)
@@ -42,10 +83,9 @@ function useGoogleAuthProvider() {
         const profile = credentials.getBasicProfile();
         const id = profile.getId(); // Do not send to your backend! Use an ID token instead.
         const name = profile.getName();
-        const image = profile.getImageUrl();
         const email = profile.getEmail(); // This is null if the 'email' scope is not present.
-        setAuthCookie({id, name, image, email});  // theoretically, this should setUser as well, since we added a listener to it
-        setUser({id, name, image, email});
+        setAuthCookie({id, name, email});  // theoretically, this should setUser as well, since we added a listener to it
+        setUser({id, name, email});
         return Promise.resolve();
       })
       .catch(err => {
@@ -66,7 +106,9 @@ function useGoogleAuthProvider() {
 
   return {
     user,
-    signin,
+    signup,
+    // signin,
+    // signinGoogle,
     signout,
   };
 }

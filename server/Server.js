@@ -12,6 +12,7 @@ const logger = require('morgan');
 
 const { storeCSV } = require("./FileManager");
 const auth = require("./UserAuth/Auth.js");
+const UserAuth = require("./UserAuth/UserAuth.js");
 const JobModel = require("./database/models/Job");
 const UserModel = require("./database/models/User");
 const csv = require('jquery-csv');
@@ -53,6 +54,35 @@ app.post("/gauth", (req, res) => {
   auth.verifyAuth(req)
     .then(userData => res.send(userData))
     .catch(err => errorHandler(err, res));
+});
+
+app.post("/auth", (req, res) => {
+  UserAuth.validatePassword(req.body.email, req.body.password)
+  .then((userData) => {
+    console.log(!userData);
+    if (!userData) {
+      res.sendStatus(404);
+    } else {
+      res.send(userData);
+    }
+  })
+  .catch(err => errorHandler(err, res));
+});
+
+app.post("/addUser", (req, res) => {
+  UserAuth.addUser(req.body.name, req.body.email, req.body.password)
+  .then((result) => {
+    if (result) {
+      // res.send([{error: "Email already exists. Please log in"}]);
+      // return res.send(result);
+      return [{error: "Email already exists. Please log in"}];
+    } else {
+      res.status(200).send("good");
+    }
+  })
+  .catch(err => {
+    console.log(err);
+    errorHandler(err, res)});
 });
 
 app.get("/profile", (req, res) => {

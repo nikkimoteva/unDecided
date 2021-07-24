@@ -25,7 +25,7 @@ const useStyles = makeStyles(() => ({
   }
 }));
 
-const Transition = React.forwardRef(function Transition(props, ref) {
+const SlideUpTransition = React.forwardRef(function Transition(props, ref) {
   return <Slide direction="up" ref={ref} {...props} />;
 });
 
@@ -94,7 +94,7 @@ export default function Header() {
         onClose={closeLoginModal}
         aria-labelledby="Login Form"
         aria-describedby="Input your login details here"
-        TransitionComponent={Transition}
+        TransitionComponent={SlideUpTransition}
       >
       <AuthOptions />
         {/* <DialogTitle>Sign Up</DialogTitle>
