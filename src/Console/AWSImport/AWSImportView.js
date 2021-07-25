@@ -5,6 +5,19 @@ import "./AWSImport.css";
 import AWSImportForm from "./Form";
 import {DialogContent, TextField, Typography} from "@material-ui/core";
 
+const objectTableFields = [
+  {field: 'Key', headerName: 'Key', width: 300},
+  {field: 'Owner', headerName: 'Owner', width: 300},
+  {field: 'LastModified', headerName: 'Last Modified', width: 300},
+  {field: 'Size', headerName: 'Size (in MiB)', width: 300}
+];
+
+const bucketsTableFields = [
+  {field: 'Name', headerName: 'Name', width: 300},
+  {field: "Owner", headerName: "Owner", width: 300},
+  {field: "CreationDate", headerName: "Creation Date", width: 300}
+];
+
 export default function AWSImportView(props) {
   const [rows, setRows] = useState([]);
   const [rowsToShow, setRowsToShow] = useState([]); // rowsToShow and rows can be different based on search params
@@ -12,19 +25,6 @@ export default function AWSImportView(props) {
   const [tableFields, setTableFields] = useState([]);
   const [showBucketsTable, setShowBucketsTable] = useState(true);
   const [isLoadingList, setIsLoadingList] = useState(false);
-
-  const objectTableFields = [
-    {field: 'Key', headerName: 'Key', width: 300},
-    {field: 'Owner', headerName: 'Owner', width: 300},
-    {field: 'LastModified', headerName: 'Last Modified', width: 300},
-    {field: 'Size', headerName: 'Size (in MiB)', width: 300}
-  ];
-
-  const bucketsTableFields = [
-    {field: 'Name', headerName: 'Name', width: 300},
-    {field: "Owner", headerName: "Owner", width: 300},
-    {field: "CreationDate", headerName: "Creation Date", width: 300}
-  ];
 
   const tableTitle = (showBucketsTable) ? "Buckets" : currBucket;
 
@@ -49,9 +49,7 @@ export default function AWSImportView(props) {
   function getObjectRows(arr) {
     return arr.map((obj, ind) => {
       const size = parseFloat(obj.Size);
-      let sizeInMiB = size / 1048576.;
-      const numDigitsAfterDecimal = (sizeInMiB < 10) ? 1 : 0;
-      sizeInMiB = sizeInMiB.toFixed(numDigitsAfterDecimal);
+      const sizeInMiB = (size / 1048576.).toPrecision(3);
       return {id: ind, Key: obj.Key, Owner: obj.Owner.DisplayName, LastModified: obj.LastModified, Size: sizeInMiB};
     });
   }
