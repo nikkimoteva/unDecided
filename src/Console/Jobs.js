@@ -3,6 +3,7 @@ import {Link} from "react-router-dom";
 import React, {useEffect, useState} from "react";
 import {getJobs, deleteJob as deleteJobDB} from "../common/Managers/EndpointManager";
 import {useAuth} from "../common/Auth";
+import {useHistory} from "react-router-dom";
 import {DataGrid} from '@material-ui/data-grid';
 import Collapse from '@material-ui/core/Collapse';
 import IconButton from '@material-ui/core/IconButton';
@@ -64,6 +65,8 @@ export default function Jobs(props) {
   const [predictions, setPredictions] = useState([]);
   const [selectionModel, setSelectionModel] = useState([]);
   const auth = useAuth();
+  const history = useHistory();
+
   const url = props.url;
 
   useEffect(() => {
@@ -100,15 +103,19 @@ export default function Jobs(props) {
     }
 
     function newPrediction() {
-      submitPrediction(auth.user.email, `${row.name} prediction`, row.id)
-        .then(res => {
-          getPredictions(auth.user.email,row.id)
-          .then(res => {
-            const gottenPredictions = res.data;
-            setRowState({open:rowState.open,predictions:gottenPredictions});
+      // submitPrediction(auth.user.email, `${row.name} prediction`, row.id)
+      //   .then(res => {
+      //     getPredictions(auth.user.email,row.id)
+      //     .then(res => {
+      //       const gottenPredictions = res.data;
+      //       setRowState({open:rowState.open,predictions:gottenPredictions});
 
-          });
-        });
+      //     });
+      //   });
+      history.push({
+        pathname: `${url}/submitPrediction`,
+        state: row,
+      });
     }
 
     function SubRow(props) {
@@ -126,8 +133,9 @@ export default function Jobs(props) {
 
           });
         });
-        
       }
+
+
       return(<TableRow key={props.date}>
                           <TableCell align="center">
                             {props.name}
@@ -152,7 +160,10 @@ export default function Jobs(props) {
       });
 
     }
-    console.log(row);
+
+
+
+
     return (
       <>
 
@@ -174,7 +185,7 @@ export default function Jobs(props) {
           </Button>
           <Button variant="contained" 
             className={classes.jobActionButton} onClick={row.status==="Running"?null:newPrediction} color={row.status==="Running"?"grey":"primary"} name = {row.id}
-            component={Link} to={`${url}/submitPrediction`}>
+            >
             New Prediction
           </Button></TableCell>
           

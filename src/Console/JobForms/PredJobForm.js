@@ -1,7 +1,7 @@
 import React, {useState} from "react";
 import {makeStyles, Typography} from "@material-ui/core";
 import {submitJob} from "../../common/Managers/EndpointManager";
-import {useHistory} from "react-router-dom";
+import {useHistory,useLocation} from "react-router-dom";
 import {useAuth} from "../../common/Auth.js";
 import AWSImportView from "../AWSImport/AWSImportView";
 import JobNameComponent from "./Components/JobNameComponent";
@@ -52,6 +52,7 @@ export default function JobForm(props) {
   const classes = useStyles();
   const auth = useAuth();
   const history = useHistory();
+  const location = useLocation();
 
   // Functions
   function getFileObjectContent(file) {
