@@ -16,8 +16,11 @@ const JobModel = require("./database/models/Job");
 const PredictionModel = require("./database/models/Prediction");
 const UserModel = require("./database/models/User");
 const csv = require('jquery-csv');
+const multer = require('multer');
+const upload = multer({ dest: 'temp/' });
 
 const { readFilePromise, csvToArrays, csvToObject, arraysToCsv, runPredict, trainPipeline } = require("Util");
+
 require("./database/Database"); // Initializes DB connection
 
 const port = 3001;
@@ -89,7 +92,6 @@ app.post("/submitJob", (req, res) => {
   const id_token = body.id_token;
   const jobName = body.jobName;
   const maxJobTime = body.maxJobTime;
-  const targetColumn = body.targetColumn;
   const targetColumnName = body.targetColumnName;
   const dataset = body.dataset;
   const job = new JobModel({
@@ -172,7 +174,10 @@ app.post('/getObject', (req, res) => {
       Bucket: bucketName,
       Key: key
     }))
-      .then(awsRes => awsRes.Body.pipe(res))
+      .then(awsRes => {
+        res.set('Content-Type', 'text/plain');
+        awsRes.Body.pipe(res);
+      })
       .catch(err => errorHandler(err, res));
   }
 });

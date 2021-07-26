@@ -17,6 +17,7 @@ import Paper from '@material-ui/core/Paper';
 import KeyboardArrowDownIcon from '@material-ui/icons/KeyboardArrowDown';
 import KeyboardArrowUpIcon from '@material-ui/icons/KeyboardArrowUp';
 import {submitPrediction, getPredictions, deletePrediction as deletePredictionDB} from "../common/Managers/EndpointManager";
+import DeleteIcon from '@material-ui/icons/Delete';
 
 const useRowStyles = makeStyles({
   root: {
@@ -134,8 +135,8 @@ export default function Jobs(props) {
                           <TableCell align="center">{props.status}</TableCell>
                           <TableCell align="center">{props.created}</TableCell>
                           <TableCell align="center"><Button variant="contained" 
-                            className={classes.jobActionButton} onClick={deletePrediction} color="primary">
-                            X
+                            className={classes.jobActionButton} onClick={deletePrediction} color="primary" startIcon={<DeleteIcon />}>
+                            Delete
                           </Button>
                           </TableCell>
                         </TableRow>);

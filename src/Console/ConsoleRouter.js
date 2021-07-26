@@ -3,10 +3,11 @@ import {Switch, Route, useRouteMatch} from "react-router-dom";
 import Dashboard from "./Dashboard";
 import Jobs from "./Jobs";
 import Profile from "./Profile";
-import TrainJobForm from "./TrainJobForm";
-import PredJobForm from "./PredJobForm";
+
+import TrainJobForm from "./JobForms/TrainJobForm";
+import PredJobForm from "./JobForms/PredJobForm";
+
 import Settings from "./Settings";
-import AWSImportView from "./AWSImport/AWSImportView";
 
 export default function ConsoleRouter() {
   const {path, url} = useRouteMatch();
