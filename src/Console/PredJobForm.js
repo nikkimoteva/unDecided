@@ -34,7 +34,7 @@ const SlideUpTransition = React.forwardRef(function Transition(props, ref) {
 /**
  * @param props.header should contain the header of the train job
  */
-export default function JobForm(props) {
+export default function PredJobForm(props) {
   const [jobName, setJobName] = useState("");
   const [maxJobTime, setMaxJobTime] = useState(10);
   const [timeOption, setTimeOption] = useState(1);
@@ -93,12 +93,13 @@ export default function JobForm(props) {
     setCSV(csvString);
     const header = csvString.split('\n')[0];
     const fields = header.split(',');
-    if (!isEqualArrays(fields, props.header)) {
-      alert("The prediction dataset must have the same columns as the training dataset");
-      setDataImportSuccess(false);
-    } else {
-      setDataImportSuccess(true);
-    }
+    // if (!isEqualArrays(fields, props.header)) {
+    //   alert("The prediction dataset must have the same columns as the training dataset");
+    //   setDataImportSuccess(false);
+    // } else {
+    //   setDataImportSuccess(true);
+    // }
+    setDataImportSuccess(true);
   }
 
   function onFilePicked() {

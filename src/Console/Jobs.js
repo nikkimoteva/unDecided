@@ -63,6 +63,7 @@ export default function Jobs(props) {
   const [predictions, setPredictions] = useState([]);
   const [selectionModel, setSelectionModel] = useState([]);
   const auth = useAuth();
+  const url = props.url;
 
   useEffect(() => {
 
@@ -134,7 +135,7 @@ export default function Jobs(props) {
                           <TableCell align="center">{props.created}</TableCell>
                           <TableCell align="center"><Button variant="contained" 
                             className={classes.jobActionButton} onClick={deletePrediction} color="primary">
-                            Delete
+                            X
                           </Button>
                           </TableCell>
                         </TableRow>);
@@ -150,7 +151,7 @@ export default function Jobs(props) {
       });
 
     }
-
+    console.log(row);
     return (
       <>
 
@@ -171,7 +172,8 @@ export default function Jobs(props) {
             Delete
           </Button>
           <Button variant="contained" 
-            className={classes.jobActionButton} onClick={row.status==="Running"?null:newPrediction} color={row.status==="Running"?"grey":"primary"} name = {row.id}>
+            className={classes.jobActionButton} onClick={row.status==="Running"?null:newPrediction} color={row.status==="Running"?"grey":"primary"} name = {row.id}
+            component={Link} to={`${url}/submitPrediction`}>
             New Prediction
           </Button></TableCell>
           
@@ -223,7 +225,7 @@ export default function Jobs(props) {
       <Grid container justify="center">
         <Button variant="contained" color="secondary"
                 className={classes.newJobButton} component={Link}
-                to={`${props.url}/submitJob`}
+                to={`${url}/submitJob`}
         >
           New Job
         </Button>
