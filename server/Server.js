@@ -16,6 +16,8 @@ const UserAuth = require("./UserAuth/UserAuth.js");
 const JobModel = require("./database/models/Job");
 const UserModel = require("./database/models/User");
 const csv = require('jquery-csv');
+const multer = require('multer');
+const upload = multer({ dest: 'temp/' });
 
 const { readFilePromise, csvToArrays, csvToObject, arraysToCsv, runPredict, trainPipeline } = require("./Util");
 require("./database/Database"); // Initializes DB connection
@@ -46,7 +48,8 @@ app.delete("/deleteJob", (req, res) => {
   const id_token = req.body.id_token;
   const jobId = req.body.jobId;
   auth.getUserId(id_token)
-    .then(_ => JobModel.deleteOne({ _id: jobId }))
+    .then(_ => JobModel.deleteOne({ _id: jobId })
+      .then(_ => res.sendStatus(200)))
     .catch(err => errorHandler(err, res));
 });
 
@@ -106,14 +109,13 @@ app.post("/submitJob", (req, res) => {
   const id_token = body.id_token;
   const jobName = body.jobName;
   const maxJobTime = body.maxJobTime;
-  const targetCol = body.targetCol;
-  const targetColName = body.targetColName;
+  const targetColumnName = body.targetColumnName;
   const dataset = body.dataset;
   const job = new JobModel({
     name: jobName,
     user: id_token,
-    target_column: targetCol,
-    target_name: targetColName,
+    target_column: targetColumn,
+    target_name: targetColumnName,
     timer: maxJobTime,
   });
   job.save()
@@ -153,19 +155,21 @@ app.post('/listObjects', (req, res) => {
 });
 
 app.post('/getObject', (req, res) => {
-  if (awsClient === null) res.sendStatus(401);
-  const bucketName = req.body.bucketName;
   const key = req.body.key;
-  const csvFilePath = `temp/${key}`;
-
-  awsClient.send(new GetObjectCommand({
-    Bucket: bucketName,
-    Key: key
-  }))
-    .then(awsRes => streamToString(awsRes.Body))
-    .then(csvString => storeCSV(csvString, csvFilePath)) // TODO store in DB
-    .then(() => res.sendFile(path.resolve(csvFilePath)))
-    .catch(err => errorHandler(err, res));
+  if (awsClient === null) errorHandler("You must register your AWS credentials first", res);
+  else if (key.slice(-4) !== ".csv") errorHandler("File name must end in .csv", res);
+  else {
+    const bucketName = req.body.bucketName;
+    awsClient.send(new GetObjectCommand({
+      Bucket: bucketName,
+      Key: key
+    }))
+      .then(awsRes => {
+        res.set('Content-Type', 'text/plain');
+        awsRes.Body.pipe(res);
+      })
+      .catch(err => errorHandler(err, res));
+  }
 });
 
 app.post('/tableView', (req, res) => {

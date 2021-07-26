@@ -26,7 +26,6 @@ const SlideUpTransition = React.forwardRef(function Transition(props, ref) {
   return <Slide direction="up" ref={ref} {...props} />;
 });
 
-
 export default function Header() {
   const classes = useStyles();
   const {loginModal, setLoginModal} = useLoginModalContext();
@@ -103,4 +102,3 @@ export default function Header() {
     </>
   );
 }
-
