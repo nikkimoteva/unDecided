@@ -57,13 +57,12 @@ app.post("/gauth", (req, res) => {
 });
 
 app.post("/auth", (req, res) => {
-  UserAuth.validatePassword(req.body.email, req.body.password)
+  return UserAuth.validatePassword(req.body.email, req.body.password)
   .then((userData) => {
-    console.log(!userData);
     if (!userData) {
-      res.sendStatus(404);
+      return res.sendStatus(400);
     } else {
-      res.send(userData);
+      return res.send(userData);
     }
   })
   .catch(err => errorHandler(err, res));
@@ -72,17 +71,18 @@ app.post("/auth", (req, res) => {
 app.post("/addUser", (req, res) => {
   UserAuth.addUser(req.body.name, req.body.email, req.body.password)
   .then((result) => {
-    if (result) {
-      // res.send([{error: "Email already exists. Please log in"}]);
-      // return res.send(result);
-      return [{error: "Email already exists. Please log in"}];
+    console.log(result);
+    if (!result) {
+      return res.sendStatus(400);
+    } else if (result===1){
+      return res.send({error: "Email already exists! Please login."});
     } else {
-      res.status(200).send("good");
+      return res.sendStatus(200);
     }
   })
   .catch(err => {
     console.log(err);
-    errorHandler(err, res)});
+    errorHandler(err, res);});
 });
 
 app.get("/profile", (req, res) => {
@@ -96,7 +96,7 @@ app.get("/profile", (req, res) => {
     })
     .then(users => {
       const user = users[0];
-      res.json({ userName: user.userName, email: user.email, picture: user.picture });
+      res.json({ email: user.email, name: user.name });
     })
     .catch(err => errorHandler(err, res));
 });

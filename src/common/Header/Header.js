@@ -5,10 +5,7 @@ import {useAuth} from "../Auth";
 import React from 'react';
 import {makeStyles} from '@material-ui/core/styles';
 import ProfileIcon from "./ProfileIcon";
-import LoginModal from "./LoginModal";
 import {useLoginModalContext} from "../LoginModalProvider";
-import SignupModal from "./SignupModal";
-import SignInModal from "./SignInModal";
 import AuthOptions from "./AuthOptions";
 
 const useStyles = makeStyles(() => ({

@@ -17,8 +17,8 @@ import {addUser} from "./Managers/EndpointManager";
  */
 const authContext = createContext(undefined);
 
-export function ProvideGoogleAuth({children}) {
-  const auth = useGoogleAuthProvider();
+export function ProvideAuth({children}) {
+  const auth = useAuthProvider();
   return (
     <authContext.Provider value={auth}>
       {children}
@@ -31,23 +31,27 @@ export function useAuth() {
 }
 
 // Authentication state holding the auth provider
-function useGoogleAuthProvider() {
+function useAuthProvider() {
   const [user, setUser] = useState(getAuthCookie());  // when users refresh, immediately loads auth cookie
   addAuthListener(listenerCallback);
 
   function signup(name, email, password) { 
     console.log("Sign up");
     return addUser(name, email, password)
-    .then (() => {
+    .then ((res) => {
       //login
-      console.log("stored info in the backend");
-      setAuthCookie({name, email});  // theoretically, this should setUser as well, since we added a listener to it
-      setUser({name, email});
-      return Promise.resolve();
+      if (res.status === 400 || res.data.error) {
+        return res;
+      } else {
+        console.log("stored info in the backend");
+        setAuthCookie({name, email});  // theoretically, this should setUser as well, since we added a listener to it
+        setUser({name, email});
+        return res;
+      }
     })
     .catch(err => {
       console.error(err);
-      alert("Unable to signup. Please try again");
+      // alert("Unable to signup. Please try again");
     });
   }
 
@@ -56,20 +60,16 @@ function useGoogleAuthProvider() {
     return validateUser(email, password)
     .then ((usr) => {
       //login
-      console.log(usr.data);
+      console.log(usr);
       if (usr.status === 200) {
         console.log("password has been validated");
-        setAuthCookie({name: usr.data.name, email: usr.data.userName});
+        setAuthCookie({name: usr.data.name, email: usr.data.email});
         setUser({name, email});
-        return Promise.resolve();
       }
-      else {
-        return usr;
-      }
+      return usr;
     })
     .catch(err => {
       console.error(err);
-      // alert("Unable to signin. Check your credentials.");
     });
 
   }
@@ -107,8 +107,8 @@ function useGoogleAuthProvider() {
   return {
     user,
     signup,
-    // signin,
-    // signinGoogle,
+    signin,
+    signinGoogle,
     signout,
   };
 }

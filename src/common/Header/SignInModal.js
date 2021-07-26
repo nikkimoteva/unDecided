@@ -5,7 +5,7 @@ import { makeStyles } from '@material-ui/core/styles';
 import TextField from '@material-ui/core/TextField';
 import LoginModal from "./LoginModal";
 import {useAuth} from "../Auth";
-import {Link, useHistory} from "react-router-dom";
+import {useHistory} from "react-router-dom";
 import Divider from '@material-ui/core/Divider';
 import "../Button.css";
 
@@ -26,11 +26,12 @@ const useStyles = makeStyles((theme) => ({
 export default function SignIn() {
   const classes = useStyles();
 
-  //google auth
   const auth = useAuth();
   const history = useHistory();
+
+  //google auth
   function login(credentials) {
-    auth.signin(credentials)
+    auth.signinGoogle(credentials)
       .then(() => {
         history.push('/console');
       });
@@ -71,7 +72,7 @@ export default function SignIn() {
             password: "",
           });
         } else {
-          alert("Username or password is incorrect. Please try again.");
+          alert("Email or password is incorrect. Please try again.");
         }
       })
       .catch ((err) => {
@@ -147,7 +148,7 @@ export default function SignIn() {
           Submit
         </Button>
           <Divider/>
-        {/* <LoginModal signin={login} /> */}
+        <LoginModal signin={login} />
       </form>
     </div>
   );

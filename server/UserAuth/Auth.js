@@ -45,16 +45,16 @@ function verifyAuth(req) {
         body = axiosRes.data;
         if (body.aud !== googleClientId) reject("Incorrect aud");
         return UserModel.find({
-          _id: body.email
+          email: body.email
         });
       })
       .then(users => {
         if (users.length !== 0) return users[0];
         const newUser = new UserModel({
-          _id: body.email, // TODO: Implement getUserId (replace with actual user id)
-          userName: body.name,
-          picture: body.picture,
-          email: body.email
+          email: body.email, // TODO: Implement getUserId (replace with actual user id)
+          name: body.name,
+          // picture: body.picture,
+          // email: body.email
         });
         return newUser.save();
       })

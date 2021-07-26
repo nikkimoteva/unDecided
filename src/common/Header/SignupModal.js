@@ -60,12 +60,13 @@ export default function Signup() {
       auth.signup(user.name, user.email, user.password)
         // userAuth.addUser(user.name, user.email, user.password)
         .then ((res) => {
-          console.log("hereeeeeee");
-          console.log(res);
-          if (!res) {
-            console.log("error in signing up");
+          if (res.status === 400) {
+            alert("Error in signing up. Please try again.");
+          } else if (res.data.error) {
+            alert(res.data.error);
           } else {
             history.push('/console');
+            console.log("successfully logged in");
             setUser( {
               name: "",
               email: "",
