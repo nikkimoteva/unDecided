@@ -27,7 +27,6 @@ function addUser(name, email, password) {
                         // send internal error message 
                         console.log("Internal Error");
                         return null;
-
                     } else {
                         const hashGen = hash;
                         // store hashed password and salt in DB

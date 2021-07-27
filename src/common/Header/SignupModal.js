@@ -43,14 +43,14 @@ export default function Signup() {
     cpass: "",
   });
 
-  function handleChange(event) {
+  function handleChanges(event) {
     setUser({
       ...user, 
       [event.target.name]: event.target.value
     });
   }
 
-  function handleSubmit(event) {
+  function handleSubmits(event) {
     event.preventDefault();
 
     if (validate()) {
@@ -80,10 +80,6 @@ export default function Signup() {
         });
     }
   }
-  
-
-  const handleChanges = handleChange.bind(this);
-  const handleSubmits = handleSubmit.bind(this);
 
   function validate() {
     const errors = {};
@@ -195,7 +191,7 @@ export default function Signup() {
           <div style={{color: "#f50057"}}>{error.cpass}</div>
         </div>
 
-        <Button className="CutomSubmitAuth" type="submit" value="submit" variant="contained" color="primary">
+        <Button className="CustomSubmitAuth" type="submit" value="submit" variant="contained" color="primary">
           Submit
         </Button>
       </form>

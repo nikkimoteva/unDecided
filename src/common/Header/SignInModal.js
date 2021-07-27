@@ -49,14 +49,14 @@ export default function SignIn() {
   });
   
 
-  function handleChange(event) {
+  function handleChanges(event) {
     setUser({
       ...user, 
       [event.target.name]: event.target.value
     });
   }
 
-  function handleSubmit(event) {
+  function handleSubmits(event) {
     event.preventDefault();
 
     if (validate()) {
@@ -80,9 +80,6 @@ export default function SignIn() {
       });
     }
   }
-  
-  const handleChanges = handleChange.bind(this);
-  const handleSubmits = handleSubmit.bind(this);
 
   function validate() {
     const errors = {};
@@ -144,7 +141,7 @@ export default function SignIn() {
           />
           <div style={{color: "#f50057"}}>{error.password}</div>
         </div>
-        <Button className="CutomSubmitAuth" type="submit" value="submit" variant="contained" color="primary">
+        <Button className="CustomSubmitAuth" type="submit" value="submit" variant="contained" color="primary">
           Submit
         </Button>
           <Divider/>
