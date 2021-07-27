@@ -151,6 +151,11 @@ app.post('/tableView', (req, res) => {
   const search_time = req.body.maxJobTime;
   let nickname = req.body.nickName;
 
+  const file_name = req.body.fileHash;
+  const train_path = '../../../research/plai-scratch/BlackBoxML/bbml-backend-3/ensemble_squared/datasets' + file_name + '.csv';
+  const local_path = './' + file_name;
+
+
   if (!nickname || nickname.length === 0) {
     nickname = "auto generated nickname";
   }
@@ -165,49 +170,39 @@ app.post('/tableView', (req, res) => {
     .then(() => forwardOutPromise(ssh1.connection, ssh2))
     .then(() => {
       console.log("Success connecting to borg");
-      const file_name = req.body.fileHash;
-      const train_path = '../../../research/plai-scratch/BlackBoxML/bbml-backend-3/ensemble_squared/datasets' + file_name + '.csv';
-      const local_path = './' + file_name;
-
-      ssh2.putFile(local_path, train_path).then(() => 
-        readFilePromise(local_path)
-      ).then(fileContent => {
-        const fileArray = csv.toArrays(fileContent);
-        const headers = fileArray[0];
-        const idx = headers.findIndex(target_name);
-        const newJob = new JobModel(
-          {
-            fileHash: file_name,
-            name: nickname,
-            headers: headers,
-            target_column: idx,
-            target_name: target_name,
-            email: user_email,
-            timer: search_time,
-            status: 'SUBMITTED'
-          });
-
-        newJob.save(err => {
-          if (err) {
-            errorHandler(err, res);
-          }
+      return ssh2.putFile(local_path, train_path);
+  })
+    .then(() => readFilePromise(local_path))
+    .then(fileContent => {
+      const fileArray = csv.toArrays(fileContent);
+      const headers = fileArray[0];
+      const idx = headers.findIndex(target_name);
+      const newJob = new JobModel(
+        {
+          fileHash: file_name,
+          name: nickname,
+          headers: headers,
+          target_column: idx,
+          target_name: target_name,
+          email: user_email,
+          timer: search_time,
+          status: 'SUBMITTED'
         });
 
-        try {
-          const trainString = trainPipeline(train_path, target_name, user_email, file_name, search_time, nickname);
-          ssh2.exec(trainString, [])
-          .then(() => 
-            res.status(200)
-          );
-        } catch (err) {
-          errorHandler(err);
-        }
-      });
+      return newJob.save();
+    })
+    .then(() => {
+      const trainString = trainPipeline(train_path, target_name, user_email, file_name, search_time, nickname);
+      return ssh2.exec(trainString, []);
+    })
+    .then(msg => {
+      res.status(200);
+      res.send(msg);
     })
     .catch(err => {
-      console.log(err);
+      errorHandler(err);
     });
-  });
+});
 
 app.post('/pipeline', (req, res) => {
   const search_id = req.body.search_id;
