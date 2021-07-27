@@ -71,9 +71,7 @@ export default function TrainJobForm() {
     setCSV(csvString);
     const header = csvString.split('\n')[0];
     const fields = header.split(',');
-    setHeader(fields.map((field, ind) => {
-      return {name: field, col: ind};
-    }));
+    setHeader(fields);
     setTargetColumn(fields[fields.length - 1]); // Default to last column, as usually the last one is the target col
     setDataImportSuccess(true);
   }

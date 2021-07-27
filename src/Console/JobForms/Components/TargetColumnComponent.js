@@ -15,9 +15,9 @@ export default function TargetColumnComponent(props) {
         onChange={(event) => props.setTargetColumn(event.target.value)}
       >
         {
-          props.header.map((field) => (
-            <MenuItem key={field.col} value={field.name}>
-              {field.name}
+          props.header.map((field, ind) => (
+            <MenuItem key={ind} value={field}>
+              {field}
             </MenuItem>
           ))
         }
