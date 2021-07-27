@@ -47,7 +47,8 @@ app.delete("/deleteJob", (req, res) => {
   const id_token = req.body.id_token;
   const jobId = req.body.jobId;
   auth.getUserId(id_token)
-    .then(_ => JobModel.deleteOne({ _id: jobId }))
+    .then(_ => JobModel.deleteOne({ _id: jobId })
+      .then(_ => res.sendStatus(200)))
     .catch(err => errorHandler(err, res));
 });
 
