@@ -119,7 +119,7 @@ export default function TrainJobForm() {
     event.preventDefault();
     const jobTime = maxJobTime * timeOption;
     if (validateFormData(jobTime)) {
-      submitJob(auth.user.email, jobName, jobTime, targetColumn, CSV)
+      submitJob(auth.user.email, jobName, jobTime, targetColumn, CSV, header)
         .then(res => history.push('/console/jobs'))
         .catch(err => {
           console.log(err);
