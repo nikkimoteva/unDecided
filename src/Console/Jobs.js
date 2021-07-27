@@ -121,11 +121,13 @@ function Row(props) {
         <TableCell align="right">{row.created}</TableCell>
         <TableCell align="right">{row.targetColumn}</TableCell>
         <Button variant="contained" color="secondary"
-          className={classes.newJobButton} onClick={deleteJob} name = {row.name}>
+          className={classes.newJobButton} onClick={deleteJob} name = {row.name}
+        >
           Delete
         </Button>
         <Button variant="contained" color="secondary"
-          className={classes.newJobButton} onClick={newPrediction} name = {row.id}>
+          className={classes.newJobButton} onClick={newPrediction} name = {row.id}
+        >
           New Prediction
         </Button>
 
