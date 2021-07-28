@@ -3,7 +3,7 @@ const express = require('express');
 const app = express();
 const cors = require('cors');
 const logger = require('morgan');
-
+require('../src/SecretHandler'); // Initializes config
 require("./database/Database"); // Initializes DB connection
 
 app.use(express.json());
