@@ -2,6 +2,7 @@ import GoogleLogin from "react-google-login";
 import React from "react";
 import {DialogContent} from "@material-ui/core";
 import {googlelogin_clientID} from "../../SecretHandler";
+console.log(googlelogin_clientID);
 
 export default class LoginModal extends React.Component {
   render() {
