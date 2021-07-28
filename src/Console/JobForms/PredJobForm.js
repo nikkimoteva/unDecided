@@ -131,13 +131,11 @@ export default function JobForm(props) {
     }
   }
 
-  function _AWSImportView(props) {
-    return <AWSImportView setFile={setCSV} setDataImportSuccess={setDataImportSuccess}
-                          updateCSVState={updateCSVState} setIsLoadingFile={setIsLoadingFile}
-                          setLoadingValue={setLoadingValue}
-                          setProgressBarType={setProgressBarType} {...props}
-           />;
-  }
+  const _AWSImportView = <AWSImportView setFile={setCSV} setDataImportSuccess={setDataImportSuccess}
+                                        updateCSVState={updateCSVState} setIsLoadingFile={setIsLoadingFile}
+                                        setLoadingValue={setLoadingValue}
+                                        setProgressBarType={setProgressBarType}
+  />;
 
   return (
     <div className={classes.rootDiv}>
