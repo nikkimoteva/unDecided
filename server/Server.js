@@ -80,24 +80,25 @@ app.get("/profile", (req, res) => {
     .catch(err => errorHandler(err, res));
 });
 
-app.post("/submitJob", (req, res) => {
+app.post("/submitTrainJob", (req, res) => {
   const body = req.body;
   const id_token = body.id_token;
   const jobName = body.jobName;
   const maxJobTime = body.maxJobTime;
   const targetColumnName = body.targetColumnName;
+  const header = body.header;
+  const targetColumn = header.indexOf(targetColumnName);
   const dataset = body.dataset;
   const job = new JobModel({
-    name: jobName,
-    user: id_token,
-    target_column: targetColumn,
-    target_name: targetColumnName,
-    timer: maxJobTime,
-  });
+      name: jobName,
+      user: id_token,
+      // fileHash: fileHash,
+      target_name: targetColumnName,
+      target_column: targetColumn,
+      timer: maxJobTime,
+});
   job.save()
-    .then(_ => {
-      return res.sendStatus(200);
-    })
+    .then(_ => res.sendStatus(200))
     .catch(err => errorHandler(err, res));
 });
 

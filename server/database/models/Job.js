@@ -9,10 +9,6 @@ const jobSchema = new mongoose.Schema({
     type: String,
     required: true
   },
-  dataset: { // keep
-    type: Array,
-    // required: true
-  },
   fileHash: {
     type: String,
     // required: true

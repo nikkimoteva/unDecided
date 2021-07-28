@@ -71,9 +71,7 @@ export default function TrainJobForm() {
     setCSV(csvString);
     const header = csvString.split('\n')[0];
     const fields = header.split(',');
-    setHeader(fields.map((field, ind) => {
-      return {name: field, col: ind};
-    }));
+    setHeader(fields);
     setTargetColumn(fields[fields.length - 1]); // Default to last column, as usually the last one is the target col
     setDataImportSuccess(true);
   }
@@ -119,7 +117,7 @@ export default function TrainJobForm() {
     event.preventDefault();
     const jobTime = maxJobTime * timeOption;
     if (validateFormData(jobTime)) {
-      submitJob(auth.user.email, jobName, jobTime, targetColumn, CSV)
+      submitJob(auth.user.email, jobName, jobTime, targetColumn, CSV, header)
         .then(res => history.push('/console/jobs'))
         .catch(err => {
           console.log(err);
