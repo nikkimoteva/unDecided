@@ -28,6 +28,8 @@ export default function AWSImportView(props) {
 
   const tableTitle = (showBucketsTable) ? "Buckets" : currBucket;
 
+
+
   function onSearchChange(event) {
     const newSearch = event.target.value;
     if (newSearch === "") setRowsToShow(rows);
@@ -99,6 +101,7 @@ export default function AWSImportView(props) {
   }
 
   function getObjectOnClick(params, event) {
+    console.log(props);
     const key = params.row.Key;
     if (key.slice(-4) !== ".csv") {
       alert("File object must have a '.csv' extension");

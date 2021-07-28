@@ -52,7 +52,7 @@ export default function FileUploadComponent(props) {
         keepMounted
       >
         <DialogTitle>Import from AWS</DialogTitle>
-        {awsImportView}
+        {props.AWSImportView(closeModal)}
       </Dialog>
 
     </>

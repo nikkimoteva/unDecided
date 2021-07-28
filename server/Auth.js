@@ -63,10 +63,4 @@ function verifyAuth(req) {
   });
 }
 
-function getUserId(id_token) {
-  // TODO
-  return Promise.resolve(id_token);
-}
-
 exports.verifyAuth = verifyAuth;
-exports.getUserId = getUserId;
