@@ -10,6 +10,8 @@ import SubmitButton from "./Components/SubmitButton";
 import FileUploadComponent from "./Components/FileUploadComponent";
 import DataImportStatusMsg from "./Components/DataImportStatusMsg";
 import LoadingIcon from "../../common/LoadingIcon";
+import {submitPrediction} from "../../common/Managers/EndpointManager";
+
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -82,8 +84,7 @@ export default function JobForm(props) {
     setCSV(csvString);
     const header = csvString.split('\n')[0];
     const fields = header.split(',');
-    console.log(location.state.headers);
-    console.log(fields);
+
     if (!isEqualArrays(fields, location.state.headers)) {
       alert("The prediction dataset must have the same columns as the training dataset");
       setDataImportSuccess(false);
@@ -130,7 +131,10 @@ export default function JobForm(props) {
     event.preventDefault();
     const jobTime = maxJobTime * timeOption;
     if (validateFormData(jobTime)) {
-      // TODO
+      submitPrediction(auth.user.email, jobName, location.state.id)
+        .then(res => {
+          history.push('/console/jobs');
+        });
     }
   }
 
