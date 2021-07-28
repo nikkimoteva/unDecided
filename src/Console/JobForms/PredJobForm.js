@@ -82,7 +82,9 @@ export default function JobForm(props) {
     setCSV(csvString);
     const header = csvString.split('\n')[0];
     const fields = header.split(',');
-    if (!isEqualArrays(fields, props.header)) {
+    console.log(location.state.headers);
+    console.log(fields);
+    if (!isEqualArrays(fields, location.state.headers)) {
       alert("The prediction dataset must have the same columns as the training dataset");
       setDataImportSuccess(false);
     } else {
