@@ -13,7 +13,7 @@ export default class LoginModal extends React.Component {
             buttonText="Login with Google"
             onSuccess={this.props.signin}
             onFailure={(res) => console.log(res)}
-            cookiePolicy="http://localhost:5000"
+            cookiePolicy={"single-host-origin"}
           />
         </div>
       </DialogContent>
