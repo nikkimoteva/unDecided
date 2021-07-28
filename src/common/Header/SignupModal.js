@@ -6,6 +6,7 @@ import TextField from '@material-ui/core/TextField';
 import "../Button.css";
 import {useAuth} from "../Auth";
 import {useHistory} from "react-router-dom";
+import {useLoginModalContext} from "../LoginModalProvider";
 
 
 const useStyles = makeStyles((theme) => ({
@@ -25,6 +26,7 @@ export default function Signup() {
 
   const auth = useAuth();
   const history = useHistory();
+  const {loginModal, setLoginModal} = useLoginModalContext();
 
 
   const classes = useStyles();
@@ -65,6 +67,7 @@ export default function Signup() {
           } else if (res.data.error) {
             alert(res.data.error);
           } else {
+            setLoginModal(false);
             history.push('/console');
             console.log("successfully logged in");
             setUser( {

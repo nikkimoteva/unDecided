@@ -7,6 +7,7 @@ import LoginModal from "./LoginModal";
 import {useAuth} from "../Auth";
 import {useHistory} from "react-router-dom";
 import Divider from '@material-ui/core/Divider';
+import {useLoginModalContext} from "../LoginModalProvider";
 import "../Button.css";
 
 
@@ -28,11 +29,13 @@ export default function SignIn() {
 
   const auth = useAuth();
   const history = useHistory();
+  const {loginModal, setLoginModal} = useLoginModalContext();
 
   //google auth
   function login(credentials) {
     auth.signinGoogle(credentials)
       .then(() => {
+        setLoginModal(false);
         history.push('/console');
       });
   }
@@ -65,6 +68,7 @@ export default function SignIn() {
       auth.signin(user.email, user.password)
       .then ((res) => {
         if (res) {
+          setLoginModal(false);
           history.push('/console');
           console.log("successfully logged in");
           setUser( {
