@@ -8,7 +8,7 @@ import JobNameComponent from "./Components/JobNameComponent";
 import JobTimeComponent from "./Components/JobTimeComponent";
 import TargetColumnComponent from "./Components/TargetColumnComponent";
 import SubmitButton from "./Components/SubmitButton";
-import FileUploadComponent from "./Components/FileUploadComponent";
+import {FileUploadComponent} from "./Components/FileUploadComponent";
 import DataImportStatusMsg from "./Components/DataImportStatusMsg";
 import LoadingIcon from "../../common/LoadingIcon";
 
@@ -126,20 +126,18 @@ export default function TrainJobForm() {
     }
   }
 
-  function _AWSImportView(props) {
-    return <AWSImportView setFile={setCSV} setDataImportSuccess={setDataImportSuccess}
-                          updateCSVState={updateCSVState} setIsLoadingFile={setIsLoadingFile}
-                          setLoadingValue={setLoadingValue}
-                          setProgressBarType={setProgressBarType} {...props}
-           />;
-  }
+  const _AWSImportView = <AWSImportView setFile={setCSV} setDataImportSuccess={setDataImportSuccess}
+                                        updateCSVState={updateCSVState} setIsLoadingFile={setIsLoadingFile}
+                                        setLoadingValue={setLoadingValue}
+                                        setProgressBarType={setProgressBarType}
+                         />;
 
   return (
     <div className={classes.rootDiv}>
       <h1 style={{paddingBottom: "20px"}}>Training Job</h1>
       <div>
         <LoadingIcon hidden={!isLoadingFile} variant={progressBarType} loadingValue={loadingValue}/>
-        <DataImportStatusMsg dataImportSuccess={dataImportSuccess}/>
+        <DataImportStatusMsg isDataUploadSuccess={dataImportSuccess}/>
       </div>
 
       <form className={classes.root}>
