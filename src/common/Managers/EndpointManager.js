@@ -6,15 +6,22 @@ const root = `http://localhost:3001`; // make sure this matches up with backend
  */
 
 export function validateGoogleUser(id_token) {
-  return axios.post(`${root}/gauth`,{id_token});
+  return axios.post(`${root}/gauth`, {id_token});
 }
 
 /*
 * Main endpoints
 */
 
-export function submitJob(id_token, jobName, maxJobTime, targetColumn, targetColumnName, dataset) {
-  return axios.post(`${root}/submitJob`, {id_token, jobName, maxJobTime, targetColumn, targetColumnName, dataset});
+export function submitJob(id_token, jobName, maxJobTime, targetColumnName, dataset, header) {
+  return axios.post(`${root}/submitTrainJob`, {
+    id_token,
+    jobName,
+    maxJobTime,
+    targetColumnName,
+    dataset: "", // TODO: Fix this so we can send dataset to the server properly
+    header
+  });
 }
 
 export function submitPrediction(id_token, predictionName,jobID) {

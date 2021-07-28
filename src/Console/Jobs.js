@@ -119,7 +119,6 @@ export default function Jobs(props) {
     }
 
     function SubRow(props) {
-
       props.id = props._id;
 
       function deletePrediction() {
@@ -156,6 +155,7 @@ export default function Jobs(props) {
       .then(res => {
         const gottenPredictions = res.data;
         setRowState({open:!rowState.open,predictions:gottenPredictions});
+
 
       });
 

@@ -2,7 +2,11 @@
 const csv = require('jquery-csv');
 const fs = require('fs');
 
+const user = 'blkbx-ml';
+const password = '1qaz2wsx';
+
 module.exports = {
+    
     csvToArrays: function (fileContent) {
         return new Promise((resolve, reject) => {
             csv.toArrays(fileContent, {}, (err, data) => {
@@ -70,7 +74,27 @@ module.exports = {
         return "/opt/slurm/bin/sbatch --partition=blackboxml --nodelist=chicago\
         --error=/ubc/cs/research/plai-scratch/BlackBoxML/error.err\
         --output=/ubc/cs/research/plai-scratch/BlackBoxML/out.out\
-        /ubc/cs/research/plai-scratch/BlackBoxML/bbml-backend-3/ensemble_squared/run-client-search.sh" 
+        /ubc/cs/research/plai-scratch/BlackBoxML/bbml-backend-3/ensemble_squared/run-client-search.sh " 
         + job_id + " " + job_name + " " + csv_file_name + " " + timer + " " + target_name + " " + email;
-    }
+    },
+    
+    forwardOutPromise: function (conn1, conn2) {
+        return new Promise(((resolve, reject) => {
+          conn1.forwardOut('127.0.0.1', 22, '142.103.16.250', 22, (err, stream) => {
+            if (err) {
+              reject(err);
+            }
+            conn2.connect({
+              sock: stream,
+              username: user,
+              password: password,
+            })
+              .then(() => resolve())
+              .catch(err => reject(err));
+          });
+        }));
+    },
+
+
+
 };
