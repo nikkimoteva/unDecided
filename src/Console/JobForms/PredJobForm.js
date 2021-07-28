@@ -135,7 +135,7 @@ export default function JobForm(props) {
                                         updateCSVState={updateCSVState} setIsLoadingFile={setIsLoadingFile}
                                         setLoadingValue={setLoadingValue}
                                         setProgressBarType={setProgressBarType}
-                         />;
+  />;
 
   return (
     <div className={classes.rootDiv}>
