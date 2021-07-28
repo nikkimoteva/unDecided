@@ -15,10 +15,16 @@ const auth = require("./Auth.js");
 const JobModel = require("./database/models/Job");
 const UserModel = require("./database/models/User");
 const csv = require('jquery-csv');
+const { v4: uuidv4 } = require('uuid');
 const multer = require('multer');
 const upload = multer({ dest: 'temp/' });
 
-const { readFilePromise, csvToArrays, csvToObject, arraysToCsv, runPredict, trainPipeline } = require("./Util");
+
+const { NodeSSH } = require('node-ssh');
+const user = 'blkbx-ml';
+const password = '1qaz2wsx';
+
+const { readFilePromise, csvToArrays, csvToObject, arraysToCsv, runPredict, trainPipeline, forwardOutPromise } = require("./Util");
 require("./database/Database"); // Initializes DB connection
 
 const port = 3001;
@@ -35,8 +41,8 @@ app.get("/test", (req, res) => {
 
 app.post("/jobs", (req, res) => {
   const id_token = req.body.id_token;
-  JobModel.find({user: id_token})
-    .then(jobs =>{
+  JobModel.find({ user: id_token })
+    .then(jobs => {
       return res.json(jobs);
     })
 
@@ -148,41 +154,58 @@ app.post('/tableView', (req, res) => {
   const search_time = req.body.maxJobTime;
   let nickname = req.body.nickName;
 
+  const file_name = req.body.fileHash;
+  const train_path = "../../../research/plai-scratch/BlackBoxML/bbml-backend-3/ensemble_squared/datasets/" + file_name + "/train.csv";
+  const local_path = "./server/" + file_name + ".csv";
+
+
   if (!nickname || nickname.length === 0) {
     nickname = "auto generated nickname";
   }
-  const file_name = req.body.fileHash;
-  const train_path = './scratch/users_csv/' + file_name + '.csv';
+  const ssh1 = new NodeSSH();
+  const ssh2 = new NodeSSH();
 
-  readFilePromise(train_path).then(fileContent => {
-    const fileArray = csvToArrays(fileContent);
-    const headers = fileArray[0];
-    const idx = headers.findIndex(target_name);
-    const newJob = new JobModel(
-      {
-        fileHash: file_name,
-        name: nickname,
-        headers: headers,
-        target_column: idx,
-        target_name: target_name,
-        email: user_email,
-        timer: search_time,
-        status: 'SUBMITTED'
-      });
+  ssh1.connect({
+    host: 'remote.cs.ubc.ca',
+    username: user,
+    password: password
+  })
+    .then(() => forwardOutPromise(ssh1.connection, ssh2))
+    .then(() => {
+      console.log("Success connecting to borg");
+      ssh2.putFile(local_path, train_path);
+  })
+    .then(() => readFilePromise(local_path))
+    .then(fileContent => {
+      const fileArray = csv.toArrays(fileContent);
+      const headers = fileArray[0];
+      const idx = headers.indexOf(target_name);
+      const newJob = new JobModel(
+        {
+          fileHash: file_name,
+          name: nickname,
+          headers: headers,
+          target_column: idx,
+          target_name: target_name,
+          email: user_email,
+          timer: search_time,
+          status: 'SUBMITTED',
+          user: req.body.user
+        });
 
-    newJob.save(err => {
-      if (err) {
-        errorHandler(err, res);
-      }
-    });
-
-    try {
-      trainPipeline();
+      return newJob.save();
+    })
+    .then(() => {
+      const trainString = trainPipeline(train_path, target_name, user_email, file_name, search_time, nickname);
+      return ssh2.exec(trainString, []);
+    })
+    .then(msg => {
       res.status(200);
-    } catch (err) {
+      res.send(msg);
+    })
+    .catch(err => {
       errorHandler(err);
-    }
-  });
+    });
 });
 
 app.post('/pipeline', (req, res) => {
@@ -195,9 +218,27 @@ app.post('/pipeline', (req, res) => {
   }
 
   try {
-    const test_file_name = makeid(4);
-    const folder_path = './scratch/users_csv/' + search_id;
-    const test_path = folder_path + '/' + test_file_name + '.csv';
+
+    const ssh1 = new NodeSSH();
+    const ssh2 = new NodeSSH();
+
+    ssh1.connect({
+      host: 'remote.cs.ubc.ca',
+      username: user,
+      password: password
+    })
+      .then(() => forwardOutPromise(ssh1.connection, ssh2))
+      .then(() => {
+        console.log("Success!");
+        ssh2.execCommand("hostname").then(res => console.log(res.stdout));
+      })
+      .catch(err => {
+        console.log(err);
+      });
+
+    const test_file_name = uuidv4();
+    const folder_path = '/ubc/cs/research/plai-scratch/BlackBoxML/bbml-backend-3/ensemble_squared/datasets' + search_id;
+    const test_path = folder_path + '/' + test_file_name + '/train.csv';
 
     storeCSV(uploaded_file, test_path)
       .then(() => {
@@ -259,13 +300,3 @@ function errorHandler(err, res) {
 app.listen(port, () => {
   console.log(`Listening on http://localhost:${port}`);
 });
-
-function makeid(length) {
-  let result = '';
-  const characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
-  const charactersLength = characters.length;
-  for (let i = 0; i < length; i++) {
-    result += characters.charAt(Math.floor(Math.random() * charactersLength));
-  }
-  return result;
-}
