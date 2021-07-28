@@ -9,6 +9,15 @@ export function validateGoogleUser(id_token) {
   return axios.post(`${root}/gauth`, {id_token});
 }
 
+export function validateUser(email, password) {
+  return axios.post(`${root}/auth`,{email, password});
+}
+
+export function addUser(name, email, password) {
+  return axios.post(`${root}/addUser`,{name, email, password});
+}
+
+
 /*
 * Main endpoints
 */

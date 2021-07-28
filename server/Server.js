@@ -11,7 +11,8 @@ const cors = require('cors');
 const logger = require('morgan');
 
 const { storeCSV } = require("./FileManager");
-const auth = require("./Auth.js");
+const auth = require("./UserAuth/Auth.js");
+const UserAuth = require("./UserAuth/UserAuth.js");
 const JobModel = require("./database/models/Job");
 const UserModel = require("./database/models/User");
 const csv = require('jquery-csv');
@@ -64,6 +65,35 @@ app.post("/gauth", (req, res) => {
     .catch(err => errorHandler(err, res));
 });
 
+app.post("/auth", (req, res) => {
+  return UserAuth.validatePassword(req.body.email, req.body.password)
+  .then((userData) => {
+    if (!userData) {
+      return res.sendStatus(400);
+    } else {
+      return res.send(userData);
+    }
+  })
+  .catch(err => errorHandler(err, res));
+});
+
+app.post("/addUser", (req, res) => {
+  UserAuth.addUser(req.body.name, req.body.email, req.body.password)
+  .then((result) => {
+    console.log(result);
+    if (!result) {
+      return res.sendStatus(400);
+    } else if (result===1){
+      return res.send({error: "Email already exists! Please login."});
+    } else {
+      return res.sendStatus(200);
+    }
+  })
+  .catch(err => {
+    console.log(err);
+    errorHandler(err, res);});
+});
+
 app.get("/profile", (req, res) => {
   const id_token = req.body.id;
   auth.getUserId(id_token)
@@ -75,7 +105,7 @@ app.get("/profile", (req, res) => {
     })
     .then(users => {
       const user = users[0];
-      res.json({ userName: user.userName, email: user.email, picture: user.picture });
+      res.json({ email: user.email, name: user.name });
     })
     .catch(err => errorHandler(err, res));
 });

@@ -30,22 +30,33 @@
     width: 50%;
     height: 3em;
     margin-left: 25vw;
-    margin-bottom: 5%;
+    margin-bottom: 3%;
     color: #DEE;
 }
 
-.CutomContactUs {
+.CustomContactUs {
     font-weight: bolder;
-    width: 12em;
-    height: 3em;
-    color: #DEE;
     font-size: 1.5em;
-    margin-left: 38vw;
+    width: 30%;
+    height: 3em;
+    margin-left: 35vw;
+    color: #DEE;
 }
-.CutomSubmitContact {
+
+.CustomSubmitContact {
     font-weight: bolder;
     width: 7em;
     height: 2.4em;
     color: #DEE;
     font-size: 1em;
+}
+
+.CustomSubmitAuth {
+    font-weight: bolder;
+    width: 7em;
+    height: 2.4em;
+    color: #DEE;
+    font-size: 1em;
+    display: block;
+    margin: auto;
 }
