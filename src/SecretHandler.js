@@ -18,9 +18,10 @@ try {
   const contactus_access_token = process.env.CONTACTUS_ACCESS_TOKEN;
   const contactus_service_id = process.env.CONTACTUS_SERVICE_ID;
   const contactus_template_id = process.env.CONTACTUS_TEMPLATE_ID;
+  const googlelogin_clientID = process.env.GOOGLELOGIN_CLIENTID;
   toExport = {
     user, password, server, database, email, captcha_site_key, captcha_secret_key, contactus_user,
-    contactus_access_token, contactus_service_id, contactus_template_id
+    contactus_access_token, contactus_service_id, contactus_template_id, googlelogin_clientID
   };
 }
 
