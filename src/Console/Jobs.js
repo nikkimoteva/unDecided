@@ -142,10 +142,10 @@ export default function Jobs(props) {
                           </TableCell>
                           <TableCell align="center">{props.status}</TableCell>
                           <TableCell align="center">{props.created}</TableCell>
-                          <TableCell align="center"><Button variant="contained" 
-                            className={classes.jobActionButton} onClick={deletePrediction} color="primary" startIcon={<DeleteIcon />}>
-                            Delete
-                          </Button>
+                          <TableCell align="center">
+                          <Button variant="contained" 
+                            className={classes.jobActionButton} onClick={deletePrediction} color="primary" 
+                            startIcon={<DeleteIcon />} />
                           </TableCell>
                         </TableRow>);
     }
