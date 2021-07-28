@@ -74,7 +74,7 @@ module.exports = {
         return "/opt/slurm/bin/sbatch --partition=blackboxml --nodelist=chicago\
         --error=/ubc/cs/research/plai-scratch/BlackBoxML/error.err\
         --output=/ubc/cs/research/plai-scratch/BlackBoxML/out.out\
-        /ubc/cs/research/plai-scratch/BlackBoxML/bbml-backend-3/ensemble_squared/run-client-search.sh" 
+        /ubc/cs/research/plai-scratch/BlackBoxML/bbml-backend-3/ensemble_squared/run-client-search.sh " 
         + job_id + " " + job_name + " " + csv_file_name + " " + timer + " " + target_name + " " + email;
     },
     
@@ -93,5 +93,8 @@ module.exports = {
               .catch(err => reject(err));
           });
         }));
-      }
+    },
+
+
+
 };

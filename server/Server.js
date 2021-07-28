@@ -152,8 +152,8 @@ app.post('/tableView', (req, res) => {
   let nickname = req.body.nickName;
 
   const file_name = req.body.fileHash;
-  const train_path = '../../../research/plai-scratch/BlackBoxML/bbml-backend-3/ensemble_squared/datasets' + file_name + '.csv';
-  const local_path = './' + file_name;
+  const train_path = "../../../research/plai-scratch/BlackBoxML/bbml-backend-3/ensemble_squared/datasets/" + file_name + "/train.csv";
+  const local_path = "./server/" + file_name + ".csv";
 
 
   if (!nickname || nickname.length === 0) {
@@ -170,13 +170,13 @@ app.post('/tableView', (req, res) => {
     .then(() => forwardOutPromise(ssh1.connection, ssh2))
     .then(() => {
       console.log("Success connecting to borg");
-      return ssh2.putFile(local_path, train_path);
+      ssh2.putFile(local_path, train_path);
   })
     .then(() => readFilePromise(local_path))
     .then(fileContent => {
       const fileArray = csv.toArrays(fileContent);
       const headers = fileArray[0];
-      const idx = headers.findIndex(target_name);
+      const idx = headers.indexOf(target_name);
       const newJob = new JobModel(
         {
           fileHash: file_name,
@@ -186,7 +186,8 @@ app.post('/tableView', (req, res) => {
           target_name: target_name,
           email: user_email,
           timer: search_time,
-          status: 'SUBMITTED'
+          status: 'SUBMITTED',
+          user: req.body.user
         });
 
       return newJob.save();
@@ -234,7 +235,7 @@ app.post('/pipeline', (req, res) => {
 
     const test_file_name = uuidv4();
     const folder_path = '/ubc/cs/research/plai-scratch/BlackBoxML/bbml-backend-3/ensemble_squared/datasets' + search_id;
-    const test_path = folder_path + '/' + test_file_name + '.csv';
+    const test_path = folder_path + '/' + test_file_name + '/train.csv';
 
     storeCSV(uploaded_file, test_path)
       .then(() => {
