@@ -4,7 +4,6 @@ import React, {useEffect, useState} from "react";
 import {getJobs, deleteJob as deleteJobDB} from "../common/Managers/EndpointManager";
 import {useAuth} from "../common/Auth";
 import {useHistory} from "react-router-dom";
-import {DataGrid} from '@material-ui/data-grid';
 import Collapse from '@material-ui/core/Collapse';
 import IconButton from '@material-ui/core/IconButton';
 import Table from '@material-ui/core/Table';
@@ -17,7 +16,11 @@ import Typography from '@material-ui/core/Typography';
 import Paper from '@material-ui/core/Paper';
 import KeyboardArrowDownIcon from '@material-ui/icons/KeyboardArrowDown';
 import KeyboardArrowUpIcon from '@material-ui/icons/KeyboardArrowUp';
-import {submitPrediction, getPredictions, deletePrediction as deletePredictionDB} from "../common/Managers/EndpointManager";
+import {
+  submitPrediction,
+  getPredictions,
+  deletePrediction as deletePredictionDB
+} from "../common/Managers/EndpointManager";
 import DeleteIcon from '@material-ui/icons/Delete';
 
 const useRowStyles = makeStyles({
@@ -57,8 +60,6 @@ const useStyles = makeStyles({
 });
 
 
-
-
 export default function Jobs(props) {
   const classes = useStyles();
   const [jobs, setJobs] = useState([]);
@@ -79,13 +80,10 @@ export default function Jobs(props) {
   }, []);
 
 
-
-  
-
   function Row(props) {
 
-    const { row } = props;
-    const [rowState, setRowState] = React.useState({open:false,predictions:[]});
+    const {row} = props;
+    const [rowState, setRowState] = React.useState({open: false, predictions: []});
     const classes = useRowStyles();
 
     function deleteJob() {
@@ -123,55 +121,49 @@ export default function Jobs(props) {
 
       function deletePrediction() {
         const predictionID = props.id;
-        deletePredictionDB(auth.user.email, predictionID).
-        then(_=>{
-          getPredictions(auth.user.email,row.id)
-          .then(res => {
-            const gottenPredictions = res.data;
-            setRowState({open:rowState.open,predictions:gottenPredictions});
+        deletePredictionDB(auth.user.email, predictionID).then(_ => {
+          getPredictions(auth.user.email, row.id)
+            .then(res => {
+              const gottenPredictions = res.data;
+              setRowState({open: rowState.open, predictions: gottenPredictions});
 
-          });
+            });
         });
       }
 
 
-      return(<TableRow key={props.date}>
-                          <TableCell align="center">
-                            {props.name}
-                          </TableCell>
-                          <TableCell align="center">{props.status}</TableCell>
-                          <TableCell align="center">{props.created}</TableCell>
-                          <TableCell align="center">
-                          <Button variant="contained" 
-                            className={classes.jobActionButton} onClick={deletePrediction} color="primary" 
-                            startIcon={<DeleteIcon />}
-                          />
-                          </TableCell>
-                        </TableRow>);
+      return (<TableRow key={props.date}>
+        <TableCell align="center">
+          {props.name}
+        </TableCell>
+        <TableCell align="center">{props.status}</TableCell>
+        <TableCell align="center">{props.created}</TableCell>
+        <TableCell align="center">
+          <Button variant="contained"
+                  className={classes.jobActionButton} onClick={deletePrediction} color="primary"
+                  startIcon={<DeleteIcon/>}
+          />
+        </TableCell>
+      </TableRow>);
     }
 
-    function openButtonOnClick(){
+    function openButtonOnClick() {
+      getPredictions(auth.user.email, row.id)
+        .then(res => {
+          const gottenPredictions = res.data;
+          setRowState({open: !rowState.open, predictions: gottenPredictions});
 
-      getPredictions(auth.user.email,row.id)
-      .then(res => {
-        const gottenPredictions = res.data;
-        setRowState({open:!rowState.open,predictions:gottenPredictions});
 
-
-      });
+        });
 
     }
-
-
-
 
     return (
       <>
-
         <TableRow className={classes.root}>
           <TableCell>
             <IconButton aria-label="expand row" size="small" onClick={openButtonOnClick}>
-              {rowState.open ? <KeyboardArrowUpIcon /> : <KeyboardArrowDownIcon />}
+              {rowState.open ? <KeyboardArrowUpIcon/> : <KeyboardArrowDownIcon/>}
             </IconButton>
           </TableCell>
           <TableCell component="th" scope="row">
@@ -180,23 +172,27 @@ export default function Jobs(props) {
           <TableCell align="right">{row.status}</TableCell>
           <TableCell align="right">{row.created}</TableCell>
           <TableCell align="right">{row.targetColumn}</TableCell>
-          <TableCell align="center"><Button variant="contained" 
-            className={classes.jobActionButton} onClick={deleteJob} color="primary" name = {row.name}
+          <TableCell align="center"><Button variant="contained"
+                                            className={classes.jobActionButton} onClick={deleteJob} color="primary"
+                                            name={row.name}
                                     >
             Delete
           </Button>
-          <Button variant="contained" 
-            className={classes.jobActionButton} onClick={row.status==="Running"?null:newPrediction} color={row.status==="Running"?"grey":"primary"} name = {row.id}
-          >
-            New Prediction
-          </Button></TableCell>
-          
-
-
+            <Button
+              variant="contained"
+              color="primary"
+              className={classes.jobActionButton}
+              onClick={newPrediction}
+              name={row.id}
+              disabled={row.status === "Running"}
+            >
+              New Prediction
+            </Button>
+          </TableCell>
         </TableRow>
 
         <TableRow>
-          <TableCell style={{ paddingBottom: 0, paddingTop: 0 }} colSpan={6}>
+          <TableCell style={{paddingBottom: 0, paddingTop: 0}} colSpan={6}>
 
             <Collapse in={rowState.open} timeout="auto" unmountOnExit>
               <Box margin={1}>
@@ -228,11 +224,10 @@ export default function Jobs(props) {
     );
   }
 
-
   const rows = jobs;
   rows.forEach(function (data) {
     data.id = data._id;
-    data.predictions=[{name:"p1",status:"running",time_created:"2021.7.20"}];
+    data.predictions = [{name: "p1", status: "running", time_created: "2021.7.20"}];
   });
   return (
     <div>
@@ -250,7 +245,7 @@ export default function Jobs(props) {
           <Table aria-label="collapsible table">
             <TableHead>
               <TableRow>
-                <TableCell />
+                <TableCell/>
                 <TableCell>Job Name</TableCell>
                 <TableCell align="right">Status</TableCell>
                 <TableCell align="right">Starting Date</TableCell>
@@ -260,7 +255,7 @@ export default function Jobs(props) {
             </TableHead>
             <TableBody>
               {rows.map((row) => (
-                <Row key={row.id} row={row} />
+                <Row key={row.id} row={row}/>
               ))}
             </TableBody>
           </Table>

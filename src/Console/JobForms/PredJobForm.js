@@ -1,12 +1,11 @@
 import React, {useState} from "react";
 import {makeStyles, Typography} from "@material-ui/core";
-import {submitJob} from "../../common/Managers/EndpointManager";
 import {useHistory,useLocation} from "react-router-dom";
 import {useAuth} from "../../common/Auth.js";
 import AWSImportView from "../AWSImport/AWSImportView";
 import JobNameComponent from "./Components/JobNameComponent";
 import SubmitButton from "./Components/SubmitButton";
-import FileUploadComponent from "./Components/FileUploadComponent";
+import {FileUploadComponent} from "./Components/FileUploadComponent";
 import DataImportStatusMsg from "./Components/DataImportStatusMsg";
 import LoadingIcon from "../../common/LoadingIcon";
 import {submitPrediction} from "../../common/Managers/EndpointManager";
@@ -36,9 +35,6 @@ const useStyles = makeStyles((theme) => ({
  */
 export default function JobForm(props) {
   const [jobName, setJobName] = useState("");
-  const [timeOption, setTimeOption] = useState(1);
-  const [targetColumn, setTargetColumn] = useState("");
-  const [header, setHeader] = useState([]);
   const [CSV, setCSV] = useState("");
 
   const [isLoadingFile, setIsLoadingFile] = useState(false);
