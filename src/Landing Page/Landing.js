@@ -34,9 +34,9 @@ export default function Landing() {
 
   function handleGetStartedOnClick() {
     if (auth.user === "") {
-      return setLoginModal(true);
+      setLoginModal(true);
     } else {
-      return history.push("/console");
+      history.push("/console");
     }
   }
 
