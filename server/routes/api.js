@@ -6,17 +6,19 @@ const csv = require('jquery-csv');
 const {storeCSV} = require("../FileManager");
 const {getUserId} = require("../Util");
 const { v4: uuidv4 } = require('uuid');
-
+const {forwardOutPromise} = require("../Util");
+const {NodeSSH} = require("node-ssh");
 const { readFilePromise, csvToArrays, csvToObject, arraysToCsv, runPredict, trainPipeline, errorHandler} = require("../Util");
 
 const aws = require("./AWSRoutes");
 const jobs = require("./JobRoutes");
 const auth = require("./AuthRoutes");
-const {forwardOutPromise} = require("../Util");
-const {NodeSSH} = require("node-ssh");
 router.use('/aws', aws);
 router.use('/jobs', jobs);
 router.use('/auth', auth);
+
+const user = "";
+const password = "";
 
 router.get("/test", (req, res) => {
   res.sendStatus(200);
