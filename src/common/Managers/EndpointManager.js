@@ -33,18 +33,34 @@ export function submitJob(id_token, jobName, maxJobTime, targetColumnName, datas
   });
 }
 
+export function submitPrediction(id_token, predictionName,jobID) {
+  return axios.post(`${root}/submitPrediction`, {id_token, predictionName,jobID});
+}
+
 export function getJobs(id_token) {
   return axios.post(`${root}/jobs`, {id_token});
 
 }
 
+export function getPredictions(id_token,jobID) {
+  return axios.post(`${root}/predictions`, {id_token,jobID});
+
+}
+
 export function deleteJob(id_token, jobId) {
   const d = {id_token, jobId};
-  console.log(d);
-
   return axios({
     method: "delete",
     url: `${root}/deleteJob`,
+    data: d
+  });
+}
+
+export function deletePrediction(id_token, predictionID) {
+  const d = {id_token, predictionID};
+  return axios({
+    method: "delete",
+    url: `${root}/deletePrediction`,
     data: d
   });
 }

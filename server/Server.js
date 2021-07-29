@@ -14,11 +14,13 @@ const { storeCSV } = require("./FileManager");
 const auth = require("./UserAuth/Auth.js");
 const UserAuth = require("./UserAuth/UserAuth.js");
 const JobModel = require("./database/models/Job");
+const PredictionModel = require("./database/models/Prediction");
 const UserModel = require("./database/models/User");
 const csv = require('jquery-csv');
 const { v4: uuidv4 } = require('uuid');
 const multer = require('multer');
 const upload = multer({ dest: 'temp/' });
+
 
 
 const { NodeSSH } = require('node-ssh');
@@ -45,6 +47,17 @@ app.post("/jobs", (req, res) => {
   JobModel.find({ user: id_token })
     .then(jobs => {
       return res.json(jobs);
+    })
+
+    .catch(err => errorHandler(err, res));
+});
+
+app.post("/predictions", (req, res) => {
+  const id_token = req.body.id_token;
+  const jobID = req.body.jobID;
+  PredictionModel.find({user: id_token, jobID: jobID})
+    .then(predictions =>{
+      return res.json(predictions);
     })
 
     .catch(err => errorHandler(err, res));
@@ -126,11 +139,39 @@ app.post("/submitTrainJob", (req, res) => {
       target_name: targetColumnName,
       target_column: targetColumn,
       timer: maxJobTime,
+      headers: header
 });
   job.save()
     .then(_ => res.sendStatus(200))
     .catch(err => errorHandler(err, res));
 });
+
+app.post("/submitPrediction", (req, res) => {
+  const body = req.body;
+  const id_token = body.id_token;
+  const predictionName = body.predictionName;
+  const jobID = body.jobID;
+  const prediction = new PredictionModel({
+    name: predictionName,
+    user: id_token,
+    jobID:jobID
+  });
+  prediction.save()
+    .then(_ => {
+      return res.sendStatus(200);
+    })
+    .catch(err => errorHandler(err, res));
+});
+
+app.delete("/deletePrediction", (req, res) => {
+  const id_token = req.body.id_token;
+  const predictionID = req.body.predictionID;
+  auth.getUserId(id_token)
+    .then(_ => PredictionModel.deleteOne({ _id: predictionID })
+      .then(_ => res.sendStatus(200)))
+    .catch(err => errorHandler(err, res));
+});
+
 
 app.post('/registerAWS', (req, res) => {
   const region = req.body.region;
