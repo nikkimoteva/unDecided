@@ -15,11 +15,11 @@ export function validateGoogleUser(id_token) {
 }
 
 export function validateUser(email, password) {
-  return axios.post(`${root}`,{email, password});
+  return axios.post(`${authRoot}`,{email, password});
 }
 
 export function addUser(name, email, password) {
-  return axios.post(`${root}/addUser`,{name, email, password});
+  return axios.post(`${authRoot}/addUser`,{name, email, password});
 }
 
 
@@ -40,7 +40,7 @@ export function submitJob(id_token, jobName, maxJobTime, targetColumnName, datas
 }
 
 export function submitPrediction(id_token, predictionName,jobID) {
-  return axios.post(`${root}/submitPrediction`, {id_token, predictionName,jobID});
+  return axios.post(`${jobRoot}/submitPrediction`, {id_token, predictionName,jobID});
 }
 
 export function getJobs(id_token) {
@@ -49,7 +49,7 @@ export function getJobs(id_token) {
 }
 
 export function getPredictions(id_token,jobID) {
-  return axios.post(`${root}/predictions`, {id_token,jobID});
+  return axios.post(`${jobRoot}/predictions`, {id_token,jobID});
 
 }
 
@@ -66,7 +66,7 @@ export function deletePrediction(id_token, predictionID) {
   const d = {id_token, predictionID};
   return axios({
     method: "delete",
-    url: `${root}/deletePrediction`,
+    url: `${jobRoot}/deletePrediction`,
     data: d
   });
 }

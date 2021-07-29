@@ -13,9 +13,9 @@ const { readFilePromise, csvToArrays, csvToObject, arraysToCsv, runPredict, trai
 const aws = require("./AWSRoutes");
 const jobs = require("./JobRoutes");
 const auth = require("./AuthRoutes");
-router.use('/aws', aws);
-router.use('/jobs', jobs);
 router.use('/auth', auth);
+router.use('/jobs', jobs);
+router.use('/aws', aws);
 
 const user = "";
 const password = "";
