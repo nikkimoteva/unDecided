@@ -29,11 +29,7 @@ const useStyles = makeStyles((theme) => ({
   }
 }));
 
-
-/**
- * @param props.header should contain the header of the train job
- */
-export default function JobForm(props) {
+export default function PredJobForm() {
   const [jobName, setJobName] = useState("");
   const [CSV, setCSV] = useState("");
 
@@ -72,7 +68,6 @@ export default function JobForm(props) {
 
   // converts array of fields into array of json objects
   function updateCSVState(csvString) {
-    setCSV(csvString);
     const header = csvString.split('\n')[0];
     const fields = header.split(',');
 
@@ -80,6 +75,7 @@ export default function JobForm(props) {
       alert("The prediction dataset must have the same columns as the training dataset");
       setDataImportSuccess(false);
     } else {
+      setCSV(csvString);
       setDataImportSuccess(true);
     }
   }
@@ -92,6 +88,7 @@ export default function JobForm(props) {
       setProgressBarType('determinate');
       getFileObjectContent(file)
         .then(csvString => {
+          console.log("Success!");
           updateCSVState(csvString);
         })
         .catch(err => {
@@ -104,7 +101,7 @@ export default function JobForm(props) {
 
   function validateFormData() {
     if (CSV === "") {
-      alert("You must upload a csv file to train on.");
+      alert("You must upload a csv file to predict on.");
       return false;
       // } else
     } else if (jobName.length === 0) {
@@ -129,7 +126,7 @@ export default function JobForm(props) {
                                         updateCSVState={updateCSVState} setIsLoadingFile={setIsLoadingFile}
                                         setLoadingValue={setLoadingValue}
                                         setProgressBarType={setProgressBarType}
-  />;
+                         />;
 
 
   return (

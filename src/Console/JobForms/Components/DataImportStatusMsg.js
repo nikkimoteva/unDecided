@@ -6,14 +6,12 @@ const successMsg = (
   <div>
     <DoneIcon color="primary"/>
     <p style={{color: "green"}}>Successfully imported</p>
-
   </div>
 );
 const failMsg = (
   <div>
     <ClearIcon color="error"/>
     <p style={{color: "red"}}>Failed to import data. Try again</p>
-
   </div>
 );
 
