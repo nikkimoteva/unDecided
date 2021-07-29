@@ -144,7 +144,8 @@ export default function Jobs(props) {
                           <TableCell align="center">
                           <Button variant="contained" 
                             className={classes.jobActionButton} onClick={deletePrediction} color="primary" 
-                            startIcon={<DeleteIcon />} />
+                            startIcon={<DeleteIcon />}
+                          />
                           </TableCell>
                         </TableRow>);
     }
@@ -180,12 +181,13 @@ export default function Jobs(props) {
           <TableCell align="right">{row.created}</TableCell>
           <TableCell align="right">{row.targetColumn}</TableCell>
           <TableCell align="center"><Button variant="contained" 
-            className={classes.jobActionButton} onClick={deleteJob} color="primary" name = {row.name}>
+            className={classes.jobActionButton} onClick={deleteJob} color="primary" name = {row.name}
+                                    >
             Delete
           </Button>
           <Button variant="contained" 
             className={classes.jobActionButton} onClick={row.status==="Running"?null:newPrediction} color={row.status==="Running"?"grey":"primary"} name = {row.id}
-            >
+          >
             New Prediction
           </Button></TableCell>
           
