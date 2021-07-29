@@ -1,15 +1,16 @@
 import React, {useState} from "react";
 import {makeStyles, Typography} from "@material-ui/core";
 import {submitJob} from "../../common/Managers/EndpointManager";
-import {useHistory} from "react-router-dom";
+import {useHistory,useLocation} from "react-router-dom";
 import {useAuth} from "../../common/Auth.js";
 import AWSImportView from "../AWSImport/AWSImportView";
 import JobNameComponent from "./Components/JobNameComponent";
-import JobTimeComponent from "./Components/JobTimeComponent";
 import SubmitButton from "./Components/SubmitButton";
 import FileUploadComponent from "./Components/FileUploadComponent";
 import DataImportStatusMsg from "./Components/DataImportStatusMsg";
 import LoadingIcon from "../../common/LoadingIcon";
+import {submitPrediction} from "../../common/Managers/EndpointManager";
+
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -29,16 +30,12 @@ const useStyles = makeStyles((theme) => ({
   }
 }));
 
-// Useful constants
-const minJobTimeValue = 5;
-const maxJobTimeValue = 2880; // 48 hours
 
 /**
  * @param props.header should contain the header of the train job
  */
 export default function JobForm(props) {
   const [jobName, setJobName] = useState("");
-  const [maxJobTime, setMaxJobTime] = useState(10);
   const [timeOption, setTimeOption] = useState(1);
   const [targetColumn, setTargetColumn] = useState("");
   const [header, setHeader] = useState([]);
@@ -52,6 +49,7 @@ export default function JobForm(props) {
   const classes = useStyles();
   const auth = useAuth();
   const history = useHistory();
+  const location = useLocation();
 
   // Functions
   function getFileObjectContent(file) {
@@ -81,7 +79,8 @@ export default function JobForm(props) {
     setCSV(csvString);
     const header = csvString.split('\n')[0];
     const fields = header.split(',');
-    if (!isEqualArrays(fields, props.header)) {
+
+    if (!isEqualArrays(fields, location.state.headers)) {
       alert("The prediction dataset must have the same columns as the training dataset");
       setDataImportSuccess(false);
     } else {
@@ -107,16 +106,13 @@ export default function JobForm(props) {
     }
   }
 
-  function validateFormData(jobTime) {
+  function validateFormData() {
     if (CSV === "") {
       alert("You must upload a csv file to train on.");
       return false;
       // } else
     } else if (jobName.length === 0) {
       alert("Job name cannot be empty");
-      return false;
-    } else if (maxJobTime > maxJobTimeValue || jobTime < minJobTimeValue) {
-      alert("Max Job Time must be between 10 minutes and 48 hours");
       return false;
     } else {
       return true;
@@ -125,9 +121,11 @@ export default function JobForm(props) {
 
   function submitHandler(event) {
     event.preventDefault();
-    const jobTime = maxJobTime * timeOption;
-    if (validateFormData(jobTime)) {
-      // TODO
+    if (validateFormData()) {
+      submitPrediction(auth.user.email, jobName, location.state.id)
+        .then(res => {
+          history.push('/console/jobs');
+        });
     }
   }
 
@@ -138,6 +136,7 @@ export default function JobForm(props) {
                           setProgressBarType={setProgressBarType} {...props}
            />;
   }
+
 
   return (
     <div className={classes.rootDiv}>
@@ -154,11 +153,6 @@ export default function JobForm(props) {
         />
 
         <JobNameComponent jobName={jobName} setJobName={setJobName}/>
-
-        <JobTimeComponent maxJobTime={maxJobTime} setMaxJobTime={setMaxJobTime} timeOption={timeOption}
-                          setTimeOption={setTimeOption}
-        />
-
         <SubmitButton submitHandler={submitHandler}/>
 
       </form>
