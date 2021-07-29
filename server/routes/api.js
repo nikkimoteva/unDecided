@@ -5,12 +5,15 @@ const JobModel = require("../database/models/Job");
 const csv = require('jquery-csv');
 const {storeCSV} = require("../FileManager");
 const {getUserId} = require("../Util");
+const { v4: uuidv4 } = require('uuid');
 
 const { readFilePromise, csvToArrays, csvToObject, arraysToCsv, runPredict, trainPipeline, errorHandler} = require("../Util");
 
 const aws = require("./AWSRoutes");
 const jobs = require("./JobRoutes");
 const auth = require("./AuthRoutes");
+const {forwardOutPromise} = require("../Util");
+const {NodeSSH} = require("node-ssh");
 router.use('/aws', aws);
 router.use('/jobs', jobs);
 router.use('/auth', auth);
@@ -26,41 +29,58 @@ router.post('/tableView', (req, res) => {
   const search_time = req.body.maxJobTime;
   let nickname = req.body.nickName;
 
+  const file_name = req.body.fileHash;
+  const train_path = "../../../research/plai-scratch/BlackBoxML/bbml-backend-3/ensemble_squared/datasets/" + file_name + "/train.csv";
+  const local_path = "./server/" + file_name + ".csv";
+
+
   if (!nickname || nickname.length === 0) {
     nickname = "auto generated nickname";
   }
-  const file_name = req.body.fileHash;
-  const train_path = './scratch/users_csv/' + file_name + '.csv';
+  const ssh1 = new NodeSSH();
+  const ssh2 = new NodeSSH();
 
-  readFilePromise(train_path).then(fileContent => {
-    const fileArray = csvToArrays(fileContent);
-    const headers = fileArray[0];
-    const idx = headers.findIndex(target_name);
-    const newJob = new JobModel(
-      {
-        fileHash: file_name,
-        name: nickname,
-        headers: headers,
-        target_column: idx,
-        target_name: target_name,
-        email: user_email,
-        timer: search_time,
-        status: 'SUBMITTED'
-      });
+  ssh1.connect({
+    host: 'remote.cs.ubc.ca',
+    username: user,
+    password: password
+  })
+    .then(() => forwardOutPromise(ssh1.connection, ssh2))
+    .then(() => {
+      console.log("Success connecting to borg");
+      return ssh2.putFile(local_path, train_path);
+    })
+    .then(() => readFilePromise(local_path))
+    .then(fileContent => {
+      const fileArray = csv.toArrays(fileContent);
+      const headers = fileArray[0];
+      const idx = headers.indexOf(target_name);
+      const newJob = new JobModel(
+        {
+          fileHash: file_name,
+          name: nickname,
+          headers: headers,
+          target_column: idx,
+          target_name: target_name,
+          email: user_email,
+          timer: search_time,
+          status: 'SUBMITTED',
+          user: req.body.user
+        });
 
-    newJob.save(err => {
-      if (err) {
-        errorHandler(err, res);
-      }
-    });
-
-    try {
-      trainPipeline();
+      return newJob.save();
+    })
+    .then(() => {
+      const trainString = trainPipeline(train_path, target_name, user_email, file_name, search_time, nickname);
+      return ssh2.exec(trainString, []);
+    })
+    .then(msg => {
       res.status(200);
-    } catch (err) {
+      res.send(msg);
+    })
+    .catch(err => {
       errorHandler(err);
-    }
-  });
+    });
 });
 
 router.post('/pipeline', (req, res) => {
@@ -73,9 +93,26 @@ router.post('/pipeline', (req, res) => {
   }
 
   try {
-    const test_file_name = makeid(4);
-    const folder_path = './scratch/users_csv/' + search_id;
-    const test_path = folder_path + '/' + test_file_name + '.csv';
+    const ssh1 = new NodeSSH();
+    const ssh2 = new NodeSSH();
+
+    ssh1.connect({
+      host: 'remote.cs.ubc.ca',
+      username: user,
+      password: password
+    })
+      .then(() => forwardOutPromise(ssh1.connection, ssh2))
+      .then(() => {
+        console.log("Success!");
+        ssh2.execCommand("hostname").then(res => console.log(res.stdout));
+      })
+      .catch(err => {
+        console.log(err);
+      });
+
+    const test_file_name = uuidv4();
+    const folder_path = '/ubc/cs/research/plai-scratch/BlackBoxML/bbml-backend-3/ensemble_squared/datasets' + search_id;
+    const test_path = folder_path + '/' + test_file_name + '/train.csv';
 
     storeCSV(uploaded_file, test_path)
       .then(() => {

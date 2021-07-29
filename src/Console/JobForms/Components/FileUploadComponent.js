@@ -1,11 +1,13 @@
 import {Button, Dialog, DialogTitle, Hidden, Slide} from "@material-ui/core";
-import React, {useState} from "react";
+import React, {createContext, useState} from "react";
 
 const SlideUpTransition = React.forwardRef(function Transition(props, ref) {
   return <Slide direction="up" ref={ref} {...props} />;
 });
 
-export default function FileUploadComponent(props) {
+export const CloseModalContext = createContext(undefined);
+
+export function FileUploadComponent(props) {
   const [showModal, setShowModal] = useState(false);
 
   function openModal() {
@@ -17,7 +19,6 @@ export default function FileUploadComponent(props) {
   }
 
   const fileInput = React.createRef();
-  const awsImportView = props.AWSImportView(closeModal);
 
   return (
     <>
@@ -52,9 +53,10 @@ export default function FileUploadComponent(props) {
         keepMounted
       >
         <DialogTitle>Import from AWS</DialogTitle>
-        {props.AWSImportView(closeModal)}
+        <CloseModalContext.Provider value={closeModal}>
+          {props.AWSImportView}
+        </CloseModalContext.Provider>
       </Dialog>
-
     </>
   );
 }

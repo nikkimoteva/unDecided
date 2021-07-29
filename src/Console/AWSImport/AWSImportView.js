@@ -1,9 +1,10 @@
 import {registerAWS, listBuckets, listObjects, getObject} from "../../common/Managers/EndpointManager";
-import React, {useState} from "react";
+import React, {useContext, useState} from "react";
 import {DataGrid} from "@material-ui/data-grid";
 import "./AWSImport.css";
 import AWSImportForm from "./Form";
 import {DialogContent, TextField, Typography} from "@material-ui/core";
+import {CloseModalContext} from "../JobForms/Components/FileUploadComponent";
 
 const objectTableFields = [
   {field: 'Key', headerName: 'Key', width: 300},
@@ -25,6 +26,8 @@ export default function AWSImportView(props) {
   const [tableFields, setTableFields] = useState([]);
   const [showBucketsTable, setShowBucketsTable] = useState(true);
   const [isLoadingList, setIsLoadingList] = useState(false);
+
+  const closeModal = useContext(CloseModalContext);
 
   const tableTitle = (showBucketsTable) ? "Buckets" : currBucket;
 
@@ -108,7 +111,7 @@ export default function AWSImportView(props) {
     } else {
       props.setIsLoadingFile(true);
       props.setProgressBarType('indeterminate');
-      props.closeModal();
+      closeModal();
 
       getObject(currBucket, key)
         .then(csvString => {

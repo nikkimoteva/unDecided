@@ -196,7 +196,7 @@ export default function ContactUs() {
           <div style={{color: "#f50057"}}>{error.message}</div>
         </div>
 
-        <Button className="CutomSubmitContact" type="submit" value="submit" variant="contained" color="primary">
+        <Button className="CustomSubmitContact" type="submit" value="submit" variant="contained" color="primary">
           Submit
         </Button>
       </form>
