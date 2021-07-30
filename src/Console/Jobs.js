@@ -1,7 +1,7 @@
 import {Box, Button, makeStyles, Grid} from "@material-ui/core";
 import {Link} from "react-router-dom";
 import React, {useEffect, useState} from "react";
-import {getJobs, deleteJob as deleteJobDB} from "../common/Managers/EndpointManager";
+import {getJob, getJobs, deleteJob as deleteJobDB} from "../common/Managers/EndpointManager";
 import {useAuth} from "../common/Auth";
 import {useHistory} from "react-router-dom";
 import Collapse from '@material-ui/core/Collapse';
@@ -19,7 +19,8 @@ import KeyboardArrowUpIcon from '@material-ui/icons/KeyboardArrowUp';
 import {
   submitPrediction,
   getPredictions,
-  deletePrediction as deletePredictionDB
+  deletePrediction as deletePredictionDB,
+  deletePredictionJobID
 } from "../common/Managers/EndpointManager";
 import DeleteIcon from '@material-ui/icons/Delete';
 
@@ -45,7 +46,6 @@ const useStyles = makeStyles({
     justify: "flex-end",
     margin: "10px",
     width: "15vh",
-
   },
   jobAttributeColumn: {
     align: "left",
@@ -72,7 +72,6 @@ export default function Jobs(props) {
   const url = props.url;
 
   useEffect(() => {
-
     getJobs(auth.user.email)
       .then(res => {
         const gottenJobs = res.data;
@@ -80,17 +79,37 @@ export default function Jobs(props) {
       });
   }, []);
 
+  
+
 
   function Row(props) {
 
-    const {row} = props;
+    const [row, setRow] = React.useState(props.row);
     const [rowState, setRowState] = React.useState({open: false, predictions: []});
     const classes = useRowStyles();
+    const [dateTime, setDateTime] = useState(new Date());
+
+    useEffect(() => {
+      const intervalId = setInterval(() => {
+
+        setDateTime(new Date());
+        getJob(auth.user.email,row.id)
+        .then(res => {
+          const job = res.data[0];
+          job.id = job._id;
+          setRow(job);
+        });
+      }, 5000);
+      return () => clearInterval(intervalId); //This is important
+    });
+    
+    
 
     function deleteJob() {
       const jobId = row.id;
       deleteJobDB(auth.user.email, jobId)
         .then(_ => {
+          deletePredictionJobID(auth.user.email, jobId);
           console.log("Successfully deleted Job");
           return getJobs(auth.user.email);
         })
@@ -102,15 +121,6 @@ export default function Jobs(props) {
     }
 
     function newPrediction() {
-      // submitPrediction(auth.user.email, `${row.name} prediction`, row.id)
-      //   .then(res => {
-      //     getPredictions(auth.user.email,row.id)
-      //     .then(res => {
-      //       const gottenPredictions = res.data;
-      //       setRowState({open:rowState.open,predictions:gottenPredictions});
-
-      //     });
-      //   });
       history.push({
         pathname: `${url}/submitPrediction`,
         state: row,
@@ -119,6 +129,11 @@ export default function Jobs(props) {
 
     function SubRow(props) {
       props.id = props._id;
+      const created = new Date(props.created);
+      const current = new Date();
+      const diff = current-created;
+      const minutes = Math.floor((diff/1000)/60);
+      props.status=minutes>row.timer?"Finished":"Running";
 
       function deletePrediction() {
         const predictionID = props.id;
@@ -132,6 +147,10 @@ export default function Jobs(props) {
         });
       }
 
+      function downloadPredictionCSV() {
+        //TODO: start download
+        console.log("downloading CSV");
+      }
 
       return (<TableRow key={props.date}>
         <TableCell align="center">
@@ -144,6 +163,7 @@ export default function Jobs(props) {
                   className={classes.jobActionButton} onClick={deletePrediction} color="primary"
                   startIcon={<DeleteIcon/>}
           />
+          
         </TableCell>
       </TableRow>);
     }
@@ -153,11 +173,15 @@ export default function Jobs(props) {
         .then(res => {
           const gottenPredictions = res.data;
           setRowState({open: !rowState.open, predictions: gottenPredictions});
-
-
-        });
+      });
 
     }
+
+    const created = new Date(row.created);
+    const current = new Date();
+    const diff = current-created;
+    const minutes = Math.floor((diff/1000)/60);
+    row.status=minutes>row.timer?"Finished":"Running";
 
     return (
       <>
@@ -228,7 +252,6 @@ export default function Jobs(props) {
   const rows = jobs;
   rows.forEach(function (data) {
     data.id = data._id;
-    data.predictions = [{name: "p1", status: "running", time_created: "2021.7.20"}];
   });
   return (
     <div>

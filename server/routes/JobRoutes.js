@@ -20,6 +20,17 @@ router.post("/", (req, res) => {
     .catch(err => errorHandler(err, res));
 });
 
+router.post("/job", (req, res) => {
+  const id_token = req.body.id_token;
+  const jobID = req.body.jobID;
+  JobModel.find({ user: id_token,_id: jobID})
+    .then(job => {
+      return res.json(job);
+    })
+
+    .catch(err => errorHandler(err, res));
+});
+
 router.delete("/deleteJob", (req, res) => {
   const id_token = req.body.id_token;
   const jobId = req.body.jobId;
@@ -46,7 +57,8 @@ router.post("/submitTrainJob", (req, res) => {
     target_name: targetColumnName,
     target_column: targetColumn,
     timer: maxJobTime,
-    headers: header
+    headers: header,
+    created: Date()
   });
   job.save()
     .then(_ => res.sendStatus(200))
@@ -72,7 +84,8 @@ router.post("/submitPrediction", (req, res) => {
   const prediction = new PredictionModel({
     name: predictionName,
     user: id_token,
-    jobID:jobID
+    jobID:jobID,
+    created: Date()
   });
   prediction.save()
     .then(_ => {
@@ -86,6 +99,16 @@ router.delete("/deletePrediction", (req, res) => {
   const predictionID = req.body.predictionID;
   getUserId(id_token)
     .then(_ => PredictionModel.deleteOne({ _id: predictionID })
+      .then(_ => res.sendStatus(200)))
+    .catch(err => errorHandler(err, res));
+});
+
+router.delete("/deletePredictionJobID", (req, res) => {
+  const id_token = req.body.id_token;
+  const jobID = req.body.jobID;
+  console.log(jobID);
+  getUserId(id_token)
+    .then(_ => PredictionModel.deleteOne({jobID: jobID })
       .then(_ => res.sendStatus(200)))
     .catch(err => errorHandler(err, res));
 });
