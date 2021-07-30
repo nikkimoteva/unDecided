@@ -7,16 +7,16 @@ import {DialogContent, TextField, Typography} from "@material-ui/core";
 import {CloseModalContext} from "../JobForms/Components/FileUploadComponent";
 
 const objectTableFields = [
-  {field: 'Key', headerName: 'Key', width: 300},
-  {field: 'Owner', headerName: 'Owner', width: 300},
-  {field: 'LastModified', headerName: 'Last Modified', width: 300},
-  {field: 'Size', headerName: 'Size (in MiB)', width: 300}
+  {field: 'Key', headerName: 'Key', flex: 1},
+  {field: 'Owner', headerName: 'Owner', flex: 1},
+  {field: 'LastModified', headerName: 'Last Modified', flex: 1},
+  {field: 'Size', headerName: 'Size (in MiB)', flex: 1}
 ];
 
 const bucketsTableFields = [
-  {field: 'Name', headerName: 'Name', width: 300},
-  {field: "Owner", headerName: "Owner", width: 300},
-  {field: "CreationDate", headerName: "Creation Date", width: 300}
+  {field: 'Name', headerName: 'Name', flex: 1},
+  {field: "Owner", headerName: "Owner", flex: 1},
+  {field: "CreationDate", headerName: "Creation Date", flex: 1}
 ];
 
 export default function AWSImportView(props) {
