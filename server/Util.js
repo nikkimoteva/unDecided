@@ -1,7 +1,27 @@
 const csv = require('jquery-csv');
 const fs = require('fs');
-const { ssh_user, ssh_pw, ensemble_session_path, remote_ssh } = require('../src/common');
+const { ssh_user, ssh_pw, ensemble_session_path, remote_ssh } = require('../src/SecretHandler');
 const { NodeSSH } = require('node-ssh');
+
+const ssh1 = new NodeSSH();
+const ssh2 = new NodeSSH();
+
+function forwardOutPromise(conn1, conn2) {
+  return new Promise(((resolve, reject) => {
+    conn1.forwardOut('127.0.0.1', 22, '142.103.16.250', 22, (err, stream) => {
+      if (err) {
+        reject(err);
+      }
+      conn2.connect({
+        sock: stream,
+        username: ssh_user,
+        password: ssh_pw,
+      })
+        .then(() => resolve())
+        .catch(err => reject(err));
+    });
+  }));
+}
 
 module.exports = {
 
@@ -76,64 +96,59 @@ module.exports = {
             + job_id + " " + job_name + " " + csv_file_name + " " + timer + " " + target_name + " " + email;
     },
 
-    forwardOutPromise: function (conn1, conn2) {
-        return new Promise(((resolve, reject) => {
-            conn1.forwardOut('127.0.0.1', 22, '142.103.16.250', 22, (err, stream) => {
-                if (err) {
-                    reject(err);
-                }
-                conn2.connect({
-                    sock: stream,
-                    username: ssh_user,
-                    password: ssh_pw,
-                })
-                    .then(() => resolve())
-                    .catch(err => reject(err));
-            });
-        }));
-    },
+  getUserId: function(id_token) {
+    // TODO
+    return Promise.resolve(id_token);
+  },
 
-    makeid: function (length) {
-        let result = '';
-        const characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
-        const charactersLength = characters.length;
-        for (let i = 0; i < length; i++) {
-            result += characters.charAt(Math.floor(Math.random() * charactersLength));
-        }
-        return result;
-    },
+  forwardOutPromise: forwardOutPromise,
 
-    getResults: function (fileHash, time, seed, saveDir) {
-        return new Promise((resolve, reject) => {
-            
-            const result_path = String(ensemble_session_path + fileHash + '/ensemble/' + 't' + String(time) + '_' + 's' + String(seed) + "voting/full_ensemblesquared.csv");
-            
-            const ssh1 = new NodeSSH();
-            const ssh2 = new NodeSSH();
+  connect: function() {
+    return ssh1.connect({
+      host: 'remote.cs.ubc.ca',
+      username: ssh_user,
+      password: ssh_pw
+    })
+      .then(() => forwardOutPromise(ssh1.connection, ssh2))
+      .then(() => ssh2.execCommand('cd /ubc/cs/research/plai-scratch/BlackBoxML/bbml-backend-3'))
+      .then(() => ssh2);
+  },
 
-            ssh1.connect({
-                host: remote_ssh,
-                username: ssh_user,
-                password: ssh_pw
-            })
-                .then(() => this.forwardOutPromise(ssh1.connection, ssh2))
-                .then(() => {
-                    console.log("Success connecting to borg");
-                    return ssh2.getFile(saveDir, result_path);
-                })
-                .then(() => resolve())
-                .catch(err => reject(err));
-        });
-    },
+  errorHandler: function (err, res) {
+    console.log(err);
+    res.status(400).send(err);
+  },
 
-    getUserId: function(id_token) {
-        // TODO
-        return Promise.resolve(id_token);
-    },
-
-    errorHandler: function(err, res) {
-        console.log(err);
-        res.status(400);
-        res.send(err);
+  makeid: function (length) {
+    let result = '';
+    const characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
+    const charactersLength = characters.length;
+    for (let i = 0; i < length; i++) {
+      result += characters.charAt(Math.floor(Math.random() * charactersLength));
     }
+    return result;
+  },
+
+  getResults: function (fileHash, time, seed, saveDir) {
+    return new Promise((resolve, reject) => {
+
+      const result_path = String(ensemble_session_path + fileHash + '/ensemble/' + 't' + String(time) + '_' + 's' + String(seed) + "voting/full_ensemblesquared.csv");
+
+      const ssh1 = new NodeSSH();
+      const ssh2 = new NodeSSH();
+
+      ssh1.connect({
+        host: remote_ssh,
+        username: ssh_user,
+        password: ssh_pw
+      })
+        .then(() => this.forwardOutPromise(ssh1.connection, ssh2))
+        .then(() => {
+          console.log("Success connecting to borg");
+          return ssh2.getFile(saveDir, result_path);
+        })
+        .then(() => resolve())
+        .catch(err => reject(err));
+    });
+  },
 };

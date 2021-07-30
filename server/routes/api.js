@@ -6,8 +6,8 @@ const csv = require('jquery-csv');
 const { storeCSV } = require("../FileManager");
 const { getUserId, makeid } = require("../Util");
 const { v4: uuidv4 } = require('uuid');
-const { NodeSSH } = require("node-ssh");
-const { readFilePromise, csvToArrays, csvToObject, arraysToCsv, runPredict, trainPipeline, errorHandler, forwardOutPromise } = require("../Util");
+const {NodeSSH} = require("node-ssh");
+const { readFilePromise, csvToArrays, csvToObject, arraysToCsv, runPredict, trainPipeline, forwardOutPromise, errorHandler} = require("../Util");
 const { writeFile } = require('fs').promises;
 
 const aws = require("./AWSRoutes");
