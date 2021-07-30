@@ -106,7 +106,7 @@ router.post("/downloadPrediction", (req, res) => {
       const seed = 's0';
       const remotePath = `ensemble_squared_2/ensemble_squared/sessions/${fileHash}/ensemble/${timer}_${seed}/voting/full_ensemblesquared.csv`;
       return connect()
-        .then(borg => borg.getFile(localPath, remotePath))
+        .then(borg => borg.getFile(localPath, remotePath));
     })
     .then(() => res.attachment(localPath))
     .catch(err => errorHandler(err, res));
