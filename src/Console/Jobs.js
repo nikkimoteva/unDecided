@@ -45,6 +45,7 @@ const useStyles = makeStyles({
     justify: "flex-end",
     margin: "10px",
     width: "15vh",
+
   },
   jobAttributeColumn: {
     align: "left",

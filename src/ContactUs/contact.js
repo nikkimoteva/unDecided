@@ -2,7 +2,7 @@ import React from 'react';
 import { useState } from 'react';
 import { send } from 'emailjs-com';
 import Button from '@material-ui/core/Button';
-import {contactus_user, contactus_service_id, contactus_template_id} from "../common";
+import {contactus_user, contactus_service_id, contactus_template_id} from "../SecretHandler";
 import { makeStyles } from '@material-ui/core/styles';
 import TextField from '@material-ui/core/TextField';
 import "../common/Button.css";
