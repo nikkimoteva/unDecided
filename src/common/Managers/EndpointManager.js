@@ -34,7 +34,7 @@ export function submitJob(id_token, jobName, maxJobTime, targetColumnName, datas
     jobName,
     maxJobTime,
     targetColumnName,
-    dataset: "", // TODO: Fix this so we can send dataset to the server properly
+    dataset: dataset, // TODO: Fix this so we can send dataset to the server properly
     header
   });
 }
