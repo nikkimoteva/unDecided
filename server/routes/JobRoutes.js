@@ -100,7 +100,8 @@ router.post("/downloadPrediction", (req, res) => {
     })
     .then(trainJob => {
       const fileHash = trainJob.fileHash;
-      // TODO
+      // TODO get file from server and save to temp/predictionFile.csv
+      // res.attachment("../temp/predictionFile.csv");
       res.sendStatus(200);
     })
     .catch(err => errorHandler(err, res));

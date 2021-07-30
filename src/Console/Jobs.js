@@ -136,7 +136,11 @@ export default function Jobs(props) {
         const predictionID = props.id;
         downloadPredictionFile(auth.user.email, predictionID)
           .then(res => {
-            // TODO
+            console.log("Starting download");
+          })
+          .catch(err => {
+            console.log(err);
+            alert("Unable to find prediction file");
           });
       }
 
