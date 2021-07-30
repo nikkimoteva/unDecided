@@ -19,7 +19,7 @@ module.exports = {
 
     csvToObject: function (fileContent) {
         return new Promise((resolve, reject) => {
-            csv.toObects(fileContent, {}, (err, data) => {
+            csv.toObjects(fileContent, {}, (err, data) => {
                 if (err) {
                     reject(err);
                 }
