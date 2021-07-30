@@ -1,4 +1,3 @@
-
 const csv = require('jquery-csv');
 const fs = require('fs');
 const { ssh_user, ssh_pw, ensemble_session_path, remote_ssh } = require('../src/common');
@@ -126,4 +125,9 @@ module.exports = {
                 .catch(err => reject(err));
         });
     },
+
+    getUserId: function(id_token) {
+        // TODO
+        return Promise.resolve(id_token);
+    }
 };
