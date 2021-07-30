@@ -117,7 +117,7 @@ module.exports = {
   errorHandler: function (err, res) {
     console.log(err);
     res.status(400).send(err);
-  }
+  },
 
   makeid: function (length) {
     let result = '';
