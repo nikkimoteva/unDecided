@@ -158,6 +158,10 @@ router.post('/pipeline', (req, res) => {
   }
 });
 
+router.patch('/callback', (req, res) => {
+  console.log(req);
+});
+
 function makeid(length) {
   let result = '';
   const characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
