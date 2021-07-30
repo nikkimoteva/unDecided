@@ -19,10 +19,9 @@ const { v4: uuidv4 } = require('uuid');
 
 
 const { NodeSSH } = require('node-ssh');
-const user = 'blkbx-ml';
-const password = '1qaz2wsx';
 
-const { readFilePromise, csvToArrays, csvToObject, arraysToCsv, runPredict, trainPipeline, forwardOutPromise } = require("./Util");
+const { readFilePromise, csvToArrays, csvToObject, arraysToCsv, runPredict, trainPipeline, forwardOutPromise, makeid } = require("./Util");
+const { borg_dataset_directory, ssh_user, ssh_pw, remote_ssh, slurm_command_dataset_path } = require("../src/common");
 require("./database/Database"); // Initializes DB connection
 
 const port = 3001;
@@ -85,7 +84,7 @@ app.post("/submitJob", (req, res) => {
   const maxJobTime = body.maxJobTime;
   const targetCol = body.targetCol;
   const targetColName = body.targetColName;
-  const dataset = body.dataset;
+  const dataset = body.dataset; // why save this in db???
   const job = new JobModel({
     name: jobName,
     user: id_token,
@@ -152,9 +151,8 @@ app.post('/tableView', (req, res) => {
   let nickname = req.body.nickName;
 
   const file_name = req.body.fileHash;
-  const train_path = "../../../research/plai-scratch/BlackBoxML/bbml-backend-3/ensemble_squared/datasets/" + file_name + "/train.csv";
-  const local_path = "./server/" + file_name + ".csv";
-
+  const train_path = borg_dataset_directory + file_name + "/train.csv";
+  const local_path = "./server/training/" + file_name + ".csv";
 
   if (!nickname || nickname.length === 0) {
     nickname = "auto generated nickname";
@@ -163,15 +161,15 @@ app.post('/tableView', (req, res) => {
   const ssh2 = new NodeSSH();
 
   ssh1.connect({
-    host: 'remote.cs.ubc.ca',
-    username: user,
-    password: password
+    host: remote_ssh,
+    username: ssh_user,
+    password: ssh_pw
   })
     .then(() => forwardOutPromise(ssh1.connection, ssh2))
     .then(() => {
       console.log("Success connecting to borg");
       ssh2.putFile(local_path, train_path);
-  })
+    })
     .then(() => readFilePromise(local_path))
     .then(fileContent => {
       const fileArray = csv.toArrays(fileContent);
@@ -193,7 +191,8 @@ app.post('/tableView', (req, res) => {
       return newJob.save();
     })
     .then(() => {
-      const trainString = trainPipeline(train_path, target_name, user_email, file_name, search_time, nickname);
+      const targetPath = slurm_command_dataset_path + file_name + '/' + 'train.csv';
+      const trainString = trainPipeline(targetPath, target_name, user_email, file_name, search_time, nickname);
       return ssh2.exec(trainString, []);
     })
     .then(msg => {
@@ -214,69 +213,79 @@ app.post('/pipeline', (req, res) => {
     errorHandler({ 'msg': 'Uploaded file is empty' }, res);
   }
 
-  try {
+  const test_file_name = makeid(4);
+  const folder_path = slurm_command_dataset_path + search_id;
+  const test_path = folder_path + '/' + test_file_name + '.csv';
 
-    const ssh1 = new NodeSSH();
-    const ssh2 = new NodeSSH();
+  const local_path = './server/predictions/' + search_id + '/local.csv';
 
-    ssh1.connect({
-      host: 'remote.cs.ubc.ca',
-      username: user,
-      password: password
+  const ssh1 = new NodeSSH();
+  const ssh2 = new NodeSSH();
+
+  ssh1.connect({
+    host: remote_ssh,
+    username: ssh_user,
+    password: ssh_pw
+  })
+    .then(() => forwardOutPromise(ssh1.connection, ssh2))
+    .then(() => {
+      console.log("Success!");
+      storeCSV(uploaded_file, local_path);
     })
-      .then(() => forwardOutPromise(ssh1.connection, ssh2))
-      .then(() => {
-        console.log("Success!");
-        ssh2.execCommand("hostname").then(res => console.log(res.stdout));
-      })
-      .catch(err => {
-        console.log(err);
-      });
-
-    const test_file_name = uuidv4();
-    const folder_path = '/ubc/cs/research/plai-scratch/BlackBoxML/bbml-backend-3/ensemble_squared/datasets' + search_id;
-    const test_path = folder_path + '/' + test_file_name + '/train.csv';
-
-    storeCSV(uploaded_file, test_path)
-      .then(() => {
-        return readFilePromise(test_path);
-      })
-      .then(fileContent => {
-        return csvToArrays(fileContent);
-        // const testColumns = Object.keys(util.parseCSVToArr(test_path)[0]);
-      })
-      .then(data => {
-        const testColumns = data[0];
-        const job = {}; // TODO: get job from db using search_id
+    .then(() => {
+      return readFilePromise(local_path);
+    })
+    .then(fileContent => {
+      return csvToArrays(fileContent);
+    })
+    .then(data => {
+      const testColumns = data[0];
+      JobModel.findOne({fileHash: search_id}, (job => { // has to be a call back, need both job and testColumns
         const oldColumns = job.headers;
 
-        if (job.status !== 'SUCCESSFUL') {
-          res.status(400);
-          res.send({ 'msg': 'Your job has not completed training! Try again later.' });
-        }
-        if (!(job.targetName in testColumns)) {
+        // if (job.status !== 'SUCCESSFUL') {
+        //   res.status(400);
+        //   res.send({ 'msg': 'Your job has not completed training! Try again later.' });
+        // }
+
+        if (!(job.targetName in testColumns)) { // gotta push the target column into the file!
           testColumns.push(job.targetName);
           data[0] = testColumns;
           const newFile = csv.fromArrays(data);
-          storeCSV(newFile, test_path)
+
+          storeCSV(newFile, local_path)
             .then(() => {
-              runPredict(test_path, search_id, job.timer, job.target_name, email, job.name);
+              ssh2.putFile(local_path, test_path);
+            })
+            .then(() => {
+              const predictString = runPredict(test_path, search_id, job.timer, job.target_name, email, job.name);
+              ssh2.exec(predictString, []).then(() => {
+                res.status(200);
+                res.send({ 'msg': 'Success!' });
+              });
+            })
+            .then(() => {
               res.status(200);
               res.send({ 'msg': 'Success!' });
             });
         }
+
         if (oldColumns.length !== testColumns.length) {
           errorHandler({ 'msg': 'csv missing columns' }, res);
         }
+
         else {
-          runPredict(test_path, search_id, job.timer, job.target_name, email, job.name);
-          res.status(200);
-          res.send({ 'msg': 'Success!' });
+          const predictString = runPredict(test_path, search_id, job.timer, job.target_name, email, job.name);
+          ssh2.exec(predictString, []).then(() => {
+            res.status(200);
+            res.send({ 'msg': 'Success!' });
+          });
         }
-      });
-  } catch (err) {
-    errorHandler(err, res);
-  }
+      }));
+    })
+    .catch(err => {
+      errorHandler(err);
+    });
 });
 
 function streamToString(stream) {

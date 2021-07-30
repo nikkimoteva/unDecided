@@ -1,17 +1,16 @@
 
 const csv = require('jquery-csv');
 const fs = require('fs');
-
-const user = 'blkbx-ml';
-const password = '1qaz2wsx';
+const { ssh_user, ssh_pw, ensemble_session_path, remote_ssh } = require('../src/common');
+const { NodeSSH } = require('node-ssh');
 
 module.exports = {
-    
+
     csvToArrays: function (fileContent) {
         return new Promise((resolve, reject) => {
             csv.toArrays(fileContent, {}, (err, data) => {
                 if (err) {
-                    reject(err); 
+                    reject(err);
                 }
                 resolve(data);
             });
@@ -22,7 +21,7 @@ module.exports = {
         return new Promise((resolve, reject) => {
             csv.toObects(fileContent, {}, (err, data) => {
                 if (err) {
-                    reject(err); 
+                    reject(err);
                 }
                 resolve(data);
             });
@@ -33,7 +32,7 @@ module.exports = {
         return new Promise((resolve, reject) => {
             csv.fromArrays(arr, {}, (err, result) => {
                 if (err) {
-                    reject(err); 
+                    reject(err);
                 }
                 resolve(result);
             });
@@ -44,7 +43,7 @@ module.exports = {
         return new Promise((resolve, reject) => {
             csv.fromObjects(arr, {}, (err, result) => {
                 if (err) {
-                    reject(err); 
+                    reject(err);
                 }
                 resolve(result);
             });
@@ -55,7 +54,7 @@ module.exports = {
         return new Promise((resolve, reject) => {
             fs.readFile(filePath, 'UTF-8', (err, fileContent) => {
                 if (err) {
-                    reject(err); 
+                    reject(err);
                 }
                 resolve(fileContent);
             });
@@ -63,38 +62,68 @@ module.exports = {
     },
 
     runPredict: function (csv_file_name, job_id, timer, target_name, email, job_name) {
-       return "/opt/slurm/bin/sbatch --partition=blackboxml --nodelist=chicago\
+        return "/opt/slurm/bin/sbatch --partition=blackboxml --nodelist=chicago\
        --error=/ubc/cs/research/plai-scratch/BlackBoxML/error_predict.err\
        --output=/ubc/cs/research/plai-scratch/BlackBoxML/out_predict.out\
        /ubc/cs/research/plai-scratch/BlackBoxML/bbml-backend-3/ensemble_squared/run-client-produce.sh "
-        + job_id + " " + job_name + " " + csv_file_name + " " + timer + " " + target_name + " " + email;
+            + job_id + " " + job_name + " " + csv_file_name + " " + timer + " " + target_name + " " + email;
     },
 
-    trainPipeline: function (csv_file_name, target_name, email, job_id, timer, job_name) {
+    trainPipeline: function (csv_file_name, target_name, email, job_id, timer, job_name, callback) {
         return "/opt/slurm/bin/sbatch --partition=blackboxml --nodelist=chicago\
         --error=/ubc/cs/research/plai-scratch/BlackBoxML/error.err\
         --output=/ubc/cs/research/plai-scratch/BlackBoxML/out.out\
-        /ubc/cs/research/plai-scratch/BlackBoxML/bbml-backend-3/ensemble_squared/run-client-search.sh " 
-        + job_id + " " + job_name + " " + csv_file_name + " " + timer + " " + target_name + " " + email;
+        /ubc/cs/research/plai-scratch/BlackBoxML/bbml-backend-3/ensemble_squared/run-client-search.sh "
+            + job_id + " " + job_name + " " + csv_file_name + " " + timer + " " + target_name + " " + email + " " + callback;
     },
-    
+
     forwardOutPromise: function (conn1, conn2) {
         return new Promise(((resolve, reject) => {
-          conn1.forwardOut('127.0.0.1', 22, '142.103.16.250', 22, (err, stream) => {
-            if (err) {
-              reject(err);
-            }
-            conn2.connect({
-              sock: stream,
-              username: user,
-              password: password,
-            })
-              .then(() => resolve())
-              .catch(err => reject(err));
-          });
+            conn1.forwardOut('127.0.0.1', 22, '142.103.16.250', 22, (err, stream) => {
+                if (err) {
+                    reject(err);
+                }
+                conn2.connect({
+                    sock: stream,
+                    username: ssh_user,
+                    password: ssh_pw,
+                })
+                    .then(() => resolve())
+                    .catch(err => reject(err));
+            });
         }));
     },
 
+    makeid: function (length) {
+        let result = '';
+        const characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
+        const charactersLength = characters.length;
+        for (let i = 0; i < length; i++) {
+            result += characters.charAt(Math.floor(Math.random() * charactersLength));
+        }
+        return result;
+    },
 
+    getResults: function (fileHash, time, seed, saveDir) {
+        return new Promise((resolve, reject) => {
+            
+            const result_path = String(ensemble_session_path + fileHash + '/ensemble/' + 't' + String(time) + '_' + 's' + String(seed) + "voting/full_ensemblesquared.csv");
+            
+            const ssh1 = new NodeSSH();
+            const ssh2 = new NodeSSH();
 
+            ssh1.connect({
+                host: remote_ssh,
+                username: ssh_user,
+                password: ssh_pw
+            })
+                .then(() => this.forwardOutPromise(ssh1.connection, ssh2))
+                .then(() => {
+                    console.log("Success connecting to borg");
+                    return ssh2.getFile(saveDir, result_path);
+                })
+                .then(() => resolve())
+                .catch(err => reject(err));
+        });
+    },
 };
