@@ -2,7 +2,7 @@ const express = require('express');
 const JobModel = require("../database/models/Job");
 const PredictionModel = require("../database/models/Prediction");
 const router = express.Router();
-const {errorHandler, getUserId} = require("../Util");
+const {errorHandler, getUserId, connect} = require("../Util");
 const multer = require('multer');
 const upload = multer({ dest: './temp/' });
 
@@ -93,6 +93,8 @@ router.delete("/deletePrediction", (req, res) => {
 router.post("/downloadPrediction", (req, res) => {
   const id_token = req.body.id_token;
   const predictionID = req.body.predictionID;
+  const localPath = "../temp/predictionFile.csv";
+
   getUserId(id_token)
     .then(userToken => {
       return PredictionModel.findOne({user: userToken, _id: predictionID})
@@ -100,10 +102,13 @@ router.post("/downloadPrediction", (req, res) => {
     })
     .then(trainJob => {
       const fileHash = trainJob.fileHash;
-      // TODO get file from server and save to temp/predictionFile.csv
-      // res.attachment("../temp/predictionFile.csv");
-      res.sendStatus(200);
+      const timer = trainJob.timer;
+      const seed = 's0';
+      const remotePath = `ensemble_squared_2/ensemble_squared/sessions/${fileHash}/ensemble/${timer}_${seed}/voting/full_ensemblesquared.csv`;
+      return connect()
+        .then(borg => borg.getFile(localPath, remotePath))
     })
+    .then(() => res.attachment(localPath))
     .catch(err => errorHandler(err, res));
 });
 
