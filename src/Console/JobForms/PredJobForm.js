@@ -134,7 +134,7 @@ export default function PredJobForm() {
       <h1 style={{paddingBottom: "20px"}}>Prediction Job</h1>
       <div>
         <LoadingIcon hidden={!isLoadingFile} variant={progressBarType} loadingValue={loadingValue}/>
-        <DataImportStatusMsg dataImportSuccess={dataImportSuccess}/>
+        <DataImportStatusMsg isDataUploadSuccess={dataImportSuccess}/>
       </div>
 
       <form className={classes.root}>
