@@ -14,8 +14,8 @@ function forwardOutPromise(conn1, conn2) {
       }
       conn2.connect({
         sock: stream,
-        username: user,
-        password: password,
+        username: ssh_user,
+        password: ssh_pw,
       })
         .then(() => resolve())
         .catch(err => reject(err));
@@ -106,8 +106,8 @@ module.exports = {
   connect: function() {
     return ssh1.connect({
       host: 'remote.cs.ubc.ca',
-      username: user,
-      password: password
+      username: ssh_user,
+      password: ssh_pw
     })
       .then(() => forwardOutPromise(ssh1.connection, ssh2))
       .then(() => ssh2.execCommand('cd /ubc/cs/research/plai-scratch/BlackBoxML/bbml-backend-3'))
