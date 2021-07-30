@@ -144,13 +144,14 @@ app.post('/getObject', (req, res) => {
     .catch(err => errorHandler(err, res));
 });
 
-app.post('/tableView', (req, res) => {
+app.post('/submitJob', (req, res) => {
   const user_email = req.body.email;
-  const target_name = req.body.target;
+  const target_name = req.body.targetColName;
   const search_time = req.body.maxJobTime;
-  let nickname = req.body.nickName;
 
-  const file_name = req.body.fileHash;
+  let nickname = req.body.jobName;
+
+  const file_name = uuidv4();
   const train_path = borg_dataset_directory + file_name + "/train.csv";
   const local_path = "./server/training/" + file_name + ".csv";
 
@@ -185,7 +186,7 @@ app.post('/tableView', (req, res) => {
           email: user_email,
           timer: search_time,
           status: 'SUBMITTED',
-          user: req.body.user
+          user: req.body.id_token
         });
 
       return newJob.save();
@@ -197,7 +198,7 @@ app.post('/tableView', (req, res) => {
     })
     .then(msg => {
       res.status(200);
-      res.send(msg);
+      res.send({borg_stdout: msg, fileHash: file_name});
     })
     .catch(err => {
       errorHandler(err);
