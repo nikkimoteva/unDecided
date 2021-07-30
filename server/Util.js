@@ -8,6 +8,23 @@ const password = '1qaz2wsx';
 const ssh1 = new NodeSSH();
 const ssh2 = new NodeSSH();
 
+function forwardOutPromise(conn1, conn2) {
+  return new Promise(((resolve, reject) => {
+    conn1.forwardOut('127.0.0.1', 22, '142.103.16.250', 22, (err, stream) => {
+      if (err) {
+        reject(err);
+      }
+      conn2.connect({
+        sock: stream,
+        username: user,
+        password: password,
+      })
+        .then(() => resolve())
+        .catch(err => reject(err));
+    });
+  }));
+}
+
 module.exports = {
   csvToArrays: function (fileContent) {
     return new Promise((resolve, reject) => {
@@ -85,6 +102,8 @@ module.exports = {
     return Promise.resolve(id_token);
   },
 
+  forwardOutPromise: forwardOutPromise,
+
   connect: function() {
     return ssh1.connect({
       host: 'remote.cs.ubc.ca',
@@ -94,22 +113,11 @@ module.exports = {
       .then(() => forwardOutPromise(ssh1.connection, ssh2))
       .then(() => ssh2.execCommand('cd /ubc/cs/research/plai-scratch/BlackBoxML/bbml-backend-3'))
       .then(() => ssh2);
+  },
+
+  errorHandler: function (err, res) {
+    console.log(err);
+    res.status(400).send(err);
   }
 };
 
-export function forwardOutPromise(conn1, conn2) {
-  return new Promise(((resolve, reject) => {
-    conn1.forwardOut('127.0.0.1', 22, '142.103.16.250', 22, (err, stream) => {
-      if (err) {
-        reject(err);
-      }
-      conn2.connect({
-        sock: stream,
-        username: user,
-        password: password,
-      })
-        .then(() => resolve())
-        .catch(err => reject(err));
-    });
-  }));
-}
