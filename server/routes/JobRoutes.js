@@ -24,7 +24,7 @@ router.delete("/deleteJob", (req, res) => {
   const id_token = req.body.id_token;
   const jobId = req.body.jobId;
   getUserId(id_token)
-    .then(_ => JobModel.deleteOne({ _id: jobId })
+    .then(userToken => JobModel.deleteOne({user: userToken, _id: jobId })
       .then(_ => res.sendStatus(200)))
     .catch(err => errorHandler(err, res));
 });
@@ -85,8 +85,24 @@ router.delete("/deletePrediction", (req, res) => {
   const id_token = req.body.id_token;
   const predictionID = req.body.predictionID;
   getUserId(id_token)
-    .then(_ => PredictionModel.deleteOne({ _id: predictionID })
-      .then(_ => res.sendStatus(200)))
+    .then(userToken => PredictionModel.deleteOne({ user: userToken, _id: predictionID }))
+    .then(_ => res.sendStatus(200))
+    .catch(err => errorHandler(err, res));
+});
+
+router.post("/downloadPrediction", (req, res) => {
+  const id_token = req.body.id_token;
+  const predictionID = req.body.predictionID;
+  getUserId(id_token)
+    .then(userToken => {
+      return PredictionModel.findOne({user: userToken, _id: predictionID})
+        .then(pred => JobModel.findOne({user: userToken, _id: pred.jobID}));
+    })
+    .then(trainJob => {
+      const fileHash = trainJob.fileHash;
+      // TODO
+      res.sendStatus(200);
+    })
     .catch(err => errorHandler(err, res));
 });
 

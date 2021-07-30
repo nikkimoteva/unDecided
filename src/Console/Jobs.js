@@ -1,11 +1,12 @@
 import {Box, Button, makeStyles, Grid} from "@material-ui/core";
 import {Link} from "react-router-dom";
 import React, {useEffect, useState} from "react";
-import {getJobs, deleteJob as deleteJobDB} from "../common/Managers/EndpointManager";
+import {getJobs, deleteJob as deleteJobDB, downloadPredictionFile} from "../common/Managers/EndpointManager";
 import {useAuth} from "../common/Auth";
 import {useHistory} from "react-router-dom";
 import Collapse from '@material-ui/core/Collapse';
 import IconButton from '@material-ui/core/IconButton';
+import GetAppIcon from '@material-ui/icons/GetApp';
 import Table from '@material-ui/core/Table';
 import TableBody from '@material-ui/core/TableBody';
 import TableCell from '@material-ui/core/TableCell';
@@ -127,11 +128,17 @@ export default function Jobs(props) {
             .then(res => {
               const gottenPredictions = res.data;
               setRowState({open: rowState.open, predictions: gottenPredictions});
-
             });
         });
       }
 
+      function downloadPrediction() {
+        const predictionID = props.id;
+        downloadPredictionFile(auth.user.email, predictionID)
+          .then(res => {
+            // TODO
+          });
+      }
 
       return (<TableRow key={props.date}>
         <TableCell align="center">
@@ -140,6 +147,12 @@ export default function Jobs(props) {
         <TableCell align="center">{props.status}</TableCell>
         <TableCell align="center">{props.created}</TableCell>
         <TableCell align="center">
+          {
+            (props.status === "Running") ? <div style={{display: "none"}}/>
+            : <Button variant="contained" className={classes.jobActionButton}
+                      onClick={downloadPrediction} color="primary" startIcon={<GetAppIcon/>}
+              />
+          }
           <Button variant="contained"
                   className={classes.jobActionButton} onClick={deletePrediction} color="primary"
                   startIcon={<DeleteIcon/>}
@@ -172,7 +185,7 @@ export default function Jobs(props) {
           </TableCell>
           <TableCell align="right">{row.status}</TableCell>
           <TableCell align="right">{row.created}</TableCell>
-          <TableCell align="right">{row.targetColumn}</TableCell>
+          <TableCell align="right">{row.target_name}</TableCell>
           <TableCell align="center"><Button variant="contained"
                                             className={classes.jobActionButton} onClick={deleteJob} color="primary"
                                             name={row.name}
@@ -228,7 +241,7 @@ export default function Jobs(props) {
   const rows = jobs;
   rows.forEach(function (data) {
     data.id = data._id;
-    data.predictions = [{name: "p1", status: "running", time_created: "2021.7.20"}];
+    data.predictions = [{name: "p1", status: "Running", time_created: "2021.7.20"}];
   });
   return (
     <div>
