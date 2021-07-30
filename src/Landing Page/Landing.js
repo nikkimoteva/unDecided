@@ -27,14 +27,17 @@ export default function Landing() {
                   "Exploiting Machine Learning Solutions", "User Friendly", "Quantitative gains",
                   "Minimal Configuration Necessary", "No ML experience necessary"];
 
-  const setLoginModal = useLoginModalContext().setLoginModal;
+  
+  const {loginModal, setLoginModal} = useLoginModalContext();
   const auth = useAuth();
   const history = useHistory();
 
   function handleGetStartedOnClick() {
-    /* eslint-disable no-implicit-coercion, eqeqeq */
-    if (auth.user == null) setLoginModal(true);
-    else history.push("/console");
+    if (auth.user === "") {
+      setLoginModal(true);
+    } else {
+      history.push("/console");
+    }
   }
 
   return (

@@ -1,3 +1,5 @@
+**This project implements the user interface and backend logic for the new Ensemble-Squared AutoML system, developed by UBC researchers. This React application allows users to register and log in to their accounts, and keep track of the jobs that are being run on their system. With accessibility and ease of use in mind, this application aims to simplify the process of machine learning for all users, be they individuals or institutions.**
+
 **Who is it for?**
 
 The AutoML team at UBC. Users will be both individuals and businesses who rely on having very little ML expertise to be able to perform ML operations.
