@@ -3,8 +3,10 @@ const JobModel = require("../database/models/Job");
 const PredictionModel = require("../database/models/Prediction");
 const router = express.Router();
 const {errorHandler, getUserId, connect} = require("../Util");
-const multer = require('multer');
-const upload = multer({ dest: './temp/' });
+const {trainPipeline} = require("../Util");
+const {storeCSV} = require("../FileManager");
+const {borg_dataset_directory, slurm_command_dataset_path} = require('../../src/SecretHandler');
+const { v4: uuidv4 } = require('uuid');
 
 router.get("/", (req, res) => {
   res.sendStatus(200);
@@ -42,26 +44,39 @@ router.delete("/deleteJob", (req, res) => {
 
 
 router.post("/submitTrainJob", (req, res) => {
-  const body = req.body;
-  const id_token = body.id_token;
-  const jobName = body.jobName;
-  const maxJobTime = body.maxJobTime;
-  const targetColumnName = body.targetColumnName;
-  const header = body.header;
+  console.log(req.body);
+  const {id_token, jobName, maxJobTime, targetColumnName, dataset, header} = req.body;
   const targetColumn = header.indexOf(targetColumnName);
-  const dataset = body.dataset;
+  const file_name = uuidv4();
+  const train_path = borg_dataset_directory + file_name + "/train.csv";
+  const local_path = "/home/kians376/repos/cs455/unDecided/server/training/" + file_name + ".csv";
+  const targetPath = slurm_command_dataset_path + file_name + '/' + 'train.csv';
   const job = new JobModel({
     name: jobName,
     user: id_token,
-    // fileHash: fileHash,
+    fileHash: file_name,
     target_name: targetColumnName,
     target_column: targetColumn,
     timer: maxJobTime,
     headers: header,
     created: Date()
   });
-  job.save()
-    .then(_ => res.sendStatus(200))
+  let trainString;
+
+  // if (jobName.length === 0) jobName = "auto generated nickname";
+  storeCSV(dataset, local_path)
+    .then(() => getUserId(id_token))
+    .then(user_email => {
+      trainString = trainPipeline(targetPath, targetColumnName, user_email, file_name, maxJobTime, jobName);
+    })
+    .then(() => connect())
+    .then(borg => {
+      console.log("Success connecting to borg");
+      return borg.putFile(local_path, train_path)
+        .then(() => borg.exec(trainString, []));
+    })
+    .then(() => job.save())
+    .then(msg => res.send({ borg_stdout: msg, fileHash: file_name }))
     .catch(err => errorHandler(err, res));
 });
 
@@ -130,7 +145,7 @@ router.delete("/deletePredictionJobID", (req, res) => {
   const jobID = req.body.jobID;
   console.log(jobID);
   getUserId(id_token)
-    .then(_ => PredictionModel.deleteOne({jobID: jobID })
+    .then(userId => PredictionModel.deleteMany({user: userId, jobID: jobID })
       .then(_ => res.sendStatus(200)))
     .catch(err => errorHandler(err, res));
 });
