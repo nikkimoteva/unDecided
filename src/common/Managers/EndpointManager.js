@@ -34,13 +34,13 @@ export function submitJob(id_token, jobName, maxJobTime, targetColumnName, datas
     jobName,
     maxJobTime,
     targetColumnName,
-    dataset: dataset,
+    dataset,
     header
   });
 }
 
 export function submitPrediction(id_token, predictionName, jobID, dataset) {
-  return axios.post(`${jobRoot}/submitPrediction`, {id_token, predictionName, jobID: '6104e8a20ed9b2030ef05fd3', dataset});
+  return axios.post(`${jobRoot}/submitPrediction`, {id_token, predictionName, jobID, dataset});
 }
 
 export function getJobs(id_token) {
