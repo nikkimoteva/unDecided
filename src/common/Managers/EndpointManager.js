@@ -48,6 +48,11 @@ export function getJobs(id_token) {
 
 }
 
+export function getJob(id_token, jobID) {
+  return axios.post(`${jobRoot}/job`, {id_token,jobID});
+
+}
+
 export function getPredictions(id_token,jobID) {
   return axios.post(`${jobRoot}/predictions`, {id_token,jobID});
 }
@@ -70,6 +75,16 @@ export function deletePrediction(id_token, predictionID) {
   return axios({
     method: "delete",
     url: `${jobRoot}/deletePrediction`,
+    data: d
+  });
+}
+
+
+export function deletePredictionJobID(id_token, jobID) {
+  const d = {id_token, jobID};
+  return axios({
+    method: "delete",
+    url: `${jobRoot}/deletePredictionJobID`,
     data: d
   });
 }
