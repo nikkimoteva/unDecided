@@ -34,13 +34,13 @@ export function submitJob(id_token, jobName, maxJobTime, targetColumnName, datas
     jobName,
     maxJobTime,
     targetColumnName,
-    dataset: "", // TODO: Fix this so we can send dataset to the server properly
+    dataset,
     header
   });
 }
 
-export function submitPrediction(id_token, predictionName, jobID, ) {
-  return axios.post(`${jobRoot}/submitPrediction`, {id_token, predictionName, jobID});
+export function submitPrediction(id_token, predictionName, jobID, dataset) {
+  return axios.post(`${jobRoot}/submitPrediction`, {id_token, predictionName, jobID, dataset});
 }
 
 export function getJobs(id_token) {

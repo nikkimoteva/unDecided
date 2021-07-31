@@ -1,13 +1,14 @@
 const path = require('path');
 const express = require('express');
 const app = express();
+const bodyParser = require('body-parser');
 const cors = require('cors');
 const logger = require('morgan');
 require('../src/SecretHandler'); // Initializes config
 require("./database/Database"); // Initializes DB connection
 
-app.use(express.json());
-app.use(express.urlencoded({ extended: true }));
+app.use(bodyParser.json({limit: "500mb"}));
+app.use(bodyParser.urlencoded({limit: "500mb", extended: true }));
 app.use(cors());
 app.use(logger('dev'));
 

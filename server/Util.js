@@ -110,7 +110,7 @@ module.exports = {
       password: ssh_pw
     })
       .then(() => forwardOutPromise(ssh1.connection, ssh2))
-      .then(() => ssh2.execCommand('cd /ubc/cs/research/plai-scratch/BlackBoxML/bbml-backend-3'))
+      // .then(() => ssh2.execCommand('cd /ubc/cs/research/plai-scratch/BlackBoxML/bbml-backend-3'))
       .then(() => ssh2);
   },
 
