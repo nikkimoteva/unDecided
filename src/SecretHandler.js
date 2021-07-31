@@ -1,8 +1,6 @@
 const fs = require('fs');
 const path = require('path');
-
 let toExport;
-
 try {
   const config = fs.readFileSync(path.resolve(__dirname, "../secrets.json"), {encoding: "utf-8"});
   toExport = JSON.parse(config);
@@ -19,11 +17,17 @@ try {
   const contactus_service_id = process.env.CONTACTUS_SERVICE_ID;
   const contactus_template_id = process.env.CONTACTUS_TEMPLATE_ID;
   const googlelogin_clientID = process.env.GOOGLELOGIN_CLIENTID;
+  const ssh_user = process.env.SSH_USER;
+  const ssh_pw = process.env.SSH_PW;
+  const borg_dataset_directory = process.env.BORG_DATASET_DIRECTORY;
+  const remote_ssh = process.env.REMOTE_SSH;
+  const ensemble_session_path = process.env.ENSEMBLE_SESSION_PATH;
+  const slurm_command_dataset_path =process.env.SLURM_COMMAND_DATASET_PATH;
   console.log(`google client ID: ${googlelogin_clientID}`);
   toExport = {
     user, password, server, database, email, captcha_site_key, captcha_secret_key, contactus_user,
-    contactus_access_token, contactus_service_id, contactus_template_id, googlelogin_clientID
+    contactus_access_token, contactus_service_id, contactus_template_id, googlelogin_clientID, ssh_user, ssh_pw, 
+    borg_dataset_directory, remote_ssh, ensemble_session_path, slurm_command_dataset_path
   };
 }
-
 module.exports = toExport;
