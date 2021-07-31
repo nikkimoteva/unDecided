@@ -30,3 +30,5 @@ try {
     borg_dataset_directory, remote_ssh, ensemble_session_path, slurm_command_dataset_path
   };
 }
+
+module.exports = toExport;
