@@ -1,15 +1,12 @@
 const express = require('express');
 const JobModel = require("../database/models/Job");
 const PredictionModel = require("../database/models/Prediction");
-const {runPredict} = require("../Util");
-const {csvToArrays} = require("../Util");
-const {makeid} = require("../Util");
 const router = express.Router();
-const {errorHandler, getUserId, connect} = require("../Util");
-const {trainPipeline} = require("../Util");
-const {storeCSV} = require("../FileManager");
+const {trainPipeline, csvToArrays, makeid, runPredict, errorHandler, getUserId, connect} = require("../Util");
+const {storeCSV, removeCSV} = require("../FileManager");
 const {borg_dataset_directory, slurm_command_dataset_path} = require('../../src/SecretHandler');
 const {v4: uuidv4} = require('uuid');
+const mongoose = require('mongoose');
 
 router.get("/", (req, res) => {
   res.sendStatus(200);
@@ -47,13 +44,14 @@ router.delete("/deleteJob", (req, res) => {
 
 
 router.post("/submitTrainJob", (req, res) => {
-  console.log(req.body);
   const {id_token, jobName, maxJobTime, targetColumnName, dataset, header} = req.body;
   const targetColumn = header.indexOf(targetColumnName);
+
   const file_name = uuidv4();
   const train_path = borg_dataset_directory + file_name + "/train.csv";
-  const local_path = "/home/kians376/repos/cs455/unDecided/server/training/" + file_name + ".csv";
+  const local_path = "training/" + file_name + ".csv";
   const targetPath = slurm_command_dataset_path + file_name + '/' + 'train.csv';
+
   const job = new JobModel({
     name: jobName,
     user: id_token,
@@ -78,6 +76,7 @@ router.post("/submitTrainJob", (req, res) => {
       return borg.putFile(local_path, train_path)
         .then(() => borg.exec(trainString, []));
     })
+    .then(() => removeCSV(local_path))
     .then(() => job.save())
     .then(msg => res.send({borg_stdout: msg, fileHash: file_name}))
     .catch(err => errorHandler(err, res));
@@ -110,9 +109,11 @@ router.post("/submitPrediction", (req, res) => {
   getUserId(id_token)
     .then(userId => {
       email = userId;
-      return JobModel.findOne({_id: jobID});
+      const trainJobID = mongoose.Types.ObjectId(jobID);
+      return JobModel.findById(trainJobID);
     })
     .then(job => {
+      if (job === null) throw new Error('Associated training job not found');
       // if (!(job.headers.includes(job.target_name))) { // gotta push the target column into the file!
       //   const a = job.headers;
       //   a.push(job.target_name);
@@ -121,7 +122,7 @@ router.post("/submitPrediction", (req, res) => {
       //
       const folder_path = slurm_command_dataset_path + job.fileHash;
       const test_path = folder_path + '/' + test_file_name + '.csv';
-      const local_path = '/home/kians376/repos/cs455/unDecided/server/predictions/' + job.fileHash + '.csv';
+      const local_path = `predictions/${job.fileHash}.csv`;
       const predictString = runPredict(test_path, job.fileHash, job.timer, job.target_name, email, job.name);
 
       return storeCSV(dataset, local_path)
@@ -129,7 +130,8 @@ router.post("/submitPrediction", (req, res) => {
         .then(borg => {
             return borg.putFile(local_path, test_path)
               .then(() => borg.exec(predictString, []));
-          });
+          })
+        .then(() => removeCSV(local_path));
       })
     .then(() => prediction.save())
     .then(() => res.sendStatus(200))
@@ -175,6 +177,10 @@ router.delete("/deletePredictionJobID", (req, res) => {
     .then(userId => PredictionModel.deleteMany({user: userId, jobID: jobID})
       .then(_ => res.sendStatus(200)))
     .catch(err => errorHandler(err, res));
+});
+
+router.patch('/bbmlCallback', (req, res) => {
+  console.log(req);
 });
 
 module.exports = router;

@@ -118,6 +118,10 @@ export default function PredJobForm() {
       submitPrediction(auth.user.email, jobName, location.state.id, CSV)
         .then(res => {
           history.push('/console/jobs');
+        })
+        .catch(err => {
+          console.log(err);
+          alert("Job failed to submit");
         });
     }
   }
