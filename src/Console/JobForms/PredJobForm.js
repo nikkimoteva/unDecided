@@ -115,7 +115,7 @@ export default function PredJobForm() {
   function submitHandler(event) {
     event.preventDefault();
     if (validateFormData()) {
-      submitPrediction(auth.user.email, jobName, location.state.id)
+      submitPrediction(auth.user.email, jobName, location.state.id, CSV)
         .then(res => {
           history.push('/console/jobs');
         });

@@ -1,12 +1,15 @@
 const express = require('express');
 const JobModel = require("../database/models/Job");
 const PredictionModel = require("../database/models/Prediction");
+const {runPredict} = require("../Util");
+const {csvToArrays} = require("../Util");
+const {makeid} = require("../Util");
 const router = express.Router();
 const {errorHandler, getUserId, connect} = require("../Util");
 const {trainPipeline} = require("../Util");
 const {storeCSV} = require("../FileManager");
 const {borg_dataset_directory, slurm_command_dataset_path} = require('../../src/SecretHandler');
-const { v4: uuidv4 } = require('uuid');
+const {v4: uuidv4} = require('uuid');
 
 router.get("/", (req, res) => {
   res.sendStatus(200);
@@ -15,7 +18,7 @@ router.get("/", (req, res) => {
 router.post("/", (req, res) => {
   const id_token = req.body.id_token;
   JobModel.find({user: id_token})
-    .then(jobs =>{
+    .then(jobs => {
       return res.json(jobs);
     })
 
@@ -25,7 +28,7 @@ router.post("/", (req, res) => {
 router.post("/job", (req, res) => {
   const id_token = req.body.id_token;
   const jobID = req.body.jobID;
-  JobModel.find({ user: id_token,_id: jobID})
+  JobModel.find({user: id_token, _id: jobID})
     .then(job => {
       return res.json(job);
     })
@@ -37,7 +40,7 @@ router.delete("/deleteJob", (req, res) => {
   const id_token = req.body.id_token;
   const jobId = req.body.jobId;
   getUserId(id_token)
-    .then(userToken => JobModel.deleteOne({user: userToken, _id: jobId })
+    .then(userToken => JobModel.deleteOne({user: userToken, _id: jobId})
       .then(_ => res.sendStatus(200)))
     .catch(err => errorHandler(err, res));
 });
@@ -76,7 +79,7 @@ router.post("/submitTrainJob", (req, res) => {
         .then(() => borg.exec(trainString, []));
     })
     .then(() => job.save())
-    .then(msg => res.send({ borg_stdout: msg, fileHash: file_name }))
+    .then(msg => res.send({borg_stdout: msg, fileHash: file_name}))
     .catch(err => errorHandler(err, res));
 });
 
@@ -84,7 +87,7 @@ router.post("/predictions", (req, res) => {
   const id_token = req.body.id_token;
   const jobID = req.body.jobID;
   PredictionModel.find({user: id_token, jobID: jobID})
-    .then(predictions =>{
+    .then(predictions => {
       return res.json(predictions);
     })
 
@@ -92,20 +95,44 @@ router.post("/predictions", (req, res) => {
 });
 
 router.post("/submitPrediction", (req, res) => {
-  const body = req.body;
-  const id_token = body.id_token;
-  const predictionName = body.predictionName;
-  const jobID = body.jobID;
+  const {id_token, predictionName, jobID, dataset} = req.body;
+  let email;
   const prediction = new PredictionModel({
     name: predictionName,
     user: id_token,
-    jobID:jobID,
+    jobID: jobID,
     created: Date()
   });
-  prediction.save()
-    .then(_ => {
-      return res.sendStatus(200);
+
+  const test_file_name = makeid(4);
+
+
+  getUserId(id_token)
+    .then(userId => {
+      email = userId;
+      return JobModel.findOne({_id: jobID});
     })
+    .then(job => {
+      // if (!(job.headers.includes(job.target_name))) { // gotta push the target column into the file!
+      //   const a = job.headers;
+      //   a.push(job.target_name);
+      //   data[0] = testColumns;
+      //   const newFile = csv.fromArrays(data);
+      //
+      const folder_path = slurm_command_dataset_path + job.fileHash;
+      const test_path = folder_path + '/' + test_file_name + '.csv';
+      const local_path = '/home/kians376/repos/cs455/unDecided/server/predictions/' + job.fileHash + '.csv';
+      const predictString = runPredict(test_path, job.fileHash, job.timer, job.target_name, email, job.name);
+
+      return storeCSV(dataset, local_path)
+        .then(() => connect())
+        .then(borg => {
+            return borg.putFile(local_path, test_path)
+              .then(() => borg.exec(predictString, []));
+          });
+      })
+    .then(() => prediction.save())
+    .then(() => res.sendStatus(200))
     .catch(err => errorHandler(err, res));
 });
 
@@ -113,7 +140,7 @@ router.delete("/deletePrediction", (req, res) => {
   const id_token = req.body.id_token;
   const predictionID = req.body.predictionID;
   getUserId(id_token)
-    .then(userToken => PredictionModel.deleteOne({ user: userToken, _id: predictionID }))
+    .then(userToken => PredictionModel.deleteOne({user: userToken, _id: predictionID}))
     .then(_ => res.sendStatus(200))
     .catch(err => errorHandler(err, res));
 });
@@ -145,7 +172,7 @@ router.delete("/deletePredictionJobID", (req, res) => {
   const jobID = req.body.jobID;
   console.log(jobID);
   getUserId(id_token)
-    .then(userId => PredictionModel.deleteMany({user: userId, jobID: jobID })
+    .then(userId => PredictionModel.deleteMany({user: userId, jobID: jobID})
       .then(_ => res.sendStatus(200)))
     .catch(err => errorHandler(err, res));
 });
