@@ -41,7 +41,7 @@ export default function SimpleAccordion() {
           aria-controls="panel2a-content"
           id="panel2a-header"
         >
-          <Typography className={classes.heading}>Q: How does BlackboxML utilize AutoML?</Typography>
+          <Typography className={classes.heading}>Q: How does Ensemble AutoML utilize AutoML?</Typography>
         </AccordionSummary>
         <AccordionDetails>
           <Typography>
