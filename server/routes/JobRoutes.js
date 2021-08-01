@@ -165,7 +165,7 @@ router.post("/downloadPrediction", (req, res) => {
       return connect()
         .then(borg => borg.getFile(localPath, remotePath));
     })
-    .then(() => res.attachment(localPath))
+    .then(() => res.attachment(localPath))// TODO modify to res.download
     .catch(err => errorHandler(err, res));
 });
 
@@ -179,8 +179,9 @@ router.delete("/deletePredictionJobID", (req, res) => {
     .catch(err => errorHandler(err, res));
 });
 
-router.patch('/bbmlCallback', (req, res) => {
+router.patch('/bbmlCallback/:jobID', (req, res) => {
   console.log(req);
+  res.end();
 });
 
 module.exports = router;
