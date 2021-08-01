@@ -145,7 +145,7 @@ export default function AWSImportView(props) {
       <br/><br/>
       <Typography variant="h4" style={{textAlign: "center", marginBottom: "20px"}}>{tableTitle}</Typography>
       <div style={{display: "flex", justifyContent: "space-between"}}>
-        <Button variant="outlined" onClick={listBuckets}>
+        <Button variant="outlined" onClick={listBuckets} disabled={showBucketsTable}>
           <KeyboardReturnIcon/>
         </Button>
         <TextField onChange={onSearchChange} label="Search" type="search"/>
