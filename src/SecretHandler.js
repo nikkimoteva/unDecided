@@ -26,9 +26,8 @@ try {
   console.log(`google client ID: ${googlelogin_clientID}`);
   toExport = {
     user, password, server, database, email, captcha_site_key, captcha_secret_key, contactus_user,
-    contactus_access_token, contactus_service_id, contactus_template_id, googlelogin_clientID, ssh_user, ssh_pw,
+    contactus_access_token, contactus_service_id, contactus_template_id, googlelogin_clientID, ssh_user, ssh_pw, 
     borg_dataset_directory, remote_ssh, ensemble_session_path, slurm_command_dataset_path
   };
 }
-
 module.exports = toExport;
