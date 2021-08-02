@@ -1,10 +1,11 @@
-import {registerAWS, listBuckets, listObjects, getObject} from "../../common/Managers/EndpointManager";
+import {registerAWS, listBuckets, listObjects, getObject, addAWSCred, getAWSCred} from "../../common/Managers/EndpointManager";
 import React, {useContext, useState} from "react";
 import {DataGrid} from "@material-ui/data-grid";
 import "./AWSImport.css";
 import AWSImportForm from "./Form";
 import {DialogContent, TextField, Typography} from "@material-ui/core";
 import {CloseModalContext} from "../JobForms/Components/FileUploadComponent";
+import {getAuthCookie} from "../../common/Managers/CookieManager";
 
 const objectTableFields = [
   {field: 'Key', headerName: 'Key', flex: 1},
@@ -60,8 +61,30 @@ export default function AWSImportView(props) {
   }
 
   function registerAndListBuckets(region, accessKey, secretKey) {
-    return registerAWS(region, accessKey, secretKey)
-      .then(res => {
+    const cookie = getAuthCookie();
+    return getAWSCred(cookie.email)
+      .then((res) => {
+        if (res === null) {
+          // change for the frontend to send an alert or open up add cred options
+          console.log("aws creds do not exist");
+          return "error";
+        } else {
+          return getAWSCred(cookie.email);
+        }
+      })
+      .then((res) => {
+    return registerAWS(region, accessKey, secretKey);
+      // .then( () => {
+      //   return addAWSCred(cookie.email, accessKey, secretKey);
+      // })
+      // .then( () => {
+      //   return getAWSCred(cookie.email);
+      // })
+      })
+      .then( (res) => {
+        console.log(res);
+      })
+      .then(() => {
         updateRows([]);
         setIsLoadingList(true);
         return listBuckets();

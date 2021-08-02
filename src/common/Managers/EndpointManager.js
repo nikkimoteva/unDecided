@@ -22,6 +22,14 @@ export function addUser(name, email, password) {
   return axios.post(`${authRoot}/addUser`,{name, email, password});
 }
 
+export function addAWSCred(email, accessKey, secretKey) {
+  return axios.post(`${authRoot}/addAWSCred`, {email, accessKey, secretKey});
+}
+
+export function getAWSCred(email) {
+  return axios.post(`${authRoot}/getAWSCred`, {email});
+}
+
 
 /*
 * Job endpoints
