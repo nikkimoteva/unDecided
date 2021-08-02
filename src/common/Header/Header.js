@@ -5,8 +5,8 @@ import {useAuth} from "../Auth";
 import React from 'react';
 import {makeStyles} from '@material-ui/core/styles';
 import ProfileIcon from "./ProfileIcon";
-import LoginModal from "./LoginModal";
 import {useLoginModalContext} from "../LoginModalProvider";
+import AuthOptions from "./AuthOptions";
 
 const useStyles = makeStyles(() => ({
   root: {
@@ -22,10 +22,9 @@ const useStyles = makeStyles(() => ({
   }
 }));
 
-const Transition = React.forwardRef(function Transition(props, ref) {
+const SlideUpTransition = React.forwardRef(function Transition(props, ref) {
   return <Slide direction="up" ref={ref} {...props} />;
 });
-
 
 export default function Header() {
   const classes = useStyles();
@@ -91,12 +90,15 @@ export default function Header() {
         onClose={closeLoginModal}
         aria-labelledby="Login Form"
         aria-describedby="Input your login details here"
-        TransitionComponent={Transition}
+        TransitionComponent={SlideUpTransition}
       >
+      <AuthOptions />
+        {/* <DialogTitle>Sign Up</DialogTitle>
+        <SignupModal />
+
         <DialogTitle>Log In</DialogTitle>
-        <LoginModal signin={login} onClose={closeLoginModal}/>
+        <LoginModal signin={login} onClose={closeLoginModal}/> */}
       </Dialog>
     </>
   );
 }
-

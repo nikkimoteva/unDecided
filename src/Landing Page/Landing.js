@@ -27,14 +27,17 @@ export default function Landing() {
                   "Exploiting Machine Learning Solutions", "User Friendly", "Quantitative gains",
                   "Minimal Configuration Necessary", "No ML experience necessary"];
 
-  const setLoginModal = useLoginModalContext().setLoginModal;
+  
+  const {loginModal, setLoginModal} = useLoginModalContext();
   const auth = useAuth();
   const history = useHistory();
 
   function handleGetStartedOnClick() {
-    /* eslint-disable no-implicit-coercion, eqeqeq */
-    if (auth.user == null) setLoginModal(true);
-    else history.push("/console");
+    if (auth.user === "") {
+      setLoginModal(true);
+    } else {
+      history.push("/console");
+    }
   }
 
   return (
@@ -59,7 +62,7 @@ export default function Landing() {
             >
               autoML In Action
             </Button>
-
+  
             <Button className="CustomButton" variant="contained"
                     color="primary" onClick={handleGetStartedOnClick}
             >
@@ -69,7 +72,7 @@ export default function Landing() {
           </div>
         </div>
         <div className="Comparison">
-          <h1 className="title">The Most Advanced Predictive AutoML Engine</h1>
+          <h1 className="title">State of the Art AutoML Engine</h1>
           <div id="graph" style={{width: "80%", marginLeft: "10%",}}>
             <h3 className="subtitle">Comparison Overview</h3>
             <Overview />
@@ -79,18 +82,19 @@ export default function Landing() {
         </div>
 
         <div className="MoreInfo">
-        <h1 className="title">Accessible Machine Learning for Everyone</h1>
-        <img className="img" src={figure1} alt="figure1"/>
-        <Button className="CustomLearnMore" onClick={() => setClicked(true)} variant="contained" color="primary"
-              href="#outlined-buttons"
-        >
-          Learn More About Ensemble Squared
-        </Button>
-        <Button className="CutomContactUs" component={Link}
-                    to="./contact" variant="contained" color="primary" href="#outlined-buttons"
-        >
-              Contact Us
-            </Button>
+          <h1 className="title">Accessible Machine Learning for Everyone</h1>
+          <img className="img" src={figure1} alt="figure1"/>
+          <Button className="CustomLearnMore" onClick={() => setClicked(true)} variant="contained" color="primary"
+                href="#outlined-buttons"
+          >
+            Learn More About Ensemble Squared
+          </Button>
+          <br/>
+          <Button className="CustomContactUs" component={Link}
+                      to="./contact" variant="contained" color="primary" href="#outlined-buttons"
+          >
+          Contact Us
+          </Button>
         </div>
         <footer style={{padding: "2% 2%"}} className="copywrite">&copy; Copyright, University of British Columbia, 2021</footer>
     </div>
