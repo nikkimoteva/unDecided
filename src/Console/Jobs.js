@@ -19,6 +19,8 @@ import Typography from '@material-ui/core/Typography';
 import Paper from '@material-ui/core/Paper';
 import KeyboardArrowDownIcon from '@material-ui/icons/KeyboardArrowDown';
 import KeyboardArrowUpIcon from '@material-ui/icons/KeyboardArrowUp';
+import LinearProgress from '@material-ui/core/LinearProgress';
+
 import {
   submitPrediction,
   getPredictions,
@@ -60,6 +62,9 @@ const useStyles = makeStyles({
 
     // display:"block",
     // overflow:"auto"
+  },
+  progressBar: {
+    width: "650px"
   }
 });
 
@@ -163,26 +168,34 @@ export default function Jobs(props) {
 
       }
 
-      return (<TableRow key={props.date}>
-        <TableCell align="center">
-          {props.name}
-        </TableCell>
-        <TableCell align="center">{props.status}</TableCell>
-        <TableCell align="center">{props.created}</TableCell>
-        <TableCell align="center">
-          {
-            (props.status === "Running") ? <div style={{display: "none"}}/>
-            : <Button variant="contained" className={classes.jobActionButton}
-                      onClick={downloadPrediction} color="primary" startIcon={<GetAppIcon/>}
+      return (
+        <>
+          <TableRow key={props.date}>
+            <TableCell align="center">
+              {props.name}
+            </TableCell>
+            <TableCell align="center">{props.status}</TableCell>
+            <TableCell align="center">{props.created}</TableCell>
+            <TableCell align="center">
+              {
+                (props.status === "Running") ? <div style={{display: "none"}}/>
+                : <Button variant="contained" className={classes.jobActionButton}
+                          onClick={downloadPrediction} color="primary" startIcon={<GetAppIcon/>}
+                  />
+              }
+              <Button variant="contained"
+                      className={classes.jobActionButton} onClick={deletePrediction} color="primary"
+                      startIcon={<DeleteIcon/>}
               />
-          }
-          <Button variant="contained"
-                  className={classes.jobActionButton} onClick={deletePrediction} color="primary"
-                  startIcon={<DeleteIcon/>}
-          />
-          
-        </TableCell>
-      </TableRow>);
+              
+            </TableCell>
+          </TableRow>
+          <TableCell style={{paddingBottom: 0, paddingTop: 0}} colSpan={3}>
+            <LinearProgress variant="determinate" value={30} />
+          </TableCell>
+        </>
+
+        );
     }
 
     function openButtonOnClick() {
@@ -202,7 +215,9 @@ export default function Jobs(props) {
 
     return (
       <>
+
         <TableRow className={classes.root}>
+
           <TableCell>
             <IconButton aria-label="expand row" size="small" onClick={openButtonOnClick}>
               {rowState.open ? <KeyboardArrowUpIcon/> : <KeyboardArrowDownIcon/>}
@@ -215,24 +230,26 @@ export default function Jobs(props) {
           <TableCell align="right">{row.created}</TableCell>
           <TableCell align="right">{row.target_name}</TableCell>
           <TableCell align="center"><Button variant="contained"
-                                            className={classes.jobActionButton} onClick={deleteJob} color="primary"
-                                            name={row.name}
+            className={classes.jobActionButton} onClick={deleteJob} color="primary"
+            name={row.name}
                                     >
             Delete
           </Button>
-            <Button
-              variant="contained"
-              color="primary"
-              className={classes.jobActionButton}
-              onClick={newPrediction}
-              name={row.id}
-              disabled={row.status === "Running"}
-            >
-              New Prediction
-            </Button>
+          <Button
+            variant="contained"
+            color="primary"
+            className={classes.jobActionButton}
+            onClick={newPrediction}
+            name={row.id}
+            disabled={row.status === "Running"}
+          >
+            New Prediction
+          </Button>
           </TableCell>
         </TableRow>
-
+        <TableCell style={{paddingBottom: 0, paddingTop: 0}} colSpan={6}>
+          <LinearProgress variant="determinate" value={30} />
+        </TableCell>
         <TableRow>
           <TableCell style={{paddingBottom: 0, paddingTop: 0}} colSpan={6}>
 
@@ -242,7 +259,6 @@ export default function Jobs(props) {
                   Predictions
                 </Typography>
                 <Table size="small" aria-label="purchases">
-
                   <TableHead>
                     <TableRow>
                       <TableCell align="center">Prediction Name</TableCell>
@@ -261,7 +277,7 @@ export default function Jobs(props) {
 
           </TableCell>
         </TableRow>
-
+        
       </>
     );
   }
@@ -272,6 +288,7 @@ export default function Jobs(props) {
   });
   return (
     <div>
+
       <Grid container justify="center">
         <Button variant="contained" color="secondary"
                 className={classes.newJobButton} component={Link}
