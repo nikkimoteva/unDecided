@@ -232,9 +232,8 @@ export default function Jobs(props) {
           <TableCell align="center"><Button variant="contained"
             className={classes.jobActionButton} onClick={deleteJob} color="primary"
             name={row.name}
-                                    >
-            Delete
-          </Button>
+            startIcon={<DeleteIcon/>}
+                                    />
           <Button
             variant="contained"
             color="primary"
