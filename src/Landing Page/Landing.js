@@ -36,7 +36,7 @@ export default function Landing() {
     if (auth.user === "") {
       setLoginModal(true);
     } else {
-      history.push("/console");
+      history.push("/console/jobs");
     }
   }
 
