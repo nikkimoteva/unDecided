@@ -1,5 +1,5 @@
 import logo from '../../images/cropped_logo.png';
-import {AppBar, Button, ButtonGroup, Dialog, DialogTitle, Slide, Toolbar} from "@material-ui/core";
+import {AppBar, Button, ButtonGroup, Dialog, Slide, Toolbar} from "@material-ui/core";
 import {Link, useHistory} from "react-router-dom";
 import {useAuth} from "../../Authentication/Auth";
 import React from 'react';
@@ -39,13 +39,6 @@ export default function Header() {
 
   function closeLoginModal() {
     setLoginModal(false);
-  }
-
-  function login(credentials) {
-    auth.signin(credentials)
-      .then(() => {
-        history.push('/console');
-      });
   }
 
   function logout() {
