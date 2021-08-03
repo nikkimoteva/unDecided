@@ -6,12 +6,12 @@ import figure1 from '../images/figure1.jpg';
 import Button from '@material-ui/core/Button';
 import RankingTable from "./RankingTable";
 import Overview from "./Overview";
-import "../common/Button.css";
-import "../App.css";
-import "./Landing.css";
 import {Link, useHistory} from "react-router-dom";
 import {useLoginModalContext} from "../common/LoginModalProvider";
 import {useAuth} from "../common/Auth";
+import "../common/Button.css";
+import "../App.css";
+import "./Landing.css";
 
 export default function Landing() {
   const [clicked, setClicked] = useState(false);
