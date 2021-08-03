@@ -8,7 +8,7 @@ function addUser(name, email, password) {
     .then ( (res) => {
         if (res){
             console.log("Email already exists");
-            return 1;
+            return false;
         } else {
             return bcrypt.hash(password, saltRounds)
                 .then((hash, err) => {
@@ -23,7 +23,7 @@ function addUser(name, email, password) {
                     UserModel.create({name: name, email: email, passwordHash: hashGen});
                     console.log("SUCCESSFULLY ADDED USER");
                     // redirect to login page
-                    return 2;
+                    return true;
                 }
             });
         }
@@ -56,7 +56,7 @@ function validatePassword(email, password) {
 
 
 function addAWSCred(email, accessKey, secretKey) {
-    if (accessKey.trim() === "" || secretKey.trim() === "") return 1;
+    if (accessKey.trim() === "" || secretKey.trim() === "") return false;
     return bcrypt.hash(secretKey, saltRounds)
     .then((hash, err) => {
         if (err) {
@@ -69,7 +69,7 @@ function addAWSCred(email, accessKey, secretKey) {
                     console.log(err);
                     return null;
                 } else {
-                    return 2;
+                    return true;
                 }
             });
         }

@@ -69,11 +69,11 @@ export default function AWSImportView(props) {
           console.log("aws creds do not exist");
           return "error";
         } else {
-          return getAWSCred(cookie.email);
+          return addAWSCred(cookie.email, accessKey, secretKey);
         }
       })
       .then((res) => {
-    return registerAWS(region, accessKey, secretKey);
+      return registerAWS(region, accessKey, secretKey);
       // .then( () => {
       //   return addAWSCred(cookie.email, accessKey, secretKey);
       // })

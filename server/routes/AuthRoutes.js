@@ -44,9 +44,9 @@ router.post("/addUser", (req, res) => {
   UserAuth.addUser(req.body.name, req.body.email, req.body.password)
     .then((result) => {
       console.log(result);
-      if (!result) {
+      if (result === null) {
         return res.sendStatus(400);
-      } else if (result===1){
+      } else if (!result){
         return res.send({error: "Email already exists! Please login."});
       } else {
         return res.sendStatus(200);
@@ -62,9 +62,11 @@ router.post("/addAWSCred", (req, res) => {
   return UserAuth.addAWSCred(req.body.email, req.body.accessKey, req.body.secretKey)
   .then ((result) => {
     console.log(result);
-    if (!result) {
+    if (result === null) {
       console.log("Internal Error");
       return res.sendStatus(500);
+    } else if (!result) {
+      return res.sendStatus(400);
     } else {
       return res.sendStatus(200);
     }
@@ -78,8 +80,7 @@ router.post("/addAWSCred", (req, res) => {
 router.post("/getAWSCred", (req, res) => {
   return UserAuth.getAWSCred(req.body.email)
   .then ((result) => {
-    console.log(result);
-    if (!result) {
+    if (result === null) {
       console.log("AWSCred is not yet set.");
       return res.send(null);
     } else {
