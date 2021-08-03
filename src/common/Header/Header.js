@@ -53,7 +53,7 @@ export default function Header() {
     history.push('/'); // redirect to main page
   }
 
-  const headerButtons = (auth.user === undefined)
+  const headerButtons = (auth.user === undefined || auth.user === "")
     ? (
       <ButtonGroup variant="text" color="inherit" className={classes.toolbarButtons} size="large">
       <Button component={Link} to="/contact">Contact Us</Button>
