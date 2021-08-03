@@ -1,7 +1,7 @@
 import GoogleLogin from "react-google-login";
 import React from "react";
 import {DialogContent} from "@material-ui/core";
-import {googlelogin_clientID} from "../../SecretHandler";
+import {googlelogin_clientID} from "../SecretHandler";
 
 export default class LoginModal extends React.Component {
   render() {
@@ -14,7 +14,7 @@ export default class LoginModal extends React.Component {
             buttonText="Login with Google"
             onSuccess={this.props.signin}
             onFailure={(res) => console.log(res)}
-            cookiePolicy="https://ensemble-automl.herokuapp.com" // replace with `http://localhost:3000` if debugging locally
+            cookiePolicy="http://localhost:3000" // replace with `http://localhost:3000` if debugging locally
           />
         </div>
       </DialogContent>
