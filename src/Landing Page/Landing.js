@@ -8,7 +8,7 @@ import Overview from "./Overview";
 import {Link, useHistory} from "react-router-dom";
 import {useLoginModalContext} from "../Authentication/LoginModalProvider";
 import {useAuth} from "../Authentication/Auth";
-import "../Common/Button";
+import "../Common/Button.css";
 import "../App.css";
 import "./Landing.css";
 
