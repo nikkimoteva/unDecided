@@ -1,4 +1,4 @@
-import {registerAWS, listBuckets as listBucketsDB, listObjects, getObject} from "../../common/Managers/EndpointManager";
+import {registerAWS, listBuckets as listBucketsDB, listObjects, getObject, addAWSCred, getAWSCred} from "../../common/Managers/EndpointManager";
 import React, {useContext, useState} from "react";
 import {DataGrid} from "@material-ui/data-grid";
 import KeyboardReturnIcon from '@material-ui/icons/KeyboardReturn';
@@ -6,6 +6,7 @@ import "./AWSImport.css";
 import AWSImportForm from "./Form";
 import {DialogContent, TextField, Typography} from "@material-ui/core";
 import {CloseModalContext} from "../JobForms/Components/FileUploadComponent";
+import {getAuthCookie} from "../../common/Managers/CookieManager";
 import Button from "@material-ui/core/Button";
 
 const objectTableFields = [
@@ -59,10 +60,35 @@ export default function AWSImportView(props) {
     });
   }
 
-  function listBuckets() {
-    updateRows([]);
-    setIsLoadingList(true);
-    return listBucketsDB()
+  function registerAndListBuckets(region, accessKey, secretKey) {
+    const cookie = getAuthCookie();
+    return getAWSCred(cookie.email)
+      .then((res) => {
+        if (res === null) {
+          // change for the frontend to send an alert or open up add cred options
+          console.log("aws creds do not exist");
+          return "error";
+        } else {
+          return getAWSCred(cookie.email);
+        }
+      })
+      .then((res) => {
+    return registerAWS(region, accessKey, secretKey);
+      // .then( () => {
+      //   return addAWSCred(cookie.email, accessKey, secretKey);
+      // })
+      // .then( () => {
+      //   return getAWSCred(cookie.email);
+      // })
+      })
+      .then( (res) => {
+        console.log(res);
+      })
+      .then(() => {
+        updateRows([]);
+        setIsLoadingList(true);
+        return listBucketsDB();
+      })
       .then(res => {
         const buckets = (res.Buckets !== undefined) ? res.Buckets : [];
         const owner = res.Owner.DisplayName;
@@ -78,14 +104,14 @@ export default function AWSImportView(props) {
       .finally(() => setIsLoadingList(false));
   }
 
-  function registerAndListBuckets(region, accessKey, secretKey) {
-    return registerAWS(region, accessKey, secretKey)
-      .then(() => listBuckets())
-      .catch(err => {
-        alert("Unable to register. Check that the provided keys are correct");
-        console.log(err);
-      });
-  }
+  // function registerAndListBuckets(region, accessKey, secretKey) {
+  //   return registerAWS(region, accessKey, secretKey)
+  //     .then(() => listBucketsDB())
+  //     .catch(err => {
+  //       alert("Unable to register. Check that the provided keys are correct");
+  //       console.log(err);
+  //     });
+  // }
 
   function listObjectsOnClick(params, event) {
     const bucketName = params.row.Name;
@@ -145,7 +171,7 @@ export default function AWSImportView(props) {
       <br/><br/>
       <Typography variant="h4" style={{textAlign: "center", marginBottom: "20px"}}>{tableTitle}</Typography>
       <div style={{display: "flex", justifyContent: "space-between"}}>
-        <Button variant="outlined" onClick={listBuckets} disabled={showBucketsTable}>
+        <Button variant="outlined" onClick={listBucketsDB} disabled={showBucketsTable}>
           <KeyboardReturnIcon/>
         </Button>
         <TextField onChange={onSearchChange} label="Search" type="search"/>

@@ -4,38 +4,27 @@ const UserModel = require('../database/models/User');
 const saltRounds = 10;
 
 function addUser(name, email, password) {
-    let saltGen;
     return UserModel.findOne({email: email})
     .then ( (res) => {
         if (res){
             console.log("Email already exists");
             return 1;
         } else {
-            return bcrypt.genSalt(saltRounds)
-            .then ((salt, err) => {
+            return bcrypt.hash(password, saltRounds)
+                .then((hash, err) => {
                 if (err) {
                     console.log(err);
-                    // send internal error message
+                    // send internal error message 
                     console.log("Internal Error");
                     return null;
+                } else {
+                    const hashGen = hash;
+                    // store hashed password and salt in DB
+                    UserModel.create({name: name, email: email, passwordHash: hashGen});
+                    console.log("SUCCESSFULLY ADDED USER");
+                    // redirect to login page
+                    return 2;
                 }
-                saltGen = salt;
-                return bcrypt.hash(password, salt)
-                    .then((hash, err) => {
-                    if (err) {
-                        console.log(err);
-                        // send internal error message 
-                        console.log("Internal Error");
-                        return null;
-                    } else {
-                        const hashGen = hash;
-                        // store hashed password and salt in DB
-                        UserModel.create({name: name, email: email, salt: saltGen, passwordHash: hashGen});
-                        console.log("SUCCESSFULLY ADDED USER");
-                        // redirect to login page
-                        return 2;
-                    }
-                });
             });
         }
     });
@@ -46,11 +35,9 @@ function validatePassword(email, password) {
     .then ( (user) => {
         if (!user) {
             console.log("user not found");
-            // alert("email or password is incorrect. Please try again.");
+            // user not found, send "email or password is incorrect"
             return null;
         }
-        // const saltGen = user.salt;
-        // const passHash = saltGen + password; no need to store salt?? look more into it
         return bcrypt.compare(password, user.passwordHash)
         .then ( (match) => {
             console.log(match);
@@ -67,7 +54,45 @@ function validatePassword(email, password) {
     });
 }
 
+
+function addAWSCred(email, accessKey, secretKey) {
+    if (accessKey.trim() === "" || secretKey.trim() === "") return 1;
+    return bcrypt.hash(secretKey, saltRounds)
+    .then((hash, err) => {
+        if (err) {
+            console.log(err);
+            return null;
+        } else {
+            return UserModel.findOneAndUpdate({email: email}, {AWSAccessKey: accessKey, AWSSecretKey: hash})
+            .then ((res, err) => {
+                if (err) {
+                    console.log(err);
+                    return null;
+                } else {
+                    return 2;
+                }
+            });
+        }
+    })
+    .catch((err) => {
+        console.log(err);
+    });
+}
+
+function getAWSCred(email) {
+    return UserModel.findOne({email: email})
+    .then((user) => {
+        if (!user.AWSSecretKey || !user.AWSAccessKey) return null;
+        return {access: user.AWSAccessKey, secret: user.AWSSecretKey};
+    })
+    .catch((err) => {
+        console.log(err);
+    });
+}
+
 module.exports = {
     addUser: addUser,
-    validatePassword: validatePassword
+    validatePassword: validatePassword,
+    addAWSCred: addAWSCred,
+    getAWSCred: getAWSCred,
 };

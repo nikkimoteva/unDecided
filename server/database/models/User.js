@@ -5,9 +5,13 @@ const userSchema = new mongoose.Schema({
     type: String,
     required: true
   },
+  passwordHash: {
+    type: String,
+    required: true
+  },
   name: String,
-  salt: String,
-  passwordHash: String,
+  AWSAccessKey: String,
+  AWSSecretKey: String,
 });
 
 module.exports = mongoose.model('user', userSchema);

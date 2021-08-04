@@ -54,7 +54,42 @@ router.post("/addUser", (req, res) => {
     })
     .catch(err => {
       console.log(err);
-      errorHandler(err, res);});
+      errorHandler(err, res);
+    });
+});
+
+router.post("/addAWSCred", (req, res) => {
+  return UserAuth.addAWSCred(req.body.email, req.body.accessKey, req.body.secretKey)
+  .then ((result) => {
+    console.log(result);
+    if (!result) {
+      console.log("Internal Error");
+      return res.sendStatus(500);
+    } else {
+      return res.sendStatus(200);
+    }
+  })
+  .catch(err => {
+    console.log(err);
+    errorHandler(err, res);
+  });
+});
+
+router.post("/getAWSCred", (req, res) => {
+  return UserAuth.getAWSCred(req.body.email)
+  .then ((result) => {
+    console.log(result);
+    if (!result) {
+      console.log("AWSCred is not yet set.");
+      return res.send(null);
+    } else {
+      return res.send(result);
+    }
+  })
+  .catch(err => {
+    console.log(err);
+    errorHandler(err, res);
+  });
 });
 
 module.exports = router;
