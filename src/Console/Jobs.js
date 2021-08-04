@@ -142,6 +142,8 @@ export default function Jobs(props) {
       const diff = current-created;
       const minutes = Math.floor((diff/1000)/60);
       props.status=minutes>row.timer?"Finished":"Running";
+      props.timeTaken = Math.min(minutes,row.timer);
+      props.progress = props.timeTaken/row.timer*100;
 
       function deletePrediction() {
         const predictionID = props.id;
@@ -191,7 +193,7 @@ export default function Jobs(props) {
             </TableCell>
           </TableRow>
           <TableCell style={{paddingBottom: 0, paddingTop: 0}} colSpan={3}>
-            <LinearProgress variant="determinate" value={30} />
+            {props.status!=="Finished" && <LinearProgress variant="determinate" value={props.progress} />}
           </TableCell>
         </>
 
@@ -211,6 +213,10 @@ export default function Jobs(props) {
     const current = new Date();
     const diff = current-created;
     const minutes = Math.floor((diff/1000)/60);
+    row.timeTaken = Math.min(minutes,row.timer);
+    row.progress = row.timeTaken/row.timer*100;
+
+
     row.status=minutes>row.timer?"Finished":"Running";
 
     return (
@@ -247,7 +253,8 @@ export default function Jobs(props) {
           </TableCell>
         </TableRow>
         <TableCell style={{paddingBottom: 0, paddingTop: 0}} colSpan={6}>
-          <LinearProgress variant="determinate" value={30} />
+          {row.status!=="Finished"&&
+            <LinearProgress variant="determinate" value={row.progress} />}
         </TableCell>
         <TableRow>
           <TableCell style={{paddingBottom: 0, paddingTop: 0}} colSpan={6}>
