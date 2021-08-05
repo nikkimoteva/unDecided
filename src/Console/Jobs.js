@@ -70,7 +70,6 @@ const useStyles = makeStyles({
 export default function Jobs(props) {
   const classes = useStyles();
   const [jobs, setJobs] = useState([]);
-  const [predictions, setPredictions] = useState([]);
   const [selectionModel, setSelectionModel] = useState([]);
   const auth = useAuth();
   const history = useHistory();
@@ -135,10 +134,11 @@ export default function Jobs(props) {
       props.id = props._id;
       const created = new Date(props.created);
       const current = new Date();
+      const diff = current-created;
       const seconds = Math.floor(diff/1000);
-      props.status=seconds>row.timer*60?"Finished":"Running";
-      props.timeTaken = Math.min(seconds,row.timer*60);
-      props.progress = props.timeTaken/(row.timer*60)*100;
+      props.status=props.seconds>row.timer*60?"Finished":"Running";
+      const timeTaken = Math.min(seconds,row.timer*60);
+      props.progress = timeTaken/(row.timer*60)*100;
       function deletePrediction() {
         const predictionID = props.id;
         deletePredictionDB(auth.user.email, predictionID).then(_ => {
@@ -248,10 +248,11 @@ export default function Jobs(props) {
           {row.status!=="Finished"&&
             <LinearProgress variant="determinate" value={row.progress} />}
         </TableCell>
+        
         <TableRow>
           <TableCell style={{paddingBottom: 0, paddingTop: 0}} colSpan={6}>
-
             <Collapse in={rowState.open} timeout="auto" unmountOnExit>
+              {rowState.predictions.length!==0&&
               <Box margin={1}>
                 <Typography variant="h6" gutterBottom component="div">
                   Predictions
@@ -270,7 +271,13 @@ export default function Jobs(props) {
                     ))}
                   </TableBody>
                 </Table>
-              </Box>
+              </Box>}
+              {rowState.predictions.length===0&&
+              <Box margin={1}>
+                <Typography variant="h6" gutterBottom component="div">
+                  No Prediction Submitted
+                </Typography>
+              </Box>}
             </Collapse>
 
           </TableCell>
