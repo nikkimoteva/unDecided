@@ -40,7 +40,6 @@ const useRowStyles = makeStyles({
   },
 });
 
-
 const useStyles = makeStyles({
   jobButtonContainer: {
     justifyContent: 'center',
@@ -59,9 +58,6 @@ const useStyles = makeStyles({
     height: "650px",
     width: "95%",
     margin: "0 auto",
-
-    // display:"block",
-    // overflow:"auto"
   },
   progressBar: {
     width: "650px"
@@ -111,8 +107,6 @@ export default function Jobs(props) {
       return () => clearInterval(intervalId); //This is important
     });
     
-    
-
     function deleteJob() {
       const jobId = row.id;
       deleteJobDB(auth.user.email, jobId)
@@ -130,7 +124,7 @@ export default function Jobs(props) {
 
     function newPrediction() {
       history.push({
-        pathname: `${url}/submitPrediction`,
+        pathname: `${url}/submitPrediction:${row.id}`,
         state: row,
       });
     }
@@ -197,7 +191,7 @@ export default function Jobs(props) {
           </TableCell>
         </>
 
-        );
+      );
     }
 
     function openButtonOnClick() {
