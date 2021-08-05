@@ -288,7 +288,6 @@ export default function Jobs(props) {
   });
   return (
     <div>
-
       <Grid container justify="center">
         <Button variant="contained" color="secondary"
                 className={classes.newJobButton} component={Link}
