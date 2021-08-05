@@ -20,6 +20,8 @@ import Paper from '@material-ui/core/Paper';
 import KeyboardArrowDownIcon from '@material-ui/icons/KeyboardArrowDown';
 import KeyboardArrowUpIcon from '@material-ui/icons/KeyboardArrowUp';
 import LinearProgress from '@material-ui/core/LinearProgress';
+const dateFormat = require('dateformat');
+
 
 import {
   submitPrediction,
@@ -133,12 +135,10 @@ export default function Jobs(props) {
       props.id = props._id;
       const created = new Date(props.created);
       const current = new Date();
-      const diff = current-created;
-      const minutes = Math.floor((diff/1000)/60);
-      props.status=minutes>row.timer?"Finished":"Running";
-      props.timeTaken = Math.min(minutes,row.timer);
-      props.progress = props.timeTaken/row.timer*100;
-
+      const seconds = Math.floor(diff/1000);
+      props.status=seconds>row.timer*60?"Finished":"Running";
+      props.timeTaken = Math.min(seconds,row.timer*60);
+      props.progress = props.timeTaken/(row.timer*60)*100;
       function deletePrediction() {
         const predictionID = props.id;
         deletePredictionDB(auth.user.email, predictionID).then(_ => {
@@ -171,7 +171,7 @@ export default function Jobs(props) {
               {props.name}
             </TableCell>
             <TableCell align="center">{props.status}</TableCell>
-            <TableCell align="center">{props.created}</TableCell>
+            <TableCell align="center">{dateFormat(props.created, "mmmm dS, yyyy, h:MM:ss TT")}</TableCell>
             <TableCell align="center">
               {
                 (props.status === "Running") ? <div style={{display: "none"}}/>
@@ -206,12 +206,10 @@ export default function Jobs(props) {
     const created = new Date(row.created);
     const current = new Date();
     const diff = current-created;
-    const minutes = Math.floor((diff/1000)/60);
-    row.timeTaken = Math.min(minutes,row.timer);
-    row.progress = row.timeTaken/row.timer*100;
-
-
-    row.status=minutes>row.timer?"Finished":"Running";
+    const seconds = Math.floor(diff/1000);
+    row.timeTaken = Math.min(seconds,row.timer*60);
+    row.progress = row.timeTaken/(row.timer*60)*100;
+    row.status=seconds>row.timer*60?"Finished":"Running";
 
     return (
       <>
@@ -227,7 +225,7 @@ export default function Jobs(props) {
             {row.name}
           </TableCell>
           <TableCell align="right">{row.status}</TableCell>
-          <TableCell align="right">{row.created}</TableCell>
+          <TableCell align="right">{dateFormat(row.created, "mmmm dS, yyyy, h:MM:ss TT")}</TableCell>
           <TableCell align="right">{row.target_name}</TableCell>
           <TableCell align="center"><Button variant="contained"
             className={classes.jobActionButton} onClick={deleteJob} color="primary"
