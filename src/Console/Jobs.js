@@ -136,7 +136,7 @@ export default function Jobs(props) {
       const current = new Date();
       const diff = current-created;
       const seconds = Math.floor(diff/1000);
-      props.status=props.seconds>row.timer*60?"Finished":"Running";
+      props.status=seconds>row.timer*60?"Finished":"Running";
       const timeTaken = Math.min(seconds,row.timer*60);
       props.progress = timeTaken/(row.timer*60)*100;
       function deletePrediction() {
