@@ -44,8 +44,8 @@ export default function ProfileIcon(props) {
         open={open}
         onClose={handleClose}
       >
-        <MenuItem component={Link} to="/console/profile">Profile</MenuItem>
-        <MenuItem component={Link} to="/console/settings">Settings</MenuItem>
+        <MenuItem onClick={() => handleClose()} component={Link} to="/console/profile">Profile</MenuItem>
+        <MenuItem onClick={() => handleClose()} component={Link} to="/console/settings">Settings</MenuItem>
         <MenuItem onClick={props.signout}>Sign out</MenuItem>
       </Menu>
     </div>

@@ -4,11 +4,11 @@ import Button from '@material-ui/core/Button';
 import { makeStyles } from '@material-ui/core/styles';
 import TextField from '@material-ui/core/TextField';
 import LoginModal from "./LoginModal";
-import {useAuth} from "../Auth";
+import {useAuth} from "./Auth";
 import {useHistory} from "react-router-dom";
 import Divider from '@material-ui/core/Divider';
-import {useLoginModalContext} from "../LoginModalProvider";
-import "../Button.css";
+import {useLoginModalContext} from "./LoginModalProvider";
+import "../Common/Button.css";
 
 
 const useStyles = makeStyles((theme) => ({

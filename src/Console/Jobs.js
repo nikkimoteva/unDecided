@@ -2,9 +2,9 @@ import {Box, Button, makeStyles, Grid} from "@material-ui/core";
 import {Link} from "react-router-dom";
 import React, {useEffect, useState} from "react";
 
-import {getJob, getJobs, deleteJob as deleteJobDB, downloadPredictionFile} from "../common/Managers/EndpointManager";
+import {getJob, getJobs, deleteJob as deleteJobDB, downloadPredictionFile} from "../Common/Managers/EndpointManager";
 
-import {useAuth} from "../common/Auth";
+import {useAuth} from "../Authentication/Auth";
 import {useHistory} from "react-router-dom";
 import Collapse from '@material-ui/core/Collapse';
 import IconButton from '@material-ui/core/IconButton';
@@ -28,7 +28,7 @@ import {
   getPredictions,
   deletePrediction as deletePredictionDB,
   deletePredictionJobID
-} from "../common/Managers/EndpointManager";
+} from "../Common/Managers/EndpointManager";
 import DeleteIcon from '@material-ui/icons/Delete';
 
 const useRowStyles = makeStyles({

@@ -1,12 +1,12 @@
 import logo from '../../images/cropped_logo.png';
-import {AppBar, Button, ButtonGroup, Dialog, DialogTitle, Slide, Toolbar} from "@material-ui/core";
+import {AppBar, Button, ButtonGroup, Dialog, Slide, Toolbar} from "@material-ui/core";
 import {Link, useHistory} from "react-router-dom";
-import {useAuth} from "../Auth";
+import {useAuth} from "../../Authentication/Auth";
 import React from 'react';
 import {makeStyles} from '@material-ui/core/styles';
 import ProfileIcon from "./ProfileIcon";
-import {useLoginModalContext} from "../LoginModalProvider";
-import AuthOptions from "./AuthOptions";
+import {useLoginModalContext} from "../../Authentication/LoginModalProvider";
+import AuthOptions from "../../Authentication/AuthOptions";
 
 const useStyles = makeStyles(() => ({
   root: {

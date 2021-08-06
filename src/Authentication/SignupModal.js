@@ -3,10 +3,10 @@ import { useState } from 'react';
 import Button from '@material-ui/core/Button';
 import { makeStyles } from '@material-ui/core/styles';
 import TextField from '@material-ui/core/TextField';
-import "../Button.css";
-import {useAuth} from "../Auth";
+import "../Common/Button.css";
+import {useAuth} from "./Auth";
 import {useHistory} from "react-router-dom";
-import {useLoginModalContext} from "../LoginModalProvider";
+import {useLoginModalContext} from "./LoginModalProvider";
 
 
 const useStyles = makeStyles((theme) => ({

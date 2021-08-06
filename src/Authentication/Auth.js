@@ -4,10 +4,10 @@ import {
   addAuthListener,
   getAuthCookie,
   setAuthCookie
-} from "./Managers/CookieManager";
-import {validateGoogleUser} from "./Managers/EndpointManager";
-import {validateUser} from "./Managers/EndpointManager";
-import {addUser} from "./Managers/EndpointManager";
+} from "../Common/Managers/CookieManager";
+import {validateGoogleUser} from "../Common/Managers/EndpointManager";
+import {validateUser} from "../Common/Managers/EndpointManager";
+import {addUser} from "../Common/Managers/EndpointManager";
 
 // Source: https://reactrouter.com/web/example/auth-workflow
 
