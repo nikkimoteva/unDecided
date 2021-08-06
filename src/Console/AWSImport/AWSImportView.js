@@ -1,4 +1,4 @@
-import {registerAWS, listBuckets as listBucketsDB, listObjects, getObject, addAWSCred, getAWSCred} from "../../common/Managers/EndpointManager";
+import {registerAWS, listBuckets as listBucketsDB, listObjects, getObject, addAWSCred, getAWSCred} from "../../Common/Managers/EndpointManager";
 import React, {useContext, useState} from "react";
 import {DataGrid} from "@material-ui/data-grid";
 import KeyboardReturnIcon from '@material-ui/icons/KeyboardReturn';
@@ -6,7 +6,7 @@ import "./AWSImport.css";
 import AWSImportForm from "./Form";
 import {DialogContent, TextField, Typography} from "@material-ui/core";
 import {CloseModalContext} from "../JobForms/Components/FileUploadComponent";
-import {getAuthCookie} from "../../common/Managers/CookieManager";
+import {getAuthCookie} from "../../Common/Managers/CookieManager";
 import Button from "@material-ui/core/Button";
 
 const objectTableFields = [
@@ -69,11 +69,11 @@ export default function AWSImportView(props) {
           console.log("aws creds do not exist");
           return "error";
         } else {
-          return getAWSCred(cookie.email);
+          return addAWSCred(cookie.email, accessKey, secretKey);
         }
       })
       .then((res) => {
-    return registerAWS(region, accessKey, secretKey);
+      return registerAWS(region, accessKey, secretKey);
       // .then( () => {
       //   return addAWSCred(cookie.email, accessKey, secretKey);
       // })
