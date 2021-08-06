@@ -1,12 +1,12 @@
 import logo from '../../images/cropped_logo.png';
-import {AppBar, Button, ButtonGroup, Dialog, DialogTitle, Slide, Toolbar} from "@material-ui/core";
+import {AppBar, Button, ButtonGroup, Dialog, Slide, Toolbar} from "@material-ui/core";
 import {Link, useHistory} from "react-router-dom";
-import {useAuth} from "../Auth";
+import {useAuth} from "../../Authentication/Auth";
 import React from 'react';
 import {makeStyles} from '@material-ui/core/styles';
 import ProfileIcon from "./ProfileIcon";
-import {useLoginModalContext} from "../LoginModalProvider";
-import AuthOptions from "./AuthOptions";
+import {useLoginModalContext} from "../../Authentication/LoginModalProvider";
+import AuthOptions from "../../Authentication/AuthOptions";
 
 const useStyles = makeStyles(() => ({
   root: {
@@ -41,19 +41,12 @@ export default function Header() {
     setLoginModal(false);
   }
 
-  function login(credentials) {
-    auth.signin(credentials)
-      .then(() => {
-        history.push('/console');
-      });
-  }
-
   function logout() {
     auth.signout();
     history.push('/'); // redirect to main page
   }
 
-  const headerButtons = (auth.user === "")
+  const headerButtons = (auth.user === undefined || auth.user === "")
     ? (
       <ButtonGroup variant="text" color="inherit" className={classes.toolbarButtons} size="large">
       <Button component={Link} to="/contact">Contact Us</Button>

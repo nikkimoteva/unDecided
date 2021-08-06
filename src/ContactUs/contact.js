@@ -5,7 +5,7 @@ import Button from '@material-ui/core/Button';
 import {contactus_user, contactus_service_id, contactus_template_id} from "../SecretHandler";
 import { makeStyles } from '@material-ui/core/styles';
 import TextField from '@material-ui/core/TextField';
-import "../common/Button.css";
+import "../Common/Button.css";
 
 
 const useStyles = makeStyles((theme) => ({
@@ -76,13 +76,6 @@ export default function ContactUs() {
         .catch((err) => {
           console.log("FAILED...", err);
         });
-
-      // setToSend({
-      //   from_name: "",
-      //   subject: "",
-      //   message: "",
-      //   email: "",
-      // });
     }
   }
   

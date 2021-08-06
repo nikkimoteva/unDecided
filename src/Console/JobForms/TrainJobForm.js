@@ -1,8 +1,8 @@
 import React, {useState} from "react";
 import {makeStyles, Typography} from "@material-ui/core";
-import {submitJob} from "../../common/Managers/EndpointManager";
+import {submitJob} from "../../Common/Managers/EndpointManager";
 import {useHistory} from "react-router-dom";
-import {useAuth} from "../../common/Auth.js";
+import {useAuth} from "../../Authentication/Auth.js";
 import AWSImportView from "../AWSImport/AWSImportView";
 import JobNameComponent from "./Components/JobNameComponent";
 import JobTimeComponent from "./Components/JobTimeComponent";
@@ -10,7 +10,7 @@ import TargetColumnComponent from "./Components/TargetColumnComponent";
 import SubmitButton from "./Components/SubmitButton";
 import {FileUploadComponent} from "./Components/FileUploadComponent";
 import DataImportStatusMsg from "./Components/DataImportStatusMsg";
-import LoadingIcon from "../../common/LoadingIcon";
+import LoadingIcon from "../../Common/LoadingIcon";
 
 const useStyles = makeStyles((theme) => ({
   root: {

@@ -1,14 +1,14 @@
 import React, {useState} from "react";
 import {makeStyles, Typography} from "@material-ui/core";
 import {useHistory,useLocation} from "react-router-dom";
-import {useAuth} from "../../common/Auth.js";
+import {useAuth} from "../../Authentication/Auth.js";
 import AWSImportView from "../AWSImport/AWSImportView";
 import JobNameComponent from "./Components/JobNameComponent";
 import SubmitButton from "./Components/SubmitButton";
 import {FileUploadComponent} from "./Components/FileUploadComponent";
 import DataImportStatusMsg from "./Components/DataImportStatusMsg";
-import LoadingIcon from "../../common/LoadingIcon";
-import {submitPrediction} from "../../common/Managers/EndpointManager";
+import LoadingIcon from "../../Common/LoadingIcon";
+import {submitPrediction} from "../../Common/Managers/EndpointManager";
 
 
 const useStyles = makeStyles((theme) => ({
