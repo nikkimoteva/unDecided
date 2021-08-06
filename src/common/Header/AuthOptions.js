@@ -51,7 +51,7 @@ export default function AuthOptions() {
           {openSignUp ? <ExpandLess /> : <ExpandMore />}
         </ListItem>
           <Divider/>
-        <Collapse in={openSignUp} timeout="auto" unmountOnExit>
+        <Collapse in={openSignUp} timeout="auto">
           <List component="div" disablePadding>
             <ListItem button className={classes.nested}>
                 <SignupModal />
@@ -66,7 +66,7 @@ export default function AuthOptions() {
           <ListItemText primary="Login" />
           {openLogIn ? <ExpandLess /> : <ExpandMore />}
         </ListItem>
-        <Collapse in={openLogIn} timeout="auto" unmountOnExit>
+        <Collapse in={openLogIn} timeout="auto">
           <Divider/>
           <List component="div" disablePadding>
             <ListItem button className={classes.nested}>
