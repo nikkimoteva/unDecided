@@ -85,7 +85,17 @@ export default function Jobs(props) {
   }, []);
 
   
-
+  function ProgressBar(props){
+      console.log(props.progress);
+      console.log(props.status);
+      return (
+        <div>
+          {props.status==="Running"&&
+            <LinearProgress variant="determinate" value={props.progress} />
+          }
+        </div>
+      );
+    }
 
   function Row(props) {
 
@@ -187,7 +197,7 @@ export default function Jobs(props) {
             </TableCell>
           </TableRow>
           <TableCell style={{paddingBottom: 0, paddingTop: 0}} colSpan={3}>
-            {props.status!=="Finished" && <LinearProgress variant="determinate" value={props.progress} />}
+            <ProgressBar status={props.status}progress={props.progress}/>
           </TableCell>
         </>
 
@@ -245,8 +255,7 @@ export default function Jobs(props) {
           </TableCell>
         </TableRow>
         <TableCell style={{paddingBottom: 0, paddingTop: 0}} colSpan={6}>
-          {row.status!=="Finished"&&
-            <LinearProgress variant="determinate" value={row.progress} />}
+          <ProgressBar status={row.status} progress={row.progress}/>
         </TableCell>
         
         <TableRow>
