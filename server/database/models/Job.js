@@ -13,10 +13,10 @@ const jobSchema = new mongoose.Schema({
     type: String,
     // required: true
   },
-  status: {
+  status: { // One of ['Queued', 'Running', 'Successful', 'Failed']
     type: String,
     required: true,
-    default: "Running"
+    default: "Queued"
   },
   headers:{
     type: Array,

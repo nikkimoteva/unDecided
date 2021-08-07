@@ -51,6 +51,7 @@ router.post("/submitTrainJob", (req, res) => {
   const train_path = borg_dataset_directory + file_name + "/train.csv";
   const local_path = "training/" + file_name + ".csv";
   const targetPath = slurm_command_dataset_path + file_name + '/' + 'train.csv';
+  const callback = `https://ensemble-automl.herokuapp.com/api/jobs/bbmlCallback/${file_name}/training`;
 
   const job = new JobModel({
     name: jobName,
@@ -68,7 +69,8 @@ router.post("/submitTrainJob", (req, res) => {
   storeCSV(dataset, local_path)
     .then(() => getUserId(id_token))
     .then(user_email => {
-      trainString = trainPipeline(targetPath, targetColumnName, user_email, file_name, maxJobTime, jobName);
+      trainString = trainPipeline(targetPath, targetColumnName, user_email, file_name, maxJobTime, jobName, callback);
+      console.log(trainString);
     })
     .then(() => connect())
     .then(borg => {
@@ -123,11 +125,13 @@ router.post("/submitPrediction", (req, res) => {
       const folder_path = slurm_command_dataset_path + job.fileHash;
       const test_path = folder_path + '/' + test_file_name + '.csv';
       const local_path = `predictions/${job.fileHash}.csv`;
-      const predictString = runPredict(test_path, job.fileHash, job.timer, job.target_name, email, job.name);
+      const callback = `https://ensemble-automl.herokuapp.com/api/bbmlCallback/${job.fileHash}/prediction`;
+      const predictString = runPredict(test_path, job.fileHash, job.timer, job.target_name, email, job.name, callback);
 
       return storeCSV(dataset, local_path)
         .then(() => connect())
         .then(borg => {
+          console.log(predictString);
             return borg.putFile(local_path, test_path)
               .then(() => borg.exec(predictString, []));
           })
@@ -150,8 +154,7 @@ router.delete("/deletePrediction", (req, res) => {
 router.post("/downloadPrediction", (req, res) => {
   const id_token = req.body.id_token;
   const predictionID = req.body.predictionID;
-  const localPath = "../temp/predictionFile.csv";
-
+  const localPath = "predictions/predictionFile.csv";
   getUserId(id_token)
     .then(userToken => {
       return PredictionModel.findOne({user: userToken, _id: predictionID})
@@ -160,12 +163,15 @@ router.post("/downloadPrediction", (req, res) => {
     .then(trainJob => {
       const fileHash = trainJob.fileHash;
       const timer = trainJob.timer;
-      const seed = 's0';
-      const remotePath = `ensemble_squared_2/ensemble_squared/sessions/${fileHash}/ensemble/${timer}_${seed}/voting/full_ensemblesquared.csv`;
+      const seed = 0;
+      const remotePath = `${slurm_command_dataset_path}../sessions/${fileHash}/ensemble/t${timer}_s${seed}/voting/full_ensemblesquared.csv`;
+      console.log(remotePath);
       return connect()
-        .then(borg => borg.getFile(localPath, remotePath));
+        .then(borg => borg.getFile(localPath, remotePath))
+        .then(() => console.log("Successfully downloaded prediction file"))
+        .catch(() => res.error());
     })
-    .then(() => res.attachment(localPath))// TODO modify to res.download
+    .then(() => res.download(localPath))
     .catch(err => errorHandler(err, res));
 });
 
@@ -179,8 +185,18 @@ router.delete("/deletePredictionJobID", (req, res) => {
     .catch(err => errorHandler(err, res));
 });
 
-router.patch('/bbmlCallback/:jobID', (req, res) => {
-  console.log(req);
+router.patch('/bbmlCallback/:jobID/:type', (req, res) => {
+  console.log(req.body);
+  const jobID = req.params.jobID;
+  const type = req.params.type;
+  const newStatus = (req.body.isSuccess) ? "Successful" : "Failed";
+  if (type === "training") {
+    JobModel.updateOne({_id: jobID}, {status: newStatus});
+  } else if (type === "prediction") {
+    PredictionModel.updateOne({jobID: jobID}, {status: newStatus});
+  } else {
+    res.error();
+  }
   res.end();
 });
 

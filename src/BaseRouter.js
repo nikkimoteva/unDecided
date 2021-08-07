@@ -5,7 +5,7 @@ import {PrivateRoute} from "./Authentication/Auth";
 import DocsRouter from "./Docs/DocsRouter";
 import Demo from "./Demo/Demo";
 import Landing from "./Landing Page/Landing";
-import ContactUs from "./ContactUs/Contact";
+import ContactUs from "./ContactUs/contact";
 import React, {lazy, Suspense} from "react";
 
 export default function BaseRouter() {
