@@ -68,7 +68,7 @@ export default function PredJobForm() {
 
   // converts array of fields into array of json objects
   function updateCSVState(csvString) {
-    const header = csvString.split('\n')[0];
+    const header = csvString.split('/\\r?\\n/')[0];
     const fields = header.split(',');
 
     if (!isEqualArrays(fields, location.state.headers)) {
