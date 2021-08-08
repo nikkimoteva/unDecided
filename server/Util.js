@@ -115,7 +115,7 @@ module.exports = {
   },
 
   errorHandler: function (err, res) {
-    console.log(err);
+    console.error(err);
     res.status(400).send(err);
   },
 
@@ -153,19 +153,9 @@ module.exports = {
   },
 
   parseSqueue: function(stdOut, jobID) {
-    if (!stdOut) {
-      return {
-        isJobDone: true, 
-        days: 0, 
-        hours: 0, 
-        minutes: 0,
-        status: "done" };
-    }
-    
-    if (stdOut.includes(String(jobID))) {
-
+    if (stdOut && stdOut.includes(String(jobID))) {
       const idx = stdOut.search(jobID) + 37;  // time column starts here, may have trailing white space
-      const end_idx = idx + 13;  // ends here, may have trailing white space 
+      const end_idx = idx + 13;  // ends here, may have trailing white space
       const status = stdOut.slice(stdOut.search(jobID) + 34, (stdOut.search(jobID) + 37)).trim();
       const time_string = stdOut.slice(idx, end_idx).trim();
 
@@ -175,28 +165,19 @@ module.exports = {
       if (idx_hr !== -1) {
         num_days = time_string.slice(0, idx_hr);
       } else {
-        num_days = 0; 
+        num_days = 0;
       }
-      
+
       const str_without_days = time_string.slice(time_string.search('-') + 1, time_string.length);
       const num_hours = str_without_days.slice(0, str_without_days.search(':'));
 
       const str_without_hours = str_without_days.slice(str_without_days.search(':') + 1, str_without_days.length);
       const num_minutes = str_without_hours.slice(0, str_without_hours.search(':'));
 
-      return {
-        isJobDone: false, 
-        days: num_days, 
-        hours: num_hours, 
-        minutes: num_minutes,
-        status: status };
+      const time_elapsed = parseInt(num_minutes) + parseInt(num_hours) * 60 + parseInt(num_days) * 1440;
+      return {time_elapsed, status};
     } else {
-      return {
-        isJobDone: true, 
-        days: 0, 
-        hours: 0, 
-        minutes: 0,
-        status: "done" };
+      return null;
     }
   }
 };

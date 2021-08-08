@@ -11,16 +11,16 @@ const jobSchema = new mongoose.Schema({
   },
   fileHash: {
     type: String,
-    // required: true
+    // required: true // TODO: Should we make this required
   },
-  status: { // One of ['Queued', 'Running', 'Successful', 'Failed']
+  status: {
     type: String,
-    required: true,
+    enum: ['Queued', 'Running', 'Successful', 'Failed'],
     default: "Queued"
   },
   headers:{
     type: Array,
-    // required: true
+    // required: true // TODO make required
   },
   target_name: {
     type: String
@@ -31,13 +31,13 @@ const jobSchema = new mongoose.Schema({
   },
   target_column: {
     type: Number,
-    default : 0
+    default : 0 // TODO: IS this a good idea
   },
   created: {
     type: Date,
     default: Date.now()
   },
-  job_id: {
+  time_elapsed: {
     type: Number,
     default: 0
   }
