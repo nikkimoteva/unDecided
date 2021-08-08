@@ -151,4 +151,52 @@ module.exports = {
         .catch(err => reject(err));
     });
   },
+
+  parseSqueue: function(stdOut, jobID) {
+    if (!stdOut) {
+      return {
+        isJobDone: true, 
+        days: 0, 
+        hours: 0, 
+        minutes: 0,
+        status: "done" };
+    }
+    
+    if (stdOut.includes(String(jobID))) {
+
+      const idx = stdOut.search(jobID) + 37;  // time column starts here, may have trailing white space
+      const end_idx = idx + 13;  // ends here, may have trailing white space 
+      const status = stdOut.slice(stdOut.search(jobID) + 34, (stdOut.search(jobID) + 37)).trim();
+      const time_string = stdOut.slice(idx, end_idx).trim();
+
+      let num_days;
+      const idx_hr = time_string.search('-');
+
+      if (idx_hr !== -1) {
+        num_days = time_string.slice(0, idx_hr);
+      } else {
+        num_days = 0; 
+      }
+      
+      const str_without_days = time_string.slice(time_string.search('-') + 1, time_string.length);
+      const num_hours = str_without_days.slice(0, str_without_days.search(':'));
+
+      const str_without_hours = str_without_days.slice(str_without_days.search(':') + 1, str_without_days.length);
+      const num_minutes = str_without_hours.slice(0, str_without_hours.search(':'));
+
+      return {
+        isJobDone: false, 
+        days: num_days, 
+        hours: num_hours, 
+        minutes: num_minutes,
+        status: status };
+    } else {
+      return {
+        isJobDone: true, 
+        days: 0, 
+        hours: 0, 
+        minutes: 0,
+        status: "done" };
+    }
+  }
 };

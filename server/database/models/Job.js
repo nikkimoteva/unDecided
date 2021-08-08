@@ -36,6 +36,10 @@ const jobSchema = new mongoose.Schema({
   created: {
     type: Date,
     default: Date.now()
+  },
+  job_id: {
+    type: Number,
+    default: 0
   }
 });
 

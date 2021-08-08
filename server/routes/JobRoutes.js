@@ -2,7 +2,7 @@ const express = require('express');
 const JobModel = require("../database/models/Job");
 const PredictionModel = require("../database/models/Prediction");
 const router = express.Router();
-const {trainPipeline, csvToArrays, makeid, runPredict, errorHandler, getUserId, connect} = require("../Util");
+const {trainPipeline, csvToArrays, makeid, runPredict, errorHandler, getUserId, connect, parseSqueue} = require("../Util");
 const {storeCSV, removeCSV} = require("../FileManager");
 const {borg_dataset_directory, slurm_command_dataset_path} = require('../../src/SecretHandler');
 const {v4: uuidv4} = require('uuid');
@@ -46,6 +46,7 @@ router.delete("/deleteJob", (req, res) => {
 router.post("/submitTrainJob", (req, res) => {
   const {id_token, jobName, maxJobTime, targetColumnName, dataset, header} = req.body;
   const targetColumn = header.indexOf(targetColumnName);
+  const _targetColumnName = targetColumnName.trim();
 
   const file_name = uuidv4();
   const train_path = borg_dataset_directory + file_name + "/train.csv";
@@ -53,33 +54,37 @@ router.post("/submitTrainJob", (req, res) => {
   const targetPath = slurm_command_dataset_path + file_name + '/' + 'train.csv';
   const callback = `https://ensemble-automl.herokuapp.com/api/jobs/bbmlCallback/${file_name}/training`;
 
-  const job = new JobModel({
-    name: jobName,
-    user: id_token,
-    fileHash: file_name,
-    target_name: targetColumnName,
-    target_column: targetColumn,
-    timer: maxJobTime,
-    headers: header,
-    created: Date()
-  });
   let trainString;
 
   // if (jobName.length === 0) jobName = "auto generated nickname";
   storeCSV(dataset, local_path)
     .then(() => getUserId(id_token))
     .then(user_email => {
-      trainString = trainPipeline(targetPath, targetColumnName, user_email, file_name, maxJobTime, jobName, callback);
+      trainString = trainPipeline(targetPath, _targetColumnName, user_email, file_name, maxJobTime, jobName, callback);
       console.log(trainString);
     })
     .then(() => connect())
     .then(borg => {
       console.log("Success connecting to borg");
       return borg.putFile(local_path, train_path)
-        .then(() => borg.exec(trainString, []));
+        .then(() => borg.exec(trainString, []))
+        .then(stdOut => {
+          const job = new JobModel({
+            name: jobName,
+            user: id_token,
+            fileHash: file_name,
+            target_name: _targetColumnName,
+            target_column: targetColumn,
+            timer: maxJobTime,
+            headers: header,
+            created: Date(),
+            job_id: stdOut.slice(stdOut.length - 6, stdOut.length).trim()
+          });
+          console.log(job.job_id);
+          return job.save();
+        });
     })
     .then(() => removeCSV(local_path))
-    .then(() => job.save())
     .then(msg => res.send({borg_stdout: msg, fileHash: file_name}))
     .catch(err => errorHandler(err, res));
 });
@@ -200,6 +205,32 @@ router.patch('/bbmlCallback/:jobID/:type', (req, res) => {
   res.end();
 });
 
+router.post('/allJobs', async (req, res) => {
+  const id_token = req.userID;
+  const jobIDs = await JobModel.find({
+    $or: [
+      {status: "Queued"},
+      {status: "Running"}
+    ],
+    // user: id_token
+  }, {job_id: 1});
+
+  const borg = await connect();
+  for (const jobID of jobIDs) {
+    const currJobID = jobID.job_id;
+    const msg = await borg.execCommand(`/opt/slurm/bin/squeue -j ${currJobID}`);
+    const job_status = parseSqueue(msg.stdOut, currJobID).status;
+
+    if (job_status === 'R' && jobID.status === "Queued") {
+      JobModel.updateOne({job_id: currJobID}, {status: "Running"});
+    }
+    if (job_status === "done") {
+      JobModel.updateOne({job_id: currJobID}, {status: "Successful"});
+    }
+  }
+  res.status(200);
+});
+
 router.get('/isJobDone', (req, res) => {
   const jobID = req.body.jobID;
 
@@ -208,44 +239,8 @@ router.get('/isJobDone', (req, res) => {
       return borg.exec('/opt/slurm/bin/squeue -j ' + String(jobID), []);
     })
     .then(stdOut => {
-      if (stdOut.includes(String(jobID))) {
-
-        const idx = stdOut.search(jobID) + 37;  // time column starts here, may have trailing white space
-        const end_idx = idx + 13;  // ends here, may have trailing white space 
-        const status = stdOut.slice(stdOut.search(jobID) + 34, (stdOut.search(jobID) + 37)).trim();
-        const time_string = stdOut.slice(idx, end_idx).trim();
-
-        let num_days;
-        const idx_hr = time_string.search('-');
-
-        if (idx_hr !== -1) {
-          num_days = time_string.slice(0, idx_hr);
-        } else {
-          num_days = 0; 
-        }
-        
-        const str_without_days = time_string.slice(time_string.search('-') + 1, time_string.length);
-        const num_hours = str_without_days.slice(0, str_without_days.search(':'));
-
-        const str_without_hours = str_without_days.slice(str_without_days.search(':') + 1, str_without_days.length);
-        const num_minutes = str_without_hours.slice(0, str_without_hours.search(':'));
-
-        res.send({
-          isJobDone: false, 
-          days: num_days, 
-          hours: num_hours, 
-          minutes: num_minutes,
-          status: status
-        });
-      } else {
-        res.send({
-          isJobDone: true, 
-          days: 0, 
-          hours: 0, 
-          minutes: 0,
-          status: "done"
-        });
-      }
+      const time_status_json = parseSqueue(stdOut, jobID);
+      res.send(time_status_json);
     })
     .catch(err => {
       errorHandler(err);
