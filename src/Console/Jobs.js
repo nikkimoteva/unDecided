@@ -111,7 +111,6 @@ export default function Jobs(props) {
         getJob(auth.user.email,row.id)
         .then(res => {
           const job = res.data[0];
-          console.log(job);
           job.id = job._id;
           setRow(job);
         });
@@ -143,14 +142,10 @@ export default function Jobs(props) {
 
     function SubRow(props) {
       props.id = props._id;
-      const created = new Date(props.created);
-      const current = new Date();
-      const diff = current-created;
-      const seconds = Math.floor(diff/1000);
-      // props.status=seconds>row.timer*60?"Finished":"Running";
-      const timeTaken = Math.min(seconds,row.timer*60);
-      console.log(props.time_elapsed);
-      props.progress = props.time_elapsed/(row.timer*60)*100;
+      const timeTaken = Math.min(props.time_elapsed,row.timer+5);
+      props.progress = timeTaken/(row.timer+5)*100;
+      // console.log("pred");
+      // console.log(props);
       function deletePrediction() {
         const predictionID = props.id;
         deletePredictionDB(auth.user.email, predictionID).then(_ => {
@@ -224,15 +219,13 @@ export default function Jobs(props) {
 
     }
 
-    const created = new Date(row.created);
-    const current = new Date();
-    const diff = current-created;
-    const seconds = Math.floor(diff/1000);
-    row.timeTaken = Math.min(seconds,row.timer*60);
-    console.log(row.time_elapsed);
-    row.progress = row.time_elapsed/(row.timer*60)*100;
-    // row.status=seconds>row.timer*60?"Finished":"Running";
-
+    const timeTaken = Math.min(row.time_elapsed,row.timer+5);
+    row.progress = timeTaken/(row.timer+5)*100;
+    // console.log("job");
+    // console.log(row);
+    // if(row.progress===100){
+    //   row.status="Successful";
+    // }
     return (
       <>
 

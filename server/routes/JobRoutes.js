@@ -9,8 +9,6 @@ const {v4: uuidv4} = require('uuid');
 const mongoose = require('mongoose');
 
 async function updateModel(model, jobsToUpdate) {
-  console.log("updating");
-  console.log(jobsToUpdate);
   const borg = await connect();
   for (const job of jobsToUpdate) {
     // Prediction jobs need to get file hash from associated training job
