@@ -1,7 +1,7 @@
 require("../database/Database");
 const bcrypt = require('bcrypt');
 const UserModel = require('../database/models/User');
-const CryptoJS = require("crypto-js");
+// const CryptoJS = require("crypto-js");
 const saltRounds = 10;
 const cryptoSalt = "qe#7$$9djn";
 
