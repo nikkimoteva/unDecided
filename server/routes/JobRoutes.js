@@ -9,11 +9,15 @@ const {v4: uuidv4} = require('uuid');
 const mongoose = require('mongoose');
 
 async function updateModel(model, jobsToUpdate) {
+  console.log("updating");
+  console.log(jobsToUpdate);
   const borg = await connect();
   for (const job of jobsToUpdate) {
     const currName = job.fileHash;
     const msg = await borg.execCommand(`/opt/slurm/bin/squeue -n ${currName}`);
     const squeueOut = parseSqueue(msg.stdOut, currName);
+    console.log("squeueOut");
+    console.log(squeueOut);
     // This usually occurs if the callback had failed to notify us, which can happen on local, or the job has not started running yet
     if (squeueOut === null) continue;
     // Theoretically we don't need to check; only the currently running job has a valid file name
@@ -38,12 +42,13 @@ router.post("/", async (req, res) => {
   res.json(jobs);
 });
 
-router.post("/job", (req, res) => {
+router.post("/job", async (req, res) => {
   const id_token = req.body.id_token;
   const jobID = req.body.jobID;
-  JobModel.find({user: id_token, _id: jobID})
-    .then(job => res.json(job))
-    .catch(err => errorHandler(err, res));
+  const jobsToUpdate = await JobModel.find({user: id_token, _id: jobID});
+  await updateModel(JobModel, jobsToUpdate);
+  const job = await JobModel.find({user: id_token, _id: jobID});
+  res.json(job);
 });
 
 router.delete("/deleteJob", (req, res) => {

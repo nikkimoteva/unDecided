@@ -111,10 +111,11 @@ export default function Jobs(props) {
         getJob(auth.user.email,row.id)
         .then(res => {
           const job = res.data[0];
+          console.log(job);
           job.id = job._id;
           setRow(job);
         });
-      }, 5000);
+      }, 30000);
       return () => clearInterval(intervalId); //This is important
     });
     
@@ -146,8 +147,9 @@ export default function Jobs(props) {
       const current = new Date();
       const diff = current-created;
       const seconds = Math.floor(diff/1000);
-      props.status=seconds>row.timer*60?"Finished":"Running";
+      // props.status=seconds>row.timer*60?"Finished":"Running";
       const timeTaken = Math.min(seconds,row.timer*60);
+      console.log(props.time_elapsed);
       props.progress = timeTaken/(row.timer*60)*100;
       function deletePrediction() {
         const predictionID = props.id;
@@ -192,10 +194,11 @@ export default function Jobs(props) {
             <TableCell align="center">{dateFormat(props.created, "mmmm dS, yyyy, h:MM:ss TT")}</TableCell>
             <TableCell align="center">
               {
-                (props.status === "Running") ? <div style={{display: "none"}}/>
-                : <Button variant="contained" className={classes.jobActionButton}
+                (props.status === "Successful") ? 
+                 <Button variant="contained" className={classes.jobActionButton}
                           onClick={downloadPrediction} color="primary" startIcon={<GetAppIcon/>}
-                  />
+                 />
+                :<div style={{display: "none"}}/>
               }
               <Button variant="contained"
                       className={classes.jobActionButton} onClick={deletePrediction} color="primary"
@@ -226,8 +229,9 @@ export default function Jobs(props) {
     const diff = current-created;
     const seconds = Math.floor(diff/1000);
     row.timeTaken = Math.min(seconds,row.timer*60);
+    console.log(row.time_elapsed);
     row.progress = row.timeTaken/(row.timer*60)*100;
-    row.status=seconds>row.timer*60?"Finished":"Running";
+    // row.status=seconds>row.timer*60?"Finished":"Running";
 
     return (
       <>
@@ -256,7 +260,7 @@ export default function Jobs(props) {
             className={classes.jobActionButton}
             onClick={newPrediction}
             name={row.id}
-            disabled={row.status === "Running"}
+            disabled={row.status !=="Successful"}
           >
             New Prediction
           </Button>
