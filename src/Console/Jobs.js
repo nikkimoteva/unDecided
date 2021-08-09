@@ -150,7 +150,7 @@ export default function Jobs(props) {
       // props.status=seconds>row.timer*60?"Finished":"Running";
       const timeTaken = Math.min(seconds,row.timer*60);
       console.log(props.time_elapsed);
-      props.progress = time_elapsed/(row.timer*60)*100;
+      props.progress = props.time_elapsed/(row.timer*60)*100;
       function deletePrediction() {
         const predictionID = props.id;
         deletePredictionDB(auth.user.email, predictionID).then(_ => {
