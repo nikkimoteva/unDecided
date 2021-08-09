@@ -13,7 +13,7 @@ async function updateModel(model, jobsToUpdate) {
   for (const job of jobsToUpdate) {
     const currName = job.fileHash;
     const msg = await borg.execCommand(`/opt/slurm/bin/squeue -n ${currName}`);
-    const squeueOut = parseSqueue(msg.stdOut, currName);
+    const squeueOut = parseSqueue(msg.stdout, currName);
     // This usually occurs if the callback had failed to notify us, which can happen on local, or the job has not started running yet
     if (squeueOut === null) continue;
     // Theoretically we don't need to check; only the currently running job has a valid file name
