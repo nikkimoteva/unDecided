@@ -8,7 +8,7 @@ const {getUserId} = require("../Util");
 
 router.post("/", (req, res) => {
   return UserAuth.validatePassword(req.body.email, req.body.password)
-    .then((userData) => {
+    .then((userData) => { // TODO: userData may be null. Are we handling that properly?
       if (!userData) {
         return res.sendStatus(400);
       } else {
