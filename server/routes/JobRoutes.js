@@ -11,7 +11,9 @@ const mongoose = require('mongoose');
 async function updateModel(model, jobsToUpdate) {
   const borg = await connect();
   for (const job of jobsToUpdate) {
-    const currName = job.fileHash;
+    // Prediction jobs need to get file hash from associated training job
+    const trainJob = (model === PredictionModel) ? await JobModel.findOne({_id: job.jobID}).exec() : job;
+    const currName = trainJob.fileHash;
     const msg = await borg.execCommand(`/opt/slurm/bin/squeue -n ${currName}`);
     const squeueOut = parseSqueue(msg.stdout, currName);
     // This usually occurs if the callback had failed to notify us, which can happen on local, or the job has not started running yet
@@ -112,7 +114,7 @@ router.post("/predictions", async (req, res) => {
     jobID: trainJobID
   });
 
-  await updateModel(JobModel, jobsToUpdate);
+  await updateModel(PredictionModel, jobsToUpdate);
   const predictions = await PredictionModel.find({user: id_token, jobID: trainJobID});
   res.json(predictions);
 });
@@ -122,7 +124,7 @@ router.post("/submitPrediction", async (req, res) => {
   const test_file_name = makeid(4);
   const user_email = await getUserId(id_token);
   const trainJobID = mongoose.Types.ObjectId(jobID);
-  const trainJob = await JobModel.findById(trainJobID);
+  const trainJob = await JobModel.findById(trainJobID).exec();
 
   const prediction = new PredictionModel({
     name: predictionName,
