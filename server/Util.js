@@ -25,85 +25,85 @@ function forwardOutPromise(conn1, conn2) {
 
 module.exports = {
 
-    csvToArrays: function (fileContent) {
-        return new Promise((resolve, reject) => {
-            csv.toArrays(fileContent, {}, (err, data) => {
-                if (err) {
-                    reject(err);
-                }
-                resolve(data);
-            });
-        });
-    },
+  csvToArrays: function (fileContent) {
+    return new Promise((resolve, reject) => {
+      csv.toArrays(fileContent, {}, (err, data) => {
+        if (err) {
+          reject(err);
+        }
+        resolve(data);
+      });
+    });
+  },
 
-    csvToObject: function (fileContent) {
-        return new Promise((resolve, reject) => {
-            csv.toObjects(fileContent, {}, (err, data) => {
-                if (err) {
-                    reject(err);
-                }
-                resolve(data);
-            });
-        });
-    },
+  csvToObject: function (fileContent) {
+    return new Promise((resolve, reject) => {
+      csv.toObjects(fileContent, {}, (err, data) => {
+        if (err) {
+          reject(err);
+        }
+        resolve(data);
+      });
+    });
+  },
 
-    arraysToCsv: function (arr) {
-        return new Promise((resolve, reject) => {
-            csv.fromArrays(arr, {}, (err, result) => {
-                if (err) {
-                    reject(err);
-                }
-                resolve(result);
-            });
-        });
-    },
+  arraysToCsv: function (arr) {
+    return new Promise((resolve, reject) => {
+      csv.fromArrays(arr, {}, (err, result) => {
+        if (err) {
+          reject(err);
+        }
+        resolve(result);
+      });
+    });
+  },
 
-    objectsToCsv: function (arr) {
-        return new Promise((resolve, reject) => {
-            csv.fromObjects(arr, {}, (err, result) => {
-                if (err) {
-                    reject(err);
-                }
-                resolve(result);
-            });
-        });
-    },
+  objectsToCsv: function (arr) {
+    return new Promise((resolve, reject) => {
+      csv.fromObjects(arr, {}, (err, result) => {
+        if (err) {
+          reject(err);
+        }
+        resolve(result);
+      });
+    });
+  },
 
-    readFilePromise: function (filePath) {
-        return new Promise((resolve, reject) => {
-            fs.readFile(filePath, 'UTF-8', (err, fileContent) => {
-                if (err) {
-                    reject(err);
-                }
-                resolve(fileContent);
-            });
-        });
-    },
+  readFilePromise: function (filePath) {
+    return new Promise((resolve, reject) => {
+      fs.readFile(filePath, 'UTF-8', (err, fileContent) => {
+        if (err) {
+          reject(err);
+        }
+        resolve(fileContent);
+      });
+    });
+  },
 
-    runPredict: function (csv_file_name, job_id, timer, target_name, email, job_name, callback="") {
-        return `/opt/slurm/bin/sbatch --partition=blackboxml --nodelist=chicago\
+  runPredict: function (csv_file_name, job_id, timer, target_name, email, job_name, callback = "") {
+    return `/opt/slurm/bin/sbatch --partition=blackboxml --nodelist=chicago\
        --error=/ubc/cs/research/plai-scratch/BlackBoxML/error_predict_eml.err\
        --output=/ubc/cs/research/plai-scratch/BlackBoxML/out_predict_eml.out\
        /ubc/cs/research/plai-scratch/BlackBoxML/bbml-backend-3/ensemble_squared_2/ensemble_squared/run-client-produce-bm.sh\
         ${job_id} '${job_name}' ${csv_file_name} ${timer} '${target_name}' ${email} '${callback}'`;
-    },
+  },
 
-    trainPipeline: function (csv_file_name, target_name, email, job_id, timer, job_name, callback="") {
-        return `/opt/slurm/bin/sbatch --partition=blackboxml --nodelist=chicago\
+  trainPipeline: function (csv_file_name, target_name, email, job_id, timer, job_name, callback = "") {
+    return `/opt/slurm/bin/sbatch --partition=blackboxml --nodelist=chicago\
         --error=/ubc/cs/research/plai-scratch/BlackBoxML/error_eml.err\
         --output=/ubc/cs/research/plai-scratch/BlackBoxML/out_eml.out\
         /ubc/cs/research/plai-scratch/BlackBoxML/bbml-backend-3/ensemble_squared_2/ensemble_squared/run-client-search-bm.sh \
         ${job_id} '${job_name}' ${csv_file_name} ${timer} '${target_name}' ${email} '${callback}'`;
-    },
+  },
 
-  getUserId: function(id_token) {
+  getUserId: function (id_token) {
     // TODO
     return Promise.resolve(id_token);
   },
 
   forwardOutPromise: forwardOutPromise,
 
-  connect: function() {
+  connect: function () {
     return ssh1.connect({
       host: 'remote.cs.ubc.ca',
       username: ssh_user,
@@ -170,10 +170,18 @@ module.exports = {
       }
 
       const str_without_days = time_string.slice(time_string.search('-') + 1, time_string.length);
-      const num_hours = str_without_days.slice(0, str_without_days.search(':'));
 
-      const str_without_hours = str_without_days.slice(str_without_days.search(':') + 1, str_without_days.length);
-      const num_minutes = str_without_hours.slice(0, str_without_hours.search(':'));
+      let num_hours;
+      let num_minutes;
+
+      if (str_without_days.length > 6) {
+        num_hours = str_without_days.slice(0, str_without_days.search(':'));
+        const str_without_hours = str_without_days.slice(str_without_days.search(':') + 1, str_without_days.length);
+        num_minutes = str_without_hours.slice(0, str_without_hours.search(':'));
+      } else {
+        num_hours = 0;
+        num_minutes = str_without_days.slice(0, str_without_days.search(':'));
+      }
 
       const time_elapsed = parseInt(num_minutes) + parseInt(num_hours) * 60 + parseInt(num_days) * 1440;
       return {time_elapsed, status};
