@@ -153,7 +153,7 @@ module.exports = {
   },
 
   parseSqueue: function(stdOut, fileHash) {
-    const first_part_of_hash = fileHash.split('-')[0];
+    const first_part_of_hash = fileHash.slice(0, 9);
     if (stdOut && stdOut.includes(first_part_of_hash)) {
       const idx = stdOut.search(first_part_of_hash) + 20;  // time column starts here, may have trailing white space
       const end_idx = idx + 13;  // ends here, may have trailing white space
