@@ -3,11 +3,12 @@ import React, {useContext, useState} from "react";
 import {DataGrid} from "@material-ui/data-grid";
 import KeyboardReturnIcon from '@material-ui/icons/KeyboardReturn';
 import "./AWSImport.css";
-import AWSImportForm from "./Form";
 import {DialogContent, TextField, Typography} from "@material-ui/core";
 import {CloseModalContext} from "../JobForms/Components/FileUploadComponent";
 import {getAuthCookie} from "../../Common/Managers/CookieManager";
 import Button from "@material-ui/core/Button";
+import {MenuItem} from "@material-ui/core";
+import {makeStyles} from "@material-ui/core/styles";
 
 const objectTableFields = [
   {field: 'Key', headerName: 'Key', flex: 1},
@@ -22,6 +23,45 @@ const bucketsTableFields = [
   {field: "CreationDate", headerName: "Creation Date", flex: 1}
 ];
 
+const regions = [
+  'us-east-2',
+  'us-east-1',
+  'us-west-1',
+  'us-west-2',
+  'af-south-1',
+  'ap-east-1',
+  'ap-northeast-3',
+  'ap-northeast-2',
+  'ap-southeast-1',
+  'ap-southeast-2',
+  'ap-northeast-1',
+  'ca-central-1',
+  'cn-north-1',
+  'cn-northwest-1',
+  'eu-central-1',
+  'eu-west-1',
+  'eu-west-2',
+  'eu-south-1',
+  'eu-west-3',
+  'eu-north-1',
+  'me-south-1',
+  'sa-east-1'
+];
+
+const useStyles = makeStyles(() => ({
+  formDiv: {
+    display: "flex",
+    alignContent: "center",
+    justifyContent: "center",
+    margin: "0 auto"
+  },
+  formElem: {
+    width: "300px",
+    margin: "0 20px"
+  }
+}));
+
+
 export default function AWSImportView(props) {
   const [rows, setRows] = useState([]);
   const [rowsToShow, setRowsToShow] = useState([]); // rowsToShow and rows can be different based on search params
@@ -29,10 +69,18 @@ export default function AWSImportView(props) {
   const [tableFields, setTableFields] = useState([]);
   const [showBucketsTable, setShowBucketsTable] = useState(true);
   const [isLoadingList, setIsLoadingList] = useState(false);
+  const [region, setRegion] = useState("");
 
   const closeModal = useContext(CloseModalContext);
 
   const tableTitle = (showBucketsTable) ? "Buckets" : currBucket;
+
+  const classes = useStyles();
+
+  function handleRegionChange(event) {
+    setRegion(event.target.value);
+    registerAndListBuckets(event.target.value);
+  }
 
   function onSearchChange(event) {
     const newSearch = event.target.value;
@@ -60,26 +108,18 @@ export default function AWSImportView(props) {
     });
   }
 
-  function registerAndListBuckets(region, accessKey, secretKey) {
+  function registerAndListBuckets(region) {
+    console.log(region);
     const cookie = getAuthCookie();
     return getAWSCred(cookie.email)
       .then((res) => {
-        if (res === null) {
-          // change for the frontend to send an alert or open up add cred options
-          console.log("aws creds do not exist");
-          return "error";
-        } else {
-          return addAWSCred(cookie.email, accessKey, secretKey);
-        }
-      })
-      .then((res) => {
-      return registerAWS(region, accessKey, secretKey);
-      // .then( () => {
-      //   return addAWSCred(cookie.email, accessKey, secretKey);
-      // })
-      // .then( () => {
-      //   return getAWSCred(cookie.email);
-      // })
+        // if (res === null) {
+        //   console.log("aws creds do not exist");
+        //   return "error";
+        // } 
+        // else {
+          return registerAWS(region, res.data.access, res.data.secret);
+        // }
       })
       .then( (res) => {
         console.log(res);
@@ -103,15 +143,6 @@ export default function AWSImportView(props) {
       })
       .finally(() => setIsLoadingList(false));
   }
-
-  // function registerAndListBuckets(region, accessKey, secretKey) {
-  //   return registerAWS(region, accessKey, secretKey)
-  //     .then(() => listBucketsDB())
-  //     .catch(err => {
-  //       alert("Unable to register. Check that the provided keys are correct");
-  //       console.log(err);
-  //     });
-  // }
 
   function listObjectsOnClick(params, event) {
     const bucketName = params.row.Name;
@@ -167,13 +198,24 @@ export default function AWSImportView(props) {
 
   return (
     <DialogContent style={{height: "100vh"}}>
-      <AWSImportForm onSubmit={registerAndListBuckets}/>
-      <br/><br/>
       <Typography variant="h4" style={{textAlign: "center", marginBottom: "20px"}}>{tableTitle}</Typography>
       <div style={{display: "flex", justifyContent: "space-between"}}>
-        <Button variant="outlined" onClick={listBucketsDB} disabled={showBucketsTable}>
+        <Button variant="outlined" onClick={() => registerAndListBuckets(region)} disabled={showBucketsTable}>
           <KeyboardReturnIcon/>
         </Button>
+        <TextField
+        select
+        className={classes.formElem}
+        id="region-select"
+        value={region}
+        onChange={handleRegionChange}
+        label="S3 Bucket Region"
+        style = {{textAlign: "center"}}
+        >
+        {
+          regions.map(region => <MenuItem key={region} value={region}>{region}</MenuItem>)
+        }
+      </TextField>
         <TextField onChange={onSearchChange} label="Search" type="search"/>
       </div>
       <div style={{display: "flex", height: "100%"}}>

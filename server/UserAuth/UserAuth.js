@@ -1,7 +1,9 @@
 require("../database/Database");
 const bcrypt = require('bcrypt');
 const UserModel = require('../database/models/User');
+const CryptoJS = require("crypto-js");
 const saltRounds = 10;
+const cryptoSalt = "qe#7$$9djn";
 
 function addUser(name, email, password) {
     return UserModel.findOne({email: email})
@@ -57,21 +59,14 @@ function validatePassword(email, password) {
 
 function addAWSCred(email, accessKey, secretKey) {
     if (accessKey.trim() === "" || secretKey.trim() === "") return false;
-    return bcrypt.hash(secretKey, saltRounds)
-    .then((hash, err) => {
+    const crypt = CryptoJS.AES.encrypt(secretKey, cryptoSalt).toString();
+    return UserModel.findOneAndUpdate({email: email}, {AWSAccessKey: accessKey, AWSSecretKey: crypt})
+    .then ((res, err) => {
         if (err) {
             console.log(err);
             return null;
         } else {
-            return UserModel.findOneAndUpdate({email: email}, {AWSAccessKey: accessKey, AWSSecretKey: hash})
-            .then ((res, err) => {
-                if (err) {
-                    console.log(err);
-                    return null;
-                } else {
-                    return true;
-                }
-            });
+            return true;
         }
     })
     .catch((err) => {
@@ -83,10 +78,14 @@ function getAWSCred(email) {
     return UserModel.findOne({email: email})
     .then((user) => {
         if (!user.AWSSecretKey || !user.AWSAccessKey) return null;
-        return {access: user.AWSAccessKey, secret: user.AWSSecretKey};
+        // return {access: user.AWSAccessKey, secret: user.AWSSecretKey};
+        const bytes = CryptoJS.AES.decrypt(user.AWSSecretKey, cryptoSalt);
+        const originalSecret = bytes.toString(CryptoJS.enc.Utf8);
+        return {access: user.AWSAccessKey, secret: originalSecret};
     })
     .catch((err) => {
         console.log(err);
+        return null;
     });
 }
 
