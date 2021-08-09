@@ -2,34 +2,47 @@ const express = require('express');
 const JobModel = require("../database/models/Job");
 const PredictionModel = require("../database/models/Prediction");
 const router = express.Router();
-const {trainPipeline, csvToArrays, makeid, runPredict, errorHandler, getUserId, connect, parseSqueue} = require("../Util");
+const {trainPipeline, makeid, runPredict, errorHandler, getUserId, connect, parseSqueue} = require("../Util");
 const {storeCSV, removeCSV} = require("../FileManager");
 const {borg_dataset_directory, slurm_command_dataset_path} = require('../../src/SecretHandler');
 const {v4: uuidv4} = require('uuid');
 const mongoose = require('mongoose');
 
-router.get("/", (req, res) => {
-  res.sendStatus(200);
-});
+async function updateModel(model, jobsToUpdate) {
+  const borg = await connect();
+  for (const job of jobsToUpdate) {
+    const currName = job.fileHash;
+    const msg = await borg.execCommand(`/opt/slurm/bin/squeue -n ${currName}`);
+    const squeueOut = parseSqueue(msg.stdOut, currName);
+    // This usually occurs if the callback had failed to notify us, which can happen on local, or the job has not started running yet
+    if (squeueOut === null) continue;
+    // Theoretically we don't need to check; only the currently running job has a valid file name
+    const newStatus = (squeueOut.status === 'R') ? "Running" : "Queued";
+    console.log(`${currName}: ${newStatus}`);
+    await model.updateOne({_id: job._id}, {status: newStatus, time_elapsed: squeueOut.time_elapsed});
+  }
+}
 
-router.post("/", (req, res) => {
-  const id_token = req.body.id_token;
-  JobModel.find({user: id_token})
-    .then(jobs => {
-      return res.json(jobs);
-    })
+router.post("/", async (req, res) => {
+  const user_token = await getUserId(req.body.id_token);
+  const jobsToUpdate = await JobModel.find({
+    $or: [
+      {status: "Queued"},
+      {status: "Running"}
+    ],
+    user: user_token
+  });
 
-    .catch(err => errorHandler(err, res));
+  await updateModel(JobModel, jobsToUpdate);
+  const jobs = await JobModel.find({user: user_token});
+  res.json(jobs);
 });
 
 router.post("/job", (req, res) => {
   const id_token = req.body.id_token;
   const jobID = req.body.jobID;
   JobModel.find({user: id_token, _id: jobID})
-    .then(job => {
-      return res.json(job);
-    })
-
+    .then(job => res.json(job))
     .catch(err => errorHandler(err, res));
 });
 
@@ -37,8 +50,8 @@ router.delete("/deleteJob", (req, res) => {
   const id_token = req.body.id_token;
   const jobId = req.body.jobId;
   getUserId(id_token)
-    .then(userToken => JobModel.deleteOne({user: userToken, _id: jobId})
-      .then(_ => res.sendStatus(200)))
+    .then(userToken => JobModel.deleteOne({user: userToken, _id: jobId}))
+    .then(() => res.sendStatus(200))
     .catch(err => errorHandler(err, res));
 });
 
@@ -46,7 +59,6 @@ router.delete("/deleteJob", (req, res) => {
 router.post("/submitTrainJob", (req, res) => {
   const {id_token, jobName, maxJobTime, targetColumnName, dataset, header} = req.body;
   const targetColumn = header.indexOf(targetColumnName);
-  const _targetColumnName = targetColumnName.trim();
 
   const file_name = uuidv4();
   const train_path = borg_dataset_directory + file_name + "/train.csv";
@@ -60,7 +72,7 @@ router.post("/submitTrainJob", (req, res) => {
   storeCSV(dataset, local_path)
     .then(() => getUserId(id_token))
     .then(user_email => {
-      trainString = trainPipeline(targetPath, _targetColumnName, user_email, file_name, maxJobTime, jobName, callback);
+      trainString = trainPipeline(targetPath, targetColumnName, user_email, file_name, maxJobTime, jobName, callback);
       console.log(trainString);
     })
     .then(() => connect())
@@ -73,14 +85,11 @@ router.post("/submitTrainJob", (req, res) => {
             name: jobName,
             user: id_token,
             fileHash: file_name,
-            target_name: _targetColumnName,
+            target_name: targetColumnName,
             target_column: targetColumn,
             timer: maxJobTime,
             headers: header,
-            created: Date(),
-            job_id: stdOut.slice(stdOut.length - 6, stdOut.length).trim()
           });
-          console.log(job.job_id);
           return job.save();
         });
     })
@@ -89,62 +98,60 @@ router.post("/submitTrainJob", (req, res) => {
     .catch(err => errorHandler(err, res));
 });
 
-router.post("/predictions", (req, res) => {
+router.post("/predictions", async (req, res) => {
   const id_token = req.body.id_token;
-  const jobID = req.body.jobID;
-  PredictionModel.find({user: id_token, jobID: jobID})
-    .then(predictions => {
-      return res.json(predictions);
-    })
+  const trainJobID = req.body.jobID;
+  const user_token = await getUserId(id_token);
 
-    .catch(err => errorHandler(err, res));
+  const jobsToUpdate = await PredictionModel.find({
+    $or: [
+      {status: "Queued"},
+      {status: "Running"}
+    ],
+    user: user_token,
+    jobID: trainJobID
+  });
+
+  await updateModel(JobModel, jobsToUpdate);
+  const predictions = await PredictionModel.find({user: id_token, jobID: trainJobID});
+  res.json(predictions);
 });
 
-router.post("/submitPrediction", (req, res) => {
+router.post("/submitPrediction", async (req, res) => {
   const {id_token, predictionName, jobID, dataset} = req.body;
-  let email;
+  const test_file_name = makeid(4);
+  const user_email = await getUserId(id_token);
+  const trainJobID = mongoose.Types.ObjectId(jobID);
+  const trainJob = await JobModel.findById(trainJobID);
+
   const prediction = new PredictionModel({
     name: predictionName,
     user: id_token,
-    jobID: jobID,
-    created: Date()
+    jobID: jobID
   });
 
-  const test_file_name = makeid(4);
+  if (trainJob === null) throw new Error('Associated training job not found');
+  // if (!(job.headers.includes(job.target_name))) { // gotta push the target column into the file!
+  //   const a = job.headers;
+  //   a.push(job.target_name);
+  //   data[0] = testColumns;
+  //   const newFile = csv.fromArrays(data);
+  //
 
+  const folder_path = slurm_command_dataset_path + trainJob.fileHash;
+  const test_path = folder_path + '/' + test_file_name + '.csv';
+  const local_path = `predictions/${trainJob.fileHash}.csv`;
+  const callback = `https://ensemble-automl.herokuapp.com/api/bbmlCallback/${trainJob.fileHash}/prediction`;
+  const predictString = runPredict(test_path, trainJob.fileHash, trainJob.timer, trainJob.target_name, user_email, trainJob.name, callback);
 
-  getUserId(id_token)
-    .then(userId => {
-      email = userId;
-      const trainJobID = mongoose.Types.ObjectId(jobID);
-      return JobModel.findById(trainJobID);
-    })
-    .then(job => {
-      if (job === null) throw new Error('Associated training job not found');
-      // if (!(job.headers.includes(job.target_name))) { // gotta push the target column into the file!
-      //   const a = job.headers;
-      //   a.push(job.target_name);
-      //   data[0] = testColumns;
-      //   const newFile = csv.fromArrays(data);
-      //
-      const folder_path = slurm_command_dataset_path + job.fileHash;
-      const test_path = folder_path + '/' + test_file_name + '.csv';
-      const local_path = `predictions/${job.fileHash}.csv`;
-      const callback = `https://ensemble-automl.herokuapp.com/api/bbmlCallback/${job.fileHash}/prediction`;
-      const predictString = runPredict(test_path, job.fileHash, job.timer, job.target_name, email, job.name, callback);
-
-      return storeCSV(dataset, local_path)
-        .then(() => connect())
-        .then(borg => {
-          console.log(predictString);
-            return borg.putFile(local_path, test_path)
-              .then(() => borg.exec(predictString, []));
-          })
-        .then(() => removeCSV(local_path));
-      })
-    .then(() => prediction.save())
-    .then(() => res.sendStatus(200))
-    .catch(err => errorHandler(err, res));
+  await storeCSV(dataset, local_path);
+  const borg = await connect();
+  await borg.putFile(local_path, test_path);
+  console.log(predictString);
+  const stdOut = await borg.exec(predictString, []);
+  await removeCSV(local_path);
+  await prediction.save();
+  res.sendStatus(200);
 });
 
 router.delete("/deletePrediction", (req, res) => {
@@ -152,7 +159,7 @@ router.delete("/deletePrediction", (req, res) => {
   const predictionID = req.body.predictionID;
   getUserId(id_token)
     .then(userToken => PredictionModel.deleteOne({user: userToken, _id: predictionID}))
-    .then(_ => res.sendStatus(200))
+    .then(() => res.sendStatus(200))
     .catch(err => errorHandler(err, res));
 });
 
@@ -176,7 +183,7 @@ router.post("/downloadPrediction", (req, res) => {
         .then(() => console.log("Successfully downloaded prediction file"))
         .catch(() => res.error());
     })
-    .then(() => res.download(localPath))
+    .then(() => res.download(localPath, () => removeCSV(localPath)))
     .catch(err => errorHandler(err, res));
 });
 
@@ -185,8 +192,8 @@ router.delete("/deletePredictionJobID", (req, res) => {
   const jobID = req.body.jobID;
   console.log(jobID);
   getUserId(id_token)
-    .then(userId => PredictionModel.deleteMany({user: userId, jobID: jobID})
-      .then(_ => res.sendStatus(200)))
+    .then(userId => PredictionModel.deleteOne({user: userId, jobID: jobID}))
+    .then(() => res.sendStatus(200))
     .catch(err => errorHandler(err, res));
 });
 
@@ -205,46 +212,20 @@ router.patch('/bbmlCallback/:jobID/:type', (req, res) => {
   res.end();
 });
 
-router.post('/allJobs', async (req, res) => {
-  const id_token = req.userID;
-  const jobIDs = await JobModel.find({
-    $or: [
-      {status: "Queued"},
-      {status: "Running"}
-    ],
-    // user: id_token
-  }, {job_id: 1});
-
-  const borg = await connect();
-  for (const jobID of jobIDs) {
-    const currJobID = jobID.job_id;
-    const msg = await borg.execCommand(`/opt/slurm/bin/squeue -j ${currJobID}`);
-    const job_status = parseSqueue(msg.stdOut, currJobID).status;
-
-    if (job_status === 'R' && jobID.status === "Queued") {
-      JobModel.updateOne({job_id: currJobID}, {status: "Running"});
-    }
-    if (job_status === "done") {
-      JobModel.updateOne({job_id: currJobID}, {status: "Successful"});
-    }
-  }
-  res.status(200);
-});
-
-router.get('/isJobDone', (req, res) => {
-  const jobID = req.body.jobID;
-
-  connect()
-    .then(borg => {
-      return borg.exec('/opt/slurm/bin/squeue -j ' + String(jobID), []);
-    })
-    .then(stdOut => {
-      const time_status_json = parseSqueue(stdOut, jobID);
-      res.send(time_status_json);
-    })
-    .catch(err => {
-      errorHandler(err);
-    });
-});
+// router.get('/isJobDone', (req, res) => {
+//   const jobID = req.body.jobID;
+//
+//   connect()
+//     .then(borg => {
+//       return borg.exec('/opt/slurm/bin/squeue -j ' + String(jobID), []);
+//     })
+//     .then(stdOut => {
+//       const time_status_json = parseSqueue(stdOut, jobID);
+//       res.send(time_status_json);
+//     })
+//     .catch(err => {
+//       errorHandler(err);
+//     });
+// });
 
 module.exports = router;

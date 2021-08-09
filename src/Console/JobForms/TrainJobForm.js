@@ -67,7 +67,8 @@ export default function TrainJobForm() {
   }
 
   // converts array of fields into array of json objects
-  function updateCSVState(csvString) {
+  function updateCSVState(_csvString) {
+    const csvString = _csvString.replace("\r", ""); // for windows fix
     setCSV(csvString);
     const header = csvString.split('\n')[0];
     const fields = header.split(',');
