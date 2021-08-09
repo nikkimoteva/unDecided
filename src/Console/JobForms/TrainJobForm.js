@@ -67,7 +67,8 @@ export default function TrainJobForm() {
   }
 
   // converts array of fields into array of json objects
-  function updateCSVState(csvString) {
+  function updateCSVState(_csvString) {
+    const csvString = _csvString.replace("\r", ""); // for windows fix
     setCSV(csvString);
     const header = csvString.split('\n')[0];
     const fields = header.split(',');
@@ -118,7 +119,10 @@ export default function TrainJobForm() {
     const jobTime = maxJobTime * timeOption;
     if (validateFormData(jobTime)) {
       submitJob(auth.user.email, jobName, jobTime, targetColumn, CSV, header)
-        .then(res => history.push('/console/jobs'))
+        .then(res => {
+          alert("Job Submitted");
+          history.push('/console/jobs');
+        })
         .catch(err => {
           console.log(err);
           alert("Job failed to submit");
