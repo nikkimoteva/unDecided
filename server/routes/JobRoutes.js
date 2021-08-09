@@ -138,7 +138,6 @@ router.post("/submitPrediction", async (req, res) => {
   //   a.push(job.target_name);
   //   data[0] = testColumns;
   //   const newFile = csv.fromArrays(data);
-  //
 
   const folder_path = slurm_command_dataset_path + trainJob.fileHash;
   const test_path = folder_path + '/' + test_file_name + '.csv';
@@ -183,7 +182,7 @@ router.post("/downloadPrediction", (req, res) => {
       return connect()
         .then(borg => borg.getFile(localPath, remotePath))
         .then(() => console.log("Successfully downloaded prediction file"))
-        .catch(() => res.error());
+        .catch(() => res.sendStatus(404));
     })
     .then(() => res.download(localPath, () => removeCSV(localPath)))
     .catch(err => errorHandler(err, res));
