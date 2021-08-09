@@ -41,6 +41,13 @@ export default function Header() {
     setLoginModal(false);
   }
 
+  function login(credentials) {
+    auth.signin(credentials)
+      .then(() => {
+        history.push('/console/jobs');
+      });
+  }
+
   function logout() {
     auth.signout();
     history.push('/'); // redirect to main page
@@ -59,7 +66,6 @@ export default function Header() {
       <ButtonGroup variant="text" color="inherit" className={classes.toolbarButtons} size="large">
       <Button component={Link} to="/contact">Contact Us</Button>
         <Button component={Link} to="/docs">Docs</Button>
-        <Button component={Link} to="/console">Dashboard</Button>
         <Button component={Link} to="/console/jobs">Jobs</Button>
         <ProfileIcon signout={logout}/>
       </ButtonGroup>

@@ -7,8 +7,12 @@ import JobNameComponent from "./Components/JobNameComponent";
 import SubmitButton from "./Components/SubmitButton";
 import {FileUploadComponent} from "./Components/FileUploadComponent";
 import DataImportStatusMsg from "./Components/DataImportStatusMsg";
-import LoadingIcon from "../../Common/LoadingIcon";
-import {submitPrediction} from "../../Common/Managers/EndpointManager";
+
+import LoadingIcon from "../../common/LoadingIcon";
+import {submitPrediction} from "../../common/Managers/EndpointManager";
+import { useParams } from 'react-router-dom';
+
+
 
 
 const useStyles = makeStyles((theme) => ({
@@ -29,7 +33,7 @@ const useStyles = makeStyles((theme) => ({
   }
 }));
 
-export default function PredJobForm() {
+function PredJobForm() {
   const [jobName, setJobName] = useState("");
   const [CSV, setCSV] = useState("");
 
@@ -42,6 +46,8 @@ export default function PredJobForm() {
   const auth = useAuth();
   const history = useHistory();
   const location = useLocation();
+  const params = useParams();
+  const jobID = params.jobID.slice(1);
 
   // Functions
   function getFileObjectContent(file) {
@@ -118,8 +124,9 @@ export default function PredJobForm() {
   function submitHandler(event) {
     event.preventDefault();
     if (validateFormData()) {
-      submitPrediction(auth.user.email, jobName, location.state.id, CSV)
+      submitPrediction(auth.user.email, jobName,jobID , CSV)
         .then(res => {
+          alert("Job Submitted");
           history.push('/console/jobs');
         })
         .catch(err => {
@@ -157,3 +164,5 @@ export default function PredJobForm() {
     </div>
   );
 }
+
+export default PredJobForm;
