@@ -86,14 +86,14 @@ export default function Jobs(props) {
 
   
   function ProgressBar(props){
-      console.log(props.progress);
-      console.log(props.status);
       return (
-        <div>
+        <>
           {props.status==="Running"&&
-            <LinearProgress variant="determinate" value={props.progress} />
+            <TableCell style={{paddingBottom: 0, paddingTop: 0}} colSpan={props.colSpan}>
+              <LinearProgress variant="determinate" value={props.progress} />
+            </TableCell>
           }
-        </div>
+        </>
       );
     }
 
@@ -196,9 +196,9 @@ export default function Jobs(props) {
               
             </TableCell>
           </TableRow>
-          <TableCell style={{paddingBottom: 0, paddingTop: 0}} colSpan={3}>
-            <ProgressBar status={props.status}progress={props.progress}/>
-          </TableCell>
+          
+          <ProgressBar status={props.status}progress={props.progress} colSpan={3}/>
+
         </>
 
       );
@@ -254,9 +254,8 @@ export default function Jobs(props) {
           </Button>
           </TableCell>
         </TableRow>
-        <TableCell style={{paddingBottom: 0, paddingTop: 0}} colSpan={6}>
-          <ProgressBar status={row.status} progress={row.progress}/>
-        </TableCell>
+        <ProgressBar status={row.status} progress={row.progress} colSpan={6}/>
+
         
         <TableRow>
           <TableCell style={{paddingBottom: 0, paddingTop: 0}} colSpan={6}>
