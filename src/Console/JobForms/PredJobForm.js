@@ -8,8 +8,8 @@ import SubmitButton from "./Components/SubmitButton";
 import {FileUploadComponent} from "./Components/FileUploadComponent";
 import DataImportStatusMsg from "./Components/DataImportStatusMsg";
 
-import LoadingIcon from "../../common/LoadingIcon";
-import {submitPrediction} from "../../common/Managers/EndpointManager";
+import LoadingIcon from "../../Common/LoadingIcon";
+import {submitPrediction} from "../../Common/Managers/EndpointManager";
 import { useParams } from 'react-router-dom';
 
 

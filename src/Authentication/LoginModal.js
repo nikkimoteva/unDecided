@@ -14,7 +14,7 @@ export default class LoginModal extends React.Component {
             buttonText="Login with Google"
             onSuccess={this.props.signin}
             onFailure={(res) => console.log(res)}
-            cookiePolicy="https://ensemble-automl.herokuapp.com" // replace with `http://localhost:3000` if debugging locally
+            cookiePolicy="http://localhost:3000" // replace with `http://localhost:3000` if debugging locally
           />
         </div>
       </DialogContent>

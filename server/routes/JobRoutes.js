@@ -13,11 +13,12 @@ async function updateModel(model, jobsToUpdate) {
   console.log(jobsToUpdate);
   const borg = await connect();
   for (const job of jobsToUpdate) {
-    const currName = job.fileHash;
+    // Prediction jobs need to get file hash from associated training job
+    const trainJob = (model === PredictionModel) ? await JobModel.findOne({_id: job.jobID}).exec() : job;
+    const currName = trainJob.fileHash;
     const msg = await borg.execCommand(`/opt/slurm/bin/squeue -n ${currName}`);
-    const squeueOut = parseSqueue(msg.stdOut, currName);
-    console.log("squeueOut");
-    console.log(squeueOut);
+    const squeueOut = parseSqueue(msg.stdout, currName);
+
     // This usually occurs if the callback had failed to notify us, which can happen on local, or the job has not started running yet
     if (squeueOut === null) continue;
     // Theoretically we don't need to check; only the currently running job has a valid file name
@@ -117,7 +118,7 @@ router.post("/predictions", async (req, res) => {
     jobID: trainJobID
   });
 
-  await updateModel(JobModel, jobsToUpdate);
+  await updateModel(PredictionModel, jobsToUpdate);
   const predictions = await PredictionModel.find({user: id_token, jobID: trainJobID});
   res.json(predictions);
 });
@@ -127,7 +128,7 @@ router.post("/submitPrediction", async (req, res) => {
   const test_file_name = makeid(4);
   const user_email = await getUserId(id_token);
   const trainJobID = mongoose.Types.ObjectId(jobID);
-  const trainJob = await JobModel.findById(trainJobID);
+  const trainJob = await JobModel.findById(trainJobID).exec();
 
   const prediction = new PredictionModel({
     name: predictionName,
@@ -141,7 +142,6 @@ router.post("/submitPrediction", async (req, res) => {
   //   a.push(job.target_name);
   //   data[0] = testColumns;
   //   const newFile = csv.fromArrays(data);
-  //
 
   const folder_path = slurm_command_dataset_path + trainJob.fileHash;
   const test_path = folder_path + '/' + test_file_name + '.csv';
@@ -186,7 +186,7 @@ router.post("/downloadPrediction", (req, res) => {
       return connect()
         .then(borg => borg.getFile(localPath, remotePath))
         .then(() => console.log("Successfully downloaded prediction file"))
-        .catch(() => res.error());
+        .catch(() => res.sendStatus(404));
     })
     .then(() => res.download(localPath, () => removeCSV(localPath)))
     .catch(err => errorHandler(err, res));

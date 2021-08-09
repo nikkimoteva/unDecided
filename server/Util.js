@@ -152,11 +152,12 @@ module.exports = {
     });
   },
 
-  parseSqueue: function(stdOut, jobID) {
-    if (stdOut && stdOut.includes(String(jobID))) {
-      const idx = stdOut.search(jobID) + 37;  // time column starts here, may have trailing white space
+  parseSqueue: function(stdOut, fileHash) {
+    const first_part_of_hash = fileHash.slice(0, 9);
+    if (stdOut && stdOut.includes(first_part_of_hash)) {
+      const idx = stdOut.search(first_part_of_hash) + 20;  // time column starts here, may have trailing white space
       const end_idx = idx + 13;  // ends here, may have trailing white space
-      const status = stdOut.slice(stdOut.search(jobID) + 34, (stdOut.search(jobID) + 37)).trim();
+      const status = stdOut.slice(stdOut.search(first_part_of_hash) + 17, (stdOut.search(first_part_of_hash) + 20)).trim();
       const time_string = stdOut.slice(idx, end_idx).trim();
 
       let num_days;
