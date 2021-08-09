@@ -3,7 +3,8 @@ const mongoose = require('mongoose');
 const predictionSchema = new mongoose.Schema({
   jobID:{
     type: String,
-    required: true
+    required: true,
+    unique: true
   },
   name: {
     type: String,
@@ -15,12 +16,16 @@ const predictionSchema = new mongoose.Schema({
   },
   status: {
     type: String,
-    required: true,
-    default: "Running"
+    enum: ['Queued', 'Running', 'Successful', 'Failed'],
+    default: "Queued"
   },
   created: {
     type: Date,
     default: Date.now()
+  },
+  time_elapsed: {
+    type: Number,
+    default: 0
   }
 });
 

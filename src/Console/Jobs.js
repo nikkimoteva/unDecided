@@ -156,6 +156,14 @@ export default function Jobs(props) {
         downloadPredictionFile(auth.user.email, predictionID)
           .then(res => {
             console.log("Starting download");
+            // Disgusting JS stack code to make it actually force a download (from https://stackoverflow.com/questions/58630869/download-file-from-express-api-using-react-and-axios)
+            const url = window.URL.createObjectURL(new Blob([res.data]));
+            const link = document.createElement('a');
+            link.href = url;
+            link.setAttribute('download', 'results.csv');
+            link.setAttribute('type', 'text/csv');
+            document.body.appendChild(link);
+            link.click();
           })
           .catch(err => {
             console.log(err);
