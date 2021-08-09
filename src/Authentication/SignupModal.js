@@ -68,7 +68,7 @@ export default function Signup() {
             alert(res.data.error);
           } else {
             setLoginModal(false);
-            history.push('/console');
+            history.push('/console/jobs');
             console.log("successfully logged in");
             setUser( {
               name: "",

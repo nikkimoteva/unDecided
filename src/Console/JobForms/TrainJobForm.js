@@ -118,7 +118,10 @@ export default function TrainJobForm() {
     const jobTime = maxJobTime * timeOption;
     if (validateFormData(jobTime)) {
       submitJob(auth.user.email, jobName, jobTime, targetColumn, CSV, header)
-        .then(res => history.push('/console/jobs'))
+        .then(res => {
+          alert("Job Submitted");
+          history.push('/console/jobs');
+        })
         .catch(err => {
           console.log(err);
           alert("Job failed to submit");
