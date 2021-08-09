@@ -1,5 +1,5 @@
 import React from "react";
-import {useAuth} from "../common/Auth";
+import {useAuth} from "../Common/Auth";
 
 
 export default function Profile() {
