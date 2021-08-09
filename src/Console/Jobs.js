@@ -19,6 +19,10 @@ import Typography from '@material-ui/core/Typography';
 import Paper from '@material-ui/core/Paper';
 import KeyboardArrowDownIcon from '@material-ui/icons/KeyboardArrowDown';
 import KeyboardArrowUpIcon from '@material-ui/icons/KeyboardArrowUp';
+import LinearProgress from '@material-ui/core/LinearProgress';
+const dateFormat = require('dateformat');
+
+
 import {
   submitPrediction,
   getPredictions,
@@ -38,7 +42,6 @@ const useRowStyles = makeStyles({
   },
 });
 
-
 const useStyles = makeStyles({
   jobButtonContainer: {
     justifyContent: 'center',
@@ -57,9 +60,9 @@ const useStyles = makeStyles({
     height: "650px",
     width: "95%",
     margin: "0 auto",
-
-    // display:"block",
-    // overflow:"auto"
+  },
+  progressBar: {
+    width: "650px"
   }
 });
 
@@ -67,7 +70,6 @@ const useStyles = makeStyles({
 export default function Jobs(props) {
   const classes = useStyles();
   const [jobs, setJobs] = useState([]);
-  const [predictions, setPredictions] = useState([]);
   const [selectionModel, setSelectionModel] = useState([]);
   const auth = useAuth();
   const history = useHistory();
@@ -106,8 +108,6 @@ export default function Jobs(props) {
       return () => clearInterval(intervalId); //This is important
     });
     
-    
-
     function deleteJob() {
       const jobId = row.id;
       deleteJobDB(auth.user.email, jobId)
@@ -125,7 +125,7 @@ export default function Jobs(props) {
 
     function newPrediction() {
       history.push({
-        pathname: `${url}/submitPrediction`,
+        pathname: `${url}/submitPrediction:${row.id}`,
         state: row,
       });
     }
@@ -135,9 +135,10 @@ export default function Jobs(props) {
       const created = new Date(props.created);
       const current = new Date();
       const diff = current-created;
-      const minutes = Math.floor((diff/1000)/60);
-      props.status=minutes>row.timer?"Finished":"Running";
-
+      const seconds = Math.floor(diff/1000);
+      props.status=seconds>row.timer*60?"Finished":"Running";
+      const timeTaken = Math.min(seconds,row.timer*60);
+      props.progress = timeTaken/(row.timer*60)*100;
       function deletePrediction() {
         const predictionID = props.id;
         deletePredictionDB(auth.user.email, predictionID).then(_ => {
@@ -163,26 +164,34 @@ export default function Jobs(props) {
 
       }
 
-      return (<TableRow key={props.date}>
-        <TableCell align="center">
-          {props.name}
-        </TableCell>
-        <TableCell align="center">{props.status}</TableCell>
-        <TableCell align="center">{props.created}</TableCell>
-        <TableCell align="center">
-          {
-            (props.status === "Running") ? <div style={{display: "none"}}/>
-            : <Button variant="contained" className={classes.jobActionButton}
-                      onClick={downloadPrediction} color="primary" startIcon={<GetAppIcon/>}
+      return (
+        <>
+          <TableRow key={props.date}>
+            <TableCell align="center">
+              {props.name}
+            </TableCell>
+            <TableCell align="center">{props.status}</TableCell>
+            <TableCell align="center">{dateFormat(props.created, "mmmm dS, yyyy, h:MM:ss TT")}</TableCell>
+            <TableCell align="center">
+              {
+                (props.status === "Running") ? <div style={{display: "none"}}/>
+                : <Button variant="contained" className={classes.jobActionButton}
+                          onClick={downloadPrediction} color="primary" startIcon={<GetAppIcon/>}
+                  />
+              }
+              <Button variant="contained"
+                      className={classes.jobActionButton} onClick={deletePrediction} color="primary"
+                      startIcon={<DeleteIcon/>}
               />
-          }
-          <Button variant="contained"
-                  className={classes.jobActionButton} onClick={deletePrediction} color="primary"
-                  startIcon={<DeleteIcon/>}
-          />
-          
-        </TableCell>
-      </TableRow>);
+              
+            </TableCell>
+          </TableRow>
+          <TableCell style={{paddingBottom: 0, paddingTop: 0}} colSpan={3}>
+            {props.status!=="Finished" && <LinearProgress variant="determinate" value={props.progress} />}
+          </TableCell>
+        </>
+
+      );
     }
 
     function openButtonOnClick() {
@@ -197,12 +206,16 @@ export default function Jobs(props) {
     const created = new Date(row.created);
     const current = new Date();
     const diff = current-created;
-    const minutes = Math.floor((diff/1000)/60);
-    row.status=minutes>row.timer?"Finished":"Running";
+    const seconds = Math.floor(diff/1000);
+    row.timeTaken = Math.min(seconds,row.timer*60);
+    row.progress = row.timeTaken/(row.timer*60)*100;
+    row.status=seconds>row.timer*60?"Finished":"Running";
 
     return (
       <>
+
         <TableRow className={classes.root}>
+
           <TableCell>
             <IconButton aria-label="expand row" size="small" onClick={openButtonOnClick}>
               {rowState.open ? <KeyboardArrowUpIcon/> : <KeyboardArrowDownIcon/>}
@@ -212,37 +225,39 @@ export default function Jobs(props) {
             {row.name}
           </TableCell>
           <TableCell align="right">{row.status}</TableCell>
-          <TableCell align="right">{row.created}</TableCell>
+          <TableCell align="right">{dateFormat(row.created, "mmmm dS, yyyy, h:MM:ss TT")}</TableCell>
           <TableCell align="right">{row.target_name}</TableCell>
           <TableCell align="center"><Button variant="contained"
-                                            className={classes.jobActionButton} onClick={deleteJob} color="primary"
-                                            name={row.name}
-                                    >
-            Delete
+            className={classes.jobActionButton} onClick={deleteJob} color="primary"
+            name={row.name}
+            startIcon={<DeleteIcon/>}
+                                    />
+          <Button
+            variant="contained"
+            color="primary"
+            className={classes.jobActionButton}
+            onClick={newPrediction}
+            name={row.id}
+            disabled={row.status === "Running"}
+          >
+            New Prediction
           </Button>
-            <Button
-              variant="contained"
-              color="primary"
-              className={classes.jobActionButton}
-              onClick={newPrediction}
-              name={row.id}
-              disabled={row.status === "Running"}
-            >
-              New Prediction
-            </Button>
           </TableCell>
         </TableRow>
-
+        <TableCell style={{paddingBottom: 0, paddingTop: 0}} colSpan={6}>
+          {row.status!=="Finished"&&
+            <LinearProgress variant="determinate" value={row.progress} />}
+        </TableCell>
+        
         <TableRow>
           <TableCell style={{paddingBottom: 0, paddingTop: 0}} colSpan={6}>
-
             <Collapse in={rowState.open} timeout="auto" unmountOnExit>
+              {rowState.predictions.length!==0&&
               <Box margin={1}>
                 <Typography variant="h6" gutterBottom component="div">
                   Predictions
                 </Typography>
                 <Table size="small" aria-label="purchases">
-
                   <TableHead>
                     <TableRow>
                       <TableCell align="center">Prediction Name</TableCell>
@@ -256,12 +271,18 @@ export default function Jobs(props) {
                     ))}
                   </TableBody>
                 </Table>
-              </Box>
+              </Box>}
+              {rowState.predictions.length===0&&
+              <Box margin={1}>
+                <Typography variant="h6" gutterBottom component="div">
+                  No Prediction Submitted
+                </Typography>
+              </Box>}
             </Collapse>
 
           </TableCell>
         </TableRow>
-
+        
       </>
     );
   }

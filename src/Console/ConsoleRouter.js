@@ -18,7 +18,7 @@ export default function ConsoleRouter() {
       <Route path={`${path}/jobs`}><Jobs url={url}/></Route>
       <Route path={`${path}/profile`}><Profile/></Route>
       <Route path={`${path}/submitJob`}><TrainJobForm/></Route>
-      <Route path={`${path}/submitPrediction`}><PredJobForm/></Route>
+      <Route path={`${path}/submitPrediction:jobID`}><PredJobForm/></Route>
       <Route path={`${path}/settings`}><Settings/></Route>
       <Route exact path={path}><Dashboard/></Route> {/*Default route*/}
     </Switch>
