@@ -85,7 +85,17 @@ export default function Jobs(props) {
   }, []);
 
   
-
+  function ProgressBar(props){
+      return (
+        <>
+          {props.status==="Running"&&
+            <TableCell style={{paddingBottom: 0, paddingTop: 0}} colSpan={props.colSpan}>
+              <LinearProgress variant="determinate" value={props.progress} />
+            </TableCell>
+          }
+        </>
+      );
+    }
 
   function Row(props) {
 
@@ -104,7 +114,7 @@ export default function Jobs(props) {
           job.id = job._id;
           setRow(job);
         });
-      }, 5000);
+      }, 30000);
       return () => clearInterval(intervalId); //This is important
     });
     
@@ -132,13 +142,10 @@ export default function Jobs(props) {
 
     function SubRow(props) {
       props.id = props._id;
-      const created = new Date(props.created);
-      const current = new Date();
-      const diff = current-created;
-      const seconds = Math.floor(diff/1000);
-      props.status=seconds>row.timer*60?"Finished":"Running";
-      const timeTaken = Math.min(seconds,row.timer*60);
-      props.progress = timeTaken/(row.timer*60)*100;
+      const timeTaken = Math.min(props.time_elapsed,row.timer+5);
+      props.progress = timeTaken/(row.timer+5)*100;
+      // console.log("pred");
+      // console.log(props);
       function deletePrediction() {
         const predictionID = props.id;
         deletePredictionDB(auth.user.email, predictionID).then(_ => {
@@ -182,10 +189,11 @@ export default function Jobs(props) {
             <TableCell align="center">{dateFormat(props.created, "mmmm dS, yyyy, h:MM:ss TT")}</TableCell>
             <TableCell align="center">
               {
-                (props.status === "Running") ? <div style={{display: "none"}}/>
-                : <Button variant="contained" className={classes.jobActionButton}
+                (props.status === "Successful") ? 
+                 <Button variant="contained" className={classes.jobActionButton}
                           onClick={downloadPrediction} color="primary" startIcon={<GetAppIcon/>}
-                  />
+                 />
+                :<div style={{display: "none"}}/>
               }
               <Button variant="contained"
                       className={classes.jobActionButton} onClick={deletePrediction} color="primary"
@@ -194,9 +202,9 @@ export default function Jobs(props) {
               
             </TableCell>
           </TableRow>
-          <TableCell style={{paddingBottom: 0, paddingTop: 0}} colSpan={3}>
-            {props.status!=="Finished" && <LinearProgress variant="determinate" value={props.progress} />}
-          </TableCell>
+          
+          <ProgressBar status={props.status}progress={props.progress} colSpan={3}/>
+
         </>
 
       );
@@ -211,14 +219,13 @@ export default function Jobs(props) {
 
     }
 
-    const created = new Date(row.created);
-    const current = new Date();
-    const diff = current-created;
-    const seconds = Math.floor(diff/1000);
-    row.timeTaken = Math.min(seconds,row.timer*60);
-    row.progress = row.timeTaken/(row.timer*60)*100;
-    row.status=seconds>row.timer*60?"Finished":"Running";
-
+    const timeTaken = Math.min(row.time_elapsed,row.timer+5);
+    row.progress = timeTaken/(row.timer+5)*100;
+    // console.log("job");
+    // console.log(row);
+    // if(row.progress===100){
+    //   row.status="Successful";
+    // }
     return (
       <>
 
@@ -246,16 +253,14 @@ export default function Jobs(props) {
             className={classes.jobActionButton}
             onClick={newPrediction}
             name={row.id}
-            disabled={row.status === "Running"}
+            disabled={row.status !=="Successful"}
           >
             New Prediction
           </Button>
           </TableCell>
         </TableRow>
-        <TableCell style={{paddingBottom: 0, paddingTop: 0}} colSpan={6}>
-          {row.status!=="Finished"&&
-            <LinearProgress variant="determinate" value={row.progress} />}
-        </TableCell>
+        <ProgressBar status={row.status} progress={row.progress} colSpan={6}/>
+
         
         <TableRow>
           <TableCell style={{paddingBottom: 0, paddingTop: 0}} colSpan={6}>

@@ -57,7 +57,7 @@ CSV
 
 - View previously uploaded data (depending on accounts, can be per browser session or per user)
 
-- Job tracking visualization/progress (Dashboard)
+- Job tracking visualization/progress
 
 
 **2-3 stretch requirements (plan to complete at least 1!)**
