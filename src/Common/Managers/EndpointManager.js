@@ -66,7 +66,12 @@ export function getPredictions(id_token,jobID) {
 }
 
 export function downloadPredictionFile(id_token, predictionID) {
-  return axios.post(`${jobRoot}/downloadPrediction`, {id_token, predictionID});
+  return axios({
+    url: `${jobRoot}/downloadPrediction`,
+    method: "post",
+    data: {id_token, predictionID},
+    responseType: "blob"
+  });
 }
 
 export function deleteJob(id_token, jobId) {

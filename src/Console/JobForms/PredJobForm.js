@@ -73,11 +73,14 @@ function PredJobForm() {
   }
 
   // converts array of fields into array of json objects
-  function updateCSVState(csvString) {
+  function updateCSVState(_csvString) {
+    const csvString = _csvString.replace("\r", ""); // for windows fix
     const header = csvString.split('\n')[0];
     const fields = header.split(',');
 
     if (!isEqualArrays(fields, location.state.headers)) {
+      console.log(fields);
+      console.log(location.state.headers);
       alert("The prediction dataset must have the same columns as the training dataset");
       setDataImportSuccess(false);
     } else {
