@@ -200,7 +200,7 @@ export default function AWSImportView(props) {
     <DialogContent style={{height: "100vh"}}>
       <Typography variant="h4" style={{textAlign: "center", marginBottom: "20px"}}>{tableTitle}</Typography>
       <div style={{display: "flex", justifyContent: "space-between"}}>
-        <Button variant="outlined" onClick={listBucketsDB} disabled={showBucketsTable}>
+        <Button variant="outlined" onClick={() => registerAndListBuckets(region)} disabled={showBucketsTable}>
           <KeyboardReturnIcon/>
         </Button>
         <TextField
