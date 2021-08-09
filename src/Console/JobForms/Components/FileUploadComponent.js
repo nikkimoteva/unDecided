@@ -1,5 +1,9 @@
 import {Button, Dialog, DialogTitle, Hidden, Slide} from "@material-ui/core";
 import React, {createContext, useState} from "react";
+import {getAWSCred} from "../../../Common/Managers/EndpointManager";
+import {getAuthCookie} from "../../../Common/Managers/CookieManager";
+import Tooltip from '@material-ui/core/Tooltip';
+
 
 const SlideUpTransition = React.forwardRef(function Transition(props, ref) {
   return <Slide direction="up" ref={ref} {...props} />;
@@ -9,6 +13,7 @@ export const CloseModalContext = createContext(undefined);
 
 export function FileUploadComponent(props) {
   const [showModal, setShowModal] = useState(false);
+  const [AWSAvail, setAWSAvail] = useState(AWSCredAvailable());
 
   function openModal() {
     setShowModal(true);
@@ -18,7 +23,22 @@ export function FileUploadComponent(props) {
     setShowModal(false);
   }
 
+  console.log(1234567);
+
   const fileInput = React.createRef();
+
+  function AWSCredAvailable() {
+    const cookie = getAuthCookie();
+    return getAWSCred(cookie.email)
+    .then ((res) => {
+      if (res === null || res.data === "") {
+        setAWSAvail(true);
+      } else {
+        //enable
+        setAWSAvail(false);
+      }
+    });
+  }
 
   return (
     <>
@@ -39,7 +59,11 @@ export function FileUploadComponent(props) {
         </label>
 
         {/*AWS Import button*/}
-        <Button variant="outlined" color="secondary" onClick={openModal}>Import from AWS S3</Button>
+        <Tooltip disableFocusListener disableTouchListener title="Add or edit AWS Keys in your profile page.">
+        <span>
+          <Button variant="outlined" color="secondary" onClick={openModal} disabled={AWSAvail}>Import from AWS S3</Button>
+        </span>
+        </Tooltip>
       </Hidden>
 
       <Dialog

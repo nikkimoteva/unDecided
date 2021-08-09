@@ -13,6 +13,7 @@ build/
 # API secrets and other common info
 secrets.json
 common.js
+training/
 
 # SDK stuff
 .idea/

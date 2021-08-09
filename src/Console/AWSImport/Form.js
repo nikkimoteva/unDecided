@@ -41,15 +41,10 @@ const regions = [
 ];
 
 export default function AWSImportForm(props) {
-  const [region, setRegion] = useState(regions[0]);
   const [accessKey, setAccessKey] = useState("");
   const [secretKey, setSecretKey] = useState("");
 
   const classes = useStyles();
-
-  function handleRegionChange(event) {
-    setRegion(event.target.value);
-  }
 
   function handleAccessKeyChange(event) {
     setAccessKey(event.target.value);
@@ -62,18 +57,6 @@ export default function AWSImportForm(props) {
   return (
     <form>
       <div className={classes.formDiv}>
-        <TextField
-          select
-          className={classes.formElem}
-          id="region-select"
-          value={region}
-          onChange={handleRegionChange}
-          label="S3 Bucket Region"
-        >
-          {
-            regions.map(region => <MenuItem key={region} value={region}>{region}</MenuItem>)
-          }
-        </TextField>
         <TextField
           value={accessKey}
           onChange={handleAccessKeyChange}
@@ -93,8 +76,8 @@ export default function AWSImportForm(props) {
         <Button
           variant="contained"
           color="primary"
-          onClick={() => props.onSubmit(region, accessKey, secretKey)}
-          disabled={region === "" || accessKey === "" || secretKey === ""}
+          onClick={() => props.onSubmit(accessKey, secretKey)}
+          disabled={accessKey === "" || secretKey === ""}
           className={classes.formElem}
         >
           Use Credentials
