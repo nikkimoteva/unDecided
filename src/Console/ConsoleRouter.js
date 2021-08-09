@@ -7,7 +7,6 @@ import Profile from "./Profile";
 import TrainJobForm from "./JobForms/TrainJobForm";
 import PredJobForm from "./JobForms/PredJobForm";
 
-import Settings from "./Settings";
 
 export default function ConsoleRouter() {
   const {path, url} = useRouteMatch();
@@ -19,7 +18,6 @@ export default function ConsoleRouter() {
       <Route path={`${path}/profile`}><Profile/></Route>
       <Route path={`${path}/submitJob`}><TrainJobForm/></Route>
       <Route path={`${path}/submitPrediction:jobID`}><PredJobForm/></Route>
-      <Route path={`${path}/settings`}><Settings/></Route>
       <Route exact path={path}><Dashboard/></Route> {/*Default route*/}
     </Switch>
   );
