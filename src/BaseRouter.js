@@ -1,11 +1,11 @@
 import {BrowserRouter as Router, Route, Switch} from "react-router-dom";
-import Header from "./common/Header/Header";
+import Header from "./Common/Header/Header";
 import {CircularProgress} from "@material-ui/core";
-import {PrivateRoute} from "./common/Auth";
+import {PrivateRoute} from "./Common/Auth";
 import DocsRouter from "./Docs/DocsRouter";
 import Demo from "./Demo/Demo";
 import Landing from "./Landing Page/Landing";
-import ContactUs from "./ContactUs/contact";
+import ContactUs from "./ContactUs/Contact";
 import React, {lazy, Suspense} from "react";
 
 export default function BaseRouter() {

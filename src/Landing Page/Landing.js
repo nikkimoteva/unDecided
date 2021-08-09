@@ -1,15 +1,15 @@
 import React, {useState, useEffect} from 'react';
 import Typed from 'react-typed';
-import CustomButton from "../common/Button";
+import CustomButton from "../Common/Button";
 import logo from '../images/logo.png';
 import figure1 from '../images/figure1.jpg';
 import Button from '@material-ui/core/Button';
 import RankingTable from "./RankingTable";
 import Overview from "./Overview";
 import {Link, useHistory} from "react-router-dom";
-import {useLoginModalContext} from "../common/LoginModalProvider";
-import {useAuth} from "../common/Auth";
-import "../common/Button.css";
+import {useLoginModalContext} from "../Common/LoginModalProvider";
+import {useAuth} from "../Common/Auth";
+import "../Common/Button.css";
 import "../App.css";
 import "./Landing.css";
 
