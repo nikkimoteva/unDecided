@@ -20,7 +20,7 @@ import Paper from '@material-ui/core/Paper';
 import KeyboardArrowDownIcon from '@material-ui/icons/KeyboardArrowDown';
 import KeyboardArrowUpIcon from '@material-ui/icons/KeyboardArrowUp';
 import LinearProgress from '@material-ui/core/LinearProgress';
-const dateFormat = require('dateformat');
+import dateFormat from 'dateformat';
 
 
 import {

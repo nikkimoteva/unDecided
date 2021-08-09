@@ -6705,6 +6705,13 @@ __metadata:
   languageName: node
   linkType: hard
 
+"dateformat@npm:^4.5.1":
+  version: 4.5.1
+  resolution: "dateformat@npm:4.5.1"
+  checksum: d5d08fd36f0987570cacada467145c722b4051285fae32969d62ef4bfc3c392f310bf6982a3ecbe62f0b42a944846d94a2bff53b8051ad1540bcaf118732fbf4
+  languageName: node
+  linkType: hard
+
 "debug@npm:2.6.9, debug@npm:^2.2.0, debug@npm:^2.3.3, debug@npm:^2.6.0, debug@npm:^2.6.9":
   version: 2.6.9
   resolution: "debug@npm:2.6.9"
@@ -16462,6 +16469,7 @@ resolve@^2.0.0-next.3:
     cors: ^2.8.5
     csv-string: ^4.0.1
     csvtojson: ^2.0.10
+    dateformat: ^4.5.1
     emailjs-com: ^3.2.0
     eslint: ^7.29.0
     eslint-config-google: ^0.14.0
