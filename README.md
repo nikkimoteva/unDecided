@@ -63,7 +63,7 @@ CSV datasets.
 - Accounts
   - Structure data in database to store account information
   - Create Sign up and Log in pages
-  - Create Job Tracking page (Not part of this requirement, but is related so I added this here)
+  - Create Job Tracking page (Not part of this requirement, but it is related)
   - Create Account information and settings page
 
 #### 2-3 rough sketch prototypes of some key tasks of the app
