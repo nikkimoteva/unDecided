@@ -2,7 +2,7 @@ import {Box, Button, makeStyles, Grid} from "@material-ui/core";
 import {Link} from "react-router-dom";
 import React, {useEffect, useState} from "react";
 
-import {getJob, getJobs, deleteJob as deleteJobDB, downloadPredictionFile} from "../Common/Managers/EndpointManager";
+import {getJobs, deleteJob as deleteJobDB, downloadPredictionFile} from "../Common/Managers/EndpointManager";
 
 import {useAuth} from "../Authentication/Auth";
 import {useHistory} from "react-router-dom";

@@ -13,7 +13,7 @@ async function updateModel(model, jobsToUpdate) {
     const borg = await connect();
     for (const job of jobsToUpdate) {
       // Prediction jobs need to get file hash from associated training job
-      const trainJob = (model === PredictionModel) ? await JobModel.findOne({_id: job.jobID}).exec() : job;
+      const trainJob = (model === PredictionModel) ? await JobModel.findOne({_id: mongoose.Types.ObjectId(job.jobID)}).exec() : job;
       const currName = trainJob.fileHash;
       const msg = await borg.execCommand(`/opt/slurm/bin/squeue -n ${currName}`);
       const squeueOut = parseSqueue(msg.stdout, currName);
@@ -23,7 +23,11 @@ async function updateModel(model, jobsToUpdate) {
       // Theoretically we don't need to check; only the currently running job has a valid file name
       const newStatus = (squeueOut.status === 'R') ? "Running" : "Queued";
       console.log(`${currName}: ${newStatus}`);
-      await model.updateOne({_id: job._id}, {status: newStatus, time_elapsed: squeueOut.time_elapsed});
+      if (model === PredictionModel) {
+        await model.updateOne({jobID: mongoose.Types.ObjectId(job._id)}, {status: newStatus, time_elapsed: squeueOut.time_elapsed});
+      } else {
+        await model.updateOne({_id: mongoose.Types.ObjectId(job._id)}, {status: newStatus, time_elapsed: squeueOut.time_elapsed});
+      }
     }
   }
 }
@@ -44,6 +48,7 @@ router.post("/", async (req, res) => {
 });
 
 router.post("/job", async (req, res) => {
+  console.log('/job path hit');
   const id_token = req.body.id_token;
   const jobID = req.body.jobID;
   const jobsToUpdate = await JobModel.find({user: id_token, _id: jobID});
@@ -208,7 +213,7 @@ router.patch('/bbmlCallback/:jobID/:type', (req, res, next) => {
   const type = req.params.type;
   const newStatus = (req.body.isSuccess) ? "Successful" : "Failed";
   if (type === "training") {
-    JobModel.updateOne({_id: jobID}, {status: newStatus})
+    JobModel.updateOne({_id: mongoose.Types.ObjectId(jobID)}, {status: newStatus})
       .then(res.end())
       .catch(next);
   } else if (type === "prediction") {
