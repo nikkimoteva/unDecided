@@ -213,11 +213,11 @@ router.patch('/bbmlCallback/:jobID/:type', (req, res, next) => {
   const type = req.params.type;
   const newStatus = (req.body.isSuccess) ? "Successful" : "Failed";
   if (type === "training") {
-    JobModel.updateOne({_id: mongoose.Types.ObjectId(jobID)}, {status: newStatus})
+    JobModel.updateOne({fileHash: jobID}, {status: newStatus}) // if training, ID is fileHash
       .then(res.end())
       .catch(next);
   } else if (type === "prediction") {
-    PredictionModel.updateOne({jobID: jobID}, {status: newStatus})
+    PredictionModel.updateOne({jobID: jobID}, {status: newStatus}) // otherwise, ID is _id of train job
       .then(res.end())
       .catch(next);
   } else {
