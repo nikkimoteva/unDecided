@@ -203,7 +203,7 @@ router.delete("/deletePredictionJobID", (req, res) => {
 });
 
 router.patch('/bbmlCallback/:jobID/:type', (req, res) => {
-  console.log(req.body);
+  console.log("bbmlCallback called");
   const jobID = req.params.jobID;
   const type = req.params.type;
   const newStatus = (req.body.isSuccess) ? "Successful" : "Failed";
@@ -212,7 +212,7 @@ router.patch('/bbmlCallback/:jobID/:type', (req, res) => {
   } else if (type === "prediction") {
     PredictionModel.updateOne({jobID: jobID}, {status: newStatus});
   } else {
-    res.error();
+    console.error(`Invalid type given: ${type}`);
   }
   res.end();
 });
