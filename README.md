@@ -1,79 +1,53 @@
-**This project implements the user interface and backend logic for the new Ensemble-Squared AutoML system, developed by UBC researchers. This React application allows users to register and log in to their accounts, and keep track of the jobs that are being run on their system. With accessibility and ease of use in mind, this application aims to simplify the process of machine learning for all users, be they individuals or institutions.**
+**Application Description**
+This project implements the user interface and backend logic for the new Ensemble-Squared AutoML system, developed by UBC researchers. This React application allows users to register and log in to their accounts, and keep track of the jobs that are being run on their system. With accessibility and ease of use in mind, this application aims to simplify the process of machine learning for all users, be they individuals or institutions.
 
 **Who is it for?**
-
 The AutoML team at UBC. Users will be both individuals and businesses who rely on having very little ML expertise to be able to perform ML operations.
 
 
 **What will it do? (What "human activity" will it support?)**
-
 Takes data as input and visualize/process the data as output. Allows users to view jobs that have completed or are in progress
  
  
 **What type of data will it store?**
-
 CSV 
 
 
 **What will users be able to do with this data?**
-
 - Visualize data (Just a table)
-
 - Run a job on the Ensemble-Squared backend
-
 - See a job and its progress
-
 - View the previously uploaded data
 
 
 **What is some additional functionality you can add/remove based on time constraints?**
-
 - Tutorial page to demo the use of the application
-
 - Fancy data visualization
-
 - Other types of data such as JSON and XML, as well as ML vision models(images), NLP (Text), Time series data.
 
 
 **3-5 minimal requirements (will definitely complete)**
-
 - Opening page (UI, responsive)
-
 - Header menu
-
 - Input CSV, connect and submit to ensemble-squared backend, and retrieve and display results to user
-
 - Job tracking implemented in backend
-
 - Login
 
 **3-7 "standard" requirements (will most likely complete)**
-
 - Profile page
-
 - History/job status tracking
-
 - Table visualization for the submitted data
-
 - View previously uploaded data (depending on accounts, can be per browser session or per user)
-
 - Job tracking visualization/progress
 
 
 **2-3 stretch requirements (plan to complete at least 1!)**
-
 - Multiple OAuth providers
-
 - Take as input other types of data
-
 - Integrate other storage solutions into app (e.g. S3, kaggle, etc)
-
 - Job notification
 
-- Integrate other storage solutions into app (e.g. S3, kaggle, etc)
-
-**Pick 2 of your minimal requirements and break each of them down into ~2-5 smaller
-tasks!**
+**Pick 2 of your minimal requirements and break each of them down into ~2-5 smaller tasks!**
 
 - Opening page
   - Create a page for the landing page of the website
@@ -86,12 +60,11 @@ tasks!**
   - Create Job Tracking page (Not part of this requirement, but is related so I added this here)
   - Create Account information and settings page
 
-**Finally, draw 2-3 rough sketch prototypes of some key tasks of your app. Sketch these
-physically on paper and then scan and add to your repo.**
+**Finally, draw 2-3 rough sketch prototypes of some key tasks of your app. Sketch these physically on paper and then scan and add to your repo.**
 
-See Image 1 and Image 2.
+Please see Image 1 and Image 2.
 
-**Some more info**
+**Competitors**
 - https://www.automl.org/
   - A listing of some autoML companies and related topics
 - Google AutoML: https://cloud.google.com/automl/
