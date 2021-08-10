@@ -99,6 +99,10 @@ export default function Jobs(props) {
             for (const existingJob of jobs) {
               if(gottenJob._id.localeCompare(existingJob._id)===0){
                 gottenJob.open = existingJob.open;
+                gottenJob.predictions=existingJob.predictions;
+                if(gottenJob.open){
+                  //get latest prediction
+                }
               }
             }
           }
@@ -223,6 +227,7 @@ export default function Jobs(props) {
     }
 
     function openButtonOnClick() {
+
       getPredictions(auth.user.email, row.id)
         .then(res => {
           const gottenPredictions = res.data;
