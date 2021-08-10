@@ -227,20 +227,24 @@ export default function Jobs(props) {
     }
 
     function openButtonOnClick() {
-
-      getPredictions(auth.user.email, row.id)
-        .then(res => {
-          const gottenPredictions = res.data;
-          const copyJobs = jobs.slice();
-          for (const existingJob of copyJobs) {
-            if(row.id===existingJob._id){
-              existingJob.predictions = gottenPredictions;
-              existingJob.open = !existingJob.open;
-            }
+      const copyJobs = jobs.slice();
+      for (const existingJob of copyJobs) {
+        if(row.id===existingJob._id){
+          existingJob.open = !existingJob.open;
+          if(existingJob.open){
+            getPredictions(auth.user.email, row.id)
+              .then(res => {
+                const gottenPredictions = res.data;
+                existingJob.predictions = gottenPredictions;
+                setJobs(copyJobs);
+            });
           }
-          setJobs(copyJobs);
-      });
-
+          else{
+            setJobs(copyJobs);
+          }
+        }
+      }
+      
     }
 
     const timeTaken = Math.min(row.time_elapsed,row.timer+5);
