@@ -202,7 +202,7 @@ export default function Jobs(props) {
               {props.name}
             </TableCell>
             <TableCell align="center">{props.status}</TableCell>
-            <TableCell align="right">{dateFormat(props.created, "mmmm dS, yyyy, h:MM:ss TT")}</TableCell>
+            <TableCell align="center">{dateFormat(props.created, "mmmm dS, yyyy, h:MM:ss TT")}</TableCell>
             <TableCell align="center">
               {
                 (props.status === "Successful") ? 
