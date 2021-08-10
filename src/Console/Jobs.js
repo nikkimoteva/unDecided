@@ -20,7 +20,7 @@ import Paper from '@material-ui/core/Paper';
 import KeyboardArrowDownIcon from '@material-ui/icons/KeyboardArrowDown';
 import KeyboardArrowUpIcon from '@material-ui/icons/KeyboardArrowUp';
 import LinearProgress from '@material-ui/core/LinearProgress';
-const dateFormat = require('dateformat');
+// const dateFormat = require('dateformat');
 
 
 import {
@@ -186,7 +186,7 @@ export default function Jobs(props) {
               {props.name}
             </TableCell>
             <TableCell align="center">{props.status}</TableCell>
-            <TableCell align="center">{dateFormat(props.created, "mmmm dS, yyyy, h:MM:ss TT")}</TableCell>
+            <TableCell align="center">{1}</TableCell>
             <TableCell align="center">
               {
                 (props.status === "Successful") ? 
@@ -240,7 +240,7 @@ export default function Jobs(props) {
             {row.name}
           </TableCell>
           <TableCell align="right">{row.status}</TableCell>
-          <TableCell align="right">{dateFormat(row.created, "mmmm dS, yyyy, h:MM:ss TT")}</TableCell>
+          <TableCell align="right">{1}</TableCell>
           <TableCell align="right">{row.target_name}</TableCell>
           <TableCell align="center"><Button variant="contained"
             className={classes.jobActionButton} onClick={deleteJob} color="primary"
