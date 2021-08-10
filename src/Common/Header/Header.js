@@ -92,11 +92,6 @@ export default function Header() {
         TransitionComponent={SlideUpTransition}
       >
       <AuthOptions />
-        {/* <DialogTitle>Sign Up</DialogTitle>
-        <SignupModal />
-
-        <DialogTitle>Log In</DialogTitle>
-        <LoginModal signin={login} onClose={closeLoginModal}/> */}
       </Dialog>
     </>
   );
