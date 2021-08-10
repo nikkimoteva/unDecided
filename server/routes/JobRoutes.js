@@ -12,7 +12,6 @@ async function updateModel(model, jobsToUpdate) {
   if (jobsToUpdate.length !== 0) {
     const borg = await connect();
     for (const job of jobsToUpdate) {
-      console.log(`Attempting to update squeue status of job ${job}`);
       // Prediction jobs need to get file hash from associated training job
       const trainJob = (model === PredictionModel) ? await JobModel.findOne({_id: job.jobID}).exec() : job;
       const currName = trainJob.fileHash;
@@ -48,7 +47,7 @@ router.post("/job", async (req, res) => {
   const id_token = req.body.id_token;
   const jobID = req.body.jobID;
   const jobsToUpdate = await JobModel.find({user: id_token, _id: jobID});
-  //await updateModel(JobModel, jobsToUpdate);
+  await updateModel(JobModel, jobsToUpdate);
   const job = await JobModel.find({user: id_token, _id: jobID});
   res.json(job);
 });

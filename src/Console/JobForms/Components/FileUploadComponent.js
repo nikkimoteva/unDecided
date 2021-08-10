@@ -23,6 +23,8 @@ export function FileUploadComponent(props) {
     setShowModal(false);
   }
 
+  console.log(1234567);
+
   const fileInput = React.createRef();
 
   function AWSCredAvailable() {
