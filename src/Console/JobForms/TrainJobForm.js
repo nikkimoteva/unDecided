@@ -140,7 +140,7 @@ export default function TrainJobForm() {
     <div className={classes.rootDiv}>
       <h1 style={{paddingBottom: "20px"}}>Training Job</h1>
       <div>
-        <LoadingIcon hidden={!isLoadingFile}  variant={progressBarType} loadingValue={loadingValue}/>
+        <LoadingIcon hidden={!isLoadingFile} variant={progressBarType} loadingValue={loadingValue}/>
         <DataImportStatusMsg isDataUploadSuccess={dataImportSuccess}/>
       </div>
 
