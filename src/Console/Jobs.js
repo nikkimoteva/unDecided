@@ -70,7 +70,6 @@ const useStyles = makeStyles({
 export default function Jobs(props) {
   const classes = useStyles();
   const [jobs, setJobs] = useState([]);
-  const [selectionModel, setSelectionModel] = useState([]);
   const auth = useAuth();
   const history = useHistory();
 
@@ -80,9 +79,34 @@ export default function Jobs(props) {
     getJobs(auth.user.email)
       .then(res => {
         const gottenJobs = res.data;
+        for (const gottenJob of gottenJobs) {
+          gottenJob.open = false;
+          gottenJob.predictions=[];
+        }
         setJobs(gottenJobs);
       });
   }, []);
+
+  useEffect(() => {
+      const intervalId = setInterval(() => {
+
+        getJobs(auth.user.email)
+        .then(res => {
+          const gottenJobs = res.data;
+          for (const gottenJob of gottenJobs) {
+            gottenJob.open = false;
+            gottenJob.predictions=[];
+            for (const existingJob of jobs) {
+              if(gottenJob._id.localeCompare(existingJob._id)===0){
+                gottenJob.open = existingJob.open;
+              }
+            }
+          }
+          setJobs(gottenJobs);
+        });
+      }, 30000);
+      return () => clearInterval(intervalId); //This is important
+    });
 
   
   function ProgressBar(props){
@@ -98,26 +122,10 @@ export default function Jobs(props) {
     }
 
   function Row(props) {
-
-    const [row, setRow] = React.useState(props.row);
-    const [rowState, setRowState] = React.useState({open: false, predictions: []});
+    const row = props.row;
+    const [rowState, setRowState] = React.useState({open: row.open, predictions: row.predictions});
     const classes = useRowStyles();
-    const [dateTime, setDateTime] = useState(new Date());
 
-    useEffect(() => {
-      const intervalId = setInterval(() => {
-
-        setDateTime(new Date());
-        getJob(auth.user.email,row.id)
-        .then(res => {
-          const job = res.data[0];
-          job.id = job._id;
-          setRow(job);
-        });
-      }, 30000);
-      return () => clearInterval(intervalId); //This is important
-    });
-    
     function deleteJob() {
       const jobId = row.id;
       deleteJobDB(auth.user.email, jobId)
@@ -128,6 +136,10 @@ export default function Jobs(props) {
         })
         .then(res => {
           const gottenJobs = res.data;
+          for (const gottenJob of gottenJobs) {
+            gottenJob.open = false;
+            gottenJob.predictions=[];
+          }
           setJobs(gottenJobs);
         })
         .catch(err => console.log(err));
@@ -214,7 +226,14 @@ export default function Jobs(props) {
       getPredictions(auth.user.email, row.id)
         .then(res => {
           const gottenPredictions = res.data;
-          setRowState({open: !rowState.open, predictions: gottenPredictions});
+          const copyJobs = jobs.slice();
+          for (const existingJob of copyJobs) {
+            if(row.id===existingJob._id){
+              existingJob.predictions = gottenPredictions;
+              existingJob.open = !existingJob.open;
+            }
+          }
+          setJobs(copyJobs);
       });
 
     }
@@ -233,7 +252,7 @@ export default function Jobs(props) {
 
           <TableCell>
             <IconButton aria-label="expand row" size="small" onClick={openButtonOnClick}>
-              {rowState.open ? <KeyboardArrowUpIcon/> : <KeyboardArrowDownIcon/>}
+              {row.open ? <KeyboardArrowUpIcon/> : <KeyboardArrowDownIcon/>}
             </IconButton>
           </TableCell>
           <TableCell component="th" scope="row">
@@ -264,8 +283,8 @@ export default function Jobs(props) {
         
         <TableRow>
           <TableCell style={{paddingBottom: 0, paddingTop: 0}} colSpan={6}>
-            <Collapse in={rowState.open} timeout="auto" unmountOnExit>
-              {rowState.predictions.length!==0&&
+            <Collapse in={row.open} timeout="auto" unmountOnExit>
+              {row.predictions.length!==0&&
               <Box margin={1}>
                 <Typography variant="h6" gutterBottom component="div">
                   Predictions
@@ -279,13 +298,13 @@ export default function Jobs(props) {
                     </TableRow>
                   </TableHead>
                   <TableBody>
-                    {rowState.predictions.map((prediction) => (
+                    {row.predictions.map((prediction) => (
                       SubRow(prediction)
                     ))}
                   </TableBody>
                 </Table>
               </Box>}
-              {rowState.predictions.length===0&&
+              {row.predictions.length===0&&
               <Box margin={1}>
                 <Typography variant="h6" gutterBottom component="div">
                   No Prediction Submitted
