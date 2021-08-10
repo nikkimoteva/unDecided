@@ -56,7 +56,7 @@ export default function AWSImportForm(props) {
         <Button
           variant="contained"
           color="primary"
-          onClick={() => {props.onSubmit(accessKey, secretKey); clear();}}
+          onClick={() => {props.onSubmit(accessKey, secretKey); clear(); alert("Successfully added!");}}
           disabled={accessKey === "" || secretKey === ""}
           className={classes.formElem}
         >
