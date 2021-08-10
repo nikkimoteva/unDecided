@@ -9,20 +9,22 @@ const {v4: uuidv4} = require('uuid');
 const mongoose = require('mongoose');
 
 async function updateModel(model, jobsToUpdate) {
-  const borg = await connect();
-  for (const job of jobsToUpdate) {
-    // Prediction jobs need to get file hash from associated training job
-    const trainJob = (model === PredictionModel) ? await JobModel.findOne({_id: job.jobID}).exec() : job;
-    const currName = trainJob.fileHash;
-    const msg = await borg.execCommand(`/opt/slurm/bin/squeue -n ${currName}`);
-    const squeueOut = parseSqueue(msg.stdout, currName);
+  if (jobsToUpdate.length !== 0) {
+    const borg = await connect();
+    for (const job of jobsToUpdate) {
+      // Prediction jobs need to get file hash from associated training job
+      const trainJob = (model === PredictionModel) ? await JobModel.findOne({_id: job.jobID}).exec() : job;
+      const currName = trainJob.fileHash;
+      const msg = await borg.execCommand(`/opt/slurm/bin/squeue -n ${currName}`);
+      const squeueOut = parseSqueue(msg.stdout, currName);
 
-    // This usually occurs if the callback had failed to notify us, which can happen on local, or the job has not started running yet
-    if (squeueOut === null) continue;
-    // Theoretically we don't need to check; only the currently running job has a valid file name
-    const newStatus = (squeueOut.status === 'R') ? "Running" : "Queued";
-    console.log(`${currName}: ${newStatus}`);
-    await model.updateOne({_id: job._id}, {status: newStatus, time_elapsed: squeueOut.time_elapsed});
+      // This usually occurs if the callback had failed to notify us, which can happen on local, or the job has not started running yet
+      if (squeueOut === null) continue;
+      // Theoretically we don't need to check; only the currently running job has a valid file name
+      const newStatus = (squeueOut.status === 'R') ? "Running" : "Queued";
+      console.log(`${currName}: ${newStatus}`);
+      await model.updateOne({_id: job._id}, {status: newStatus, time_elapsed: squeueOut.time_elapsed});
+    }
   }
 }
 
@@ -201,7 +203,7 @@ router.delete("/deletePredictionJobID", (req, res) => {
 });
 
 router.patch('/bbmlCallback/:jobID/:type', (req, res) => {
-  console.log(req.body);
+  console.log("bbmlCallback called");
   const jobID = req.params.jobID;
   const type = req.params.type;
   const newStatus = (req.body.isSuccess) ? "Successful" : "Failed";
@@ -210,7 +212,7 @@ router.patch('/bbmlCallback/:jobID/:type', (req, res) => {
   } else if (type === "prediction") {
     PredictionModel.updateOne({jobID: jobID}, {status: newStatus});
   } else {
-    res.error();
+    console.error(`Invalid type given: ${type}`);
   }
   res.end();
 });
