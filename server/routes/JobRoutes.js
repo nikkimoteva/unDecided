@@ -202,19 +202,22 @@ router.delete("/deletePredictionJobID", (req, res) => {
     .catch(err => errorHandler(err, res));
 });
 
-router.patch('/bbmlCallback/:jobID/:type', (req, res) => {
+router.patch('/bbmlCallback/:jobID/:type', (req, res, next) => {
   console.log("bbmlCallback called");
   const jobID = req.params.jobID;
   const type = req.params.type;
   const newStatus = (req.body.isSuccess) ? "Successful" : "Failed";
   if (type === "training") {
-    JobModel.updateOne({_id: jobID}, {status: newStatus});
+    JobModel.updateOne({_id: jobID}, {status: newStatus})
+      .then(res.end())
+      .catch(next);
   } else if (type === "prediction") {
-    PredictionModel.updateOne({jobID: jobID}, {status: newStatus});
+    PredictionModel.updateOne({jobID: jobID}, {status: newStatus})
+      .then(res.end())
+      .catch(next);
   } else {
     console.error(`Invalid type given: ${type}`);
   }
-  res.end();
 });
 
 
