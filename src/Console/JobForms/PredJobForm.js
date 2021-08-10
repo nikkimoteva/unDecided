@@ -154,7 +154,7 @@ function PredJobForm() {
                              onFilePicked={onFilePicked}
         />
 
-        <JobNameComponent jobName={jobName} setJobName={setJobName}/>
+        <JobNameComponent jobName={jobName} setJobName={setJobName} placeholder="Prediction Job Name"/>
         <SubmitButton submitHandler={submitHandler}/>
 
       </form>

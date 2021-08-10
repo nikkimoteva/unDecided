@@ -23,11 +23,7 @@ async function updateModel(model, jobsToUpdate) {
       // Theoretically we don't need to check; only the currently running job has a valid file name
       const newStatus = (squeueOut.status === 'R') ? "Running" : "Queued";
       console.log(`${currName}: ${newStatus}`);
-      if (model === PredictionModel) {
-        await model.updateOne({jobID: mongoose.Types.ObjectId(job._id)}, {status: newStatus, time_elapsed: squeueOut.time_elapsed});
-      } else {
-        await model.updateOne({_id: mongoose.Types.ObjectId(job._id)}, {status: newStatus, time_elapsed: squeueOut.time_elapsed});
-      }
+      await model.updateOne({_id: job._id}, {status: newStatus, time_elapsed: squeueOut.time_elapsed});
     }
   }
 }
@@ -151,7 +147,7 @@ router.post("/submitPrediction", async (req, res) => {
   const folder_path = slurm_command_dataset_path + trainJob.fileHash;
   const test_path = folder_path + '/' + test_file_name + '.csv';
   const local_path = `predictions/${trainJob.fileHash}.csv`;
-  const callback = `https://ensemble-automl.herokuapp.com/api/bbmlCallback/${trainJob.fileHash}/prediction`;
+  const callback = `https://ensemble-automl.herokuapp.com/api/bbmlCallback/${jobID}/prediction`;
   const predictString = runPredict(test_path, trainJob.fileHash, trainJob.timer, trainJob.target_name, user_email, trainJob.name, callback);
 
   await storeCSV(dataset, local_path);

@@ -150,7 +150,7 @@ export default function TrainJobForm() {
                              onFilePicked={onFilePicked}
         />
 
-        <JobNameComponent jobName={jobName} setJobName={setJobName}/>
+        <JobNameComponent jobName={jobName} setJobName={setJobName} placeholder="Job Name"/>
 
         <JobTimeComponent maxJobTime={maxJobTime} setMaxJobTime={setMaxJobTime} timeOption={timeOption}
                           setTimeOption={setTimeOption}
