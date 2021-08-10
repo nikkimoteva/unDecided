@@ -150,7 +150,7 @@ router.post("/submitPrediction", async (req, res) => {
   const predJob = await prediction.save();
   const _id = predJob._id.toString();
 
-  const callback = `https://ensemble-automl.herokuapp.com/api/bbmlCallback/${_id}/prediction`;
+  const callback = `https://ensemble-automl.herokuapp.com/api/jobs/bbmlCallback/${_id}/prediction`;
   const predictString = runPredict(test_path, trainJob.fileHash, trainJob.timer, trainJob.target_name, user_email, trainJob.name, callback);
   await storeCSV(dataset, local_path);
   const borg = await connect();
