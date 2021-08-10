@@ -56,9 +56,9 @@ export function getJobs(id_token) {
 
 }
 
-// export function getJob(id_token, jobID) {
-//   return axios.post(`${jobRoot}/job`, {id_token,jobID});
-// }
+export function getJob(id_token, jobID) {
+  return axios.post(`${jobRoot}/job`, {id_token,jobID});
+}
 
 export function getPredictions(id_token,jobID) {
   return axios.post(`${jobRoot}/predictions`, {id_token,jobID});
