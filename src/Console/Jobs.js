@@ -226,25 +226,22 @@ export default function Jobs(props) {
       );
     }
 
-    function openButtonOnClick() {
+    async function openButtonOnClick() {
       const copyJobs = jobs.slice();
       for (const existingJob of copyJobs) {
         if(row.id===existingJob._id){
           existingJob.open = !existingJob.open;
           if(existingJob.open){
-            getPredictions(auth.user.email, row.id)
-              .then(res => {
-                const gottenPredictions = res.data;
-                existingJob.predictions = gottenPredictions;
-                setJobs(copyJobs);
-            });
-          }
-          else{
-            setJobs(copyJobs);
+            const res = await getPredictions(auth.user.email, row.id);
+            existingJob.predictions = res.data;
           }
         }
+        else{
+          existingJob.open=false;
+        }
+        
       }
-      
+      setJobs(copyJobs);
     }
 
     const timeTaken = Math.min(row.time_elapsed,row.timer+5);
