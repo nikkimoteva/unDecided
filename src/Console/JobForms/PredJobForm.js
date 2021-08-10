@@ -12,9 +12,6 @@ import LoadingIcon from "../../Common/LoadingIcon";
 import {submitPrediction} from "../../Common/Managers/EndpointManager";
 import { useParams } from 'react-router-dom';
 
-
-
-
 const useStyles = makeStyles((theme) => ({
   root: {
     '& > *': {

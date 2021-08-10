@@ -23,7 +23,6 @@ try {
   const remote_ssh = process.env.REMOTE_SSH;
   const ensemble_session_path = process.env.ENSEMBLE_SESSION_PATH;
   const slurm_command_dataset_path =process.env.SLURM_COMMAND_DATASET_PATH;
-  console.log(`google client ID: ${googlelogin_clientID}`);
   toExport = {
     user, password, server, database, email, captcha_site_key, captcha_secret_key, contactus_user,
     contactus_access_token, contactus_service_id, contactus_template_id, googlelogin_clientID, ssh_user, ssh_pw, 
