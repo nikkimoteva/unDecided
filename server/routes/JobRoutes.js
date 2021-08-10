@@ -147,16 +147,17 @@ router.post("/submitPrediction", async (req, res) => {
   const folder_path = slurm_command_dataset_path + trainJob.fileHash;
   const test_path = folder_path + '/' + test_file_name + '.csv';
   const local_path = `predictions/${trainJob.fileHash}.csv`;
-  const callback = `https://ensemble-automl.herokuapp.com/api/bbmlCallback/${jobID}/prediction`;
-  const predictString = runPredict(test_path, trainJob.fileHash, trainJob.timer, trainJob.target_name, user_email, trainJob.name, callback);
+  const predJob = await prediction.save();
+  const _id = predJob._id.toString();
 
+  const callback = `https://ensemble-automl.herokuapp.com/api/bbmlCallback/${_id}/prediction`;
+  const predictString = runPredict(test_path, trainJob.fileHash, trainJob.timer, trainJob.target_name, user_email, trainJob.name, callback);
   await storeCSV(dataset, local_path);
   const borg = await connect();
   await borg.putFile(local_path, test_path);
   console.log(predictString);
   const stdOut = await borg.exec(predictString, []);
   await removeCSV(local_path);
-  await prediction.save();
   res.sendStatus(200);
 });
 
@@ -213,7 +214,8 @@ router.patch('/bbmlCallback/:jobID/:type', (req, res, next) => {
       .then(res.end())
       .catch(next);
   } else if (type === "prediction") {
-    PredictionModel.updateOne({jobID: jobID}, {status: newStatus}) // otherwise, ID is _id of train job
+    console.log(jobID);
+    PredictionModel.updateOne({_id: mongoose.Types.ObjectId(jobID)}, {status: newStatus}) // otherwise, ID is _id of prediction job
       .then(res.end())
       .catch(next);
   } else {
