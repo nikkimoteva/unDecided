@@ -80,6 +80,19 @@ export default function Jobs(props) {
     getJobs(auth.user.email)
       .then(res => {
         const gottenJobs = res.data;
+        for (const gottenJob of gottenJobs) {
+            gottenJob.open = false;
+            gottenJob.predictions=[];
+            for (const existingJob of jobs) {
+              if(gottenJob._id.localeCompare(existingJob._id)===0){
+                gottenJob.open = existingJob.open;
+                gottenJob.predictions=existingJob.predictions;
+                if(gottenJob.open){
+                  //get latest prediction
+                }
+              }
+            }
+          }
         setJobs(gottenJobs);
       });
   }
@@ -87,6 +100,31 @@ export default function Jobs(props) {
   useEffect(() => {
     updateJobRows();
   }, []);
+
+  useEffect(() => {
+      const intervalId = setInterval(() => {
+
+        getJobs(auth.user.email)
+        .then(res => {
+          const gottenJobs = res.data;
+          for (const gottenJob of gottenJobs) {
+            gottenJob.open = false;
+            gottenJob.predictions=[];
+            for (const existingJob of jobs) {
+              if(gottenJob._id.localeCompare(existingJob._id)===0){
+                gottenJob.open = existingJob.open;
+                gottenJob.predictions=existingJob.predictions;
+                if(gottenJob.open){
+                  //get latest prediction
+                }
+              }
+            }
+          }
+          setJobs(gottenJobs);
+        });
+      }, 30000);
+      return () => clearInterval(intervalId);
+    });
 
   
   function ProgressBar(props){
@@ -102,8 +140,9 @@ export default function Jobs(props) {
     }
 
   function Row(props) {
-    const [row, setRow] = React.useState(props.row);
-    const [rowState, setRowState] = React.useState({open: false, predictions: []});
+
+    const row = props.row;
+    const [rowState, setRowState] = React.useState({open: row.open, predictions: row.predictions});
     const classes = useRowStyles();
 
     function deleteJob() {
@@ -116,6 +155,10 @@ export default function Jobs(props) {
         })
         .then(res => {
           const gottenJobs = res.data;
+          for (const gottenJob of gottenJobs) {
+            gottenJob.open = false;
+            gottenJob.predictions=[];
+          }
           setJobs(gottenJobs);
         })
         .catch(err => console.log(err));
@@ -132,15 +175,19 @@ export default function Jobs(props) {
       props.id = props._id;
       const timeTaken = Math.min(props.time_elapsed,row.timer+5);
       props.progress = timeTaken/(row.timer+5)*100;
-      // console.log("pred");
-      // console.log(props);
       function deletePrediction() {
         const predictionID = props.id;
         deletePredictionDB(auth.user.email, predictionID).then(_ => {
           getPredictions(auth.user.email, row.id)
             .then(res => {
               const gottenPredictions = res.data;
-              setRowState({open: rowState.open, predictions: gottenPredictions});
+              const copyJobs = jobs.slice();
+              for (const existingJob of copyJobs) {
+                if(row.id===existingJob._id){
+                  existingJob.predictions=gottenPredictions;
+                  setJobs(copyJobs);
+                }
+              }
             });
         });
       }
@@ -150,8 +197,6 @@ export default function Jobs(props) {
         const predictionID = props.id;
         downloadPredictionFile(auth.user.email, predictionID)
           .then(res => {
-            console.log("Starting download");
-            // Disgusting JS stack code to make it actually force a download (from https://stackoverflow.com/questions/58630869/download-file-from-express-api-using-react-and-axios)
             const url = window.URL.createObjectURL(new Blob([res.data]));
             const link = document.createElement('a');
             link.href = url;
@@ -174,7 +219,7 @@ export default function Jobs(props) {
               {props.name}
             </TableCell>
             <TableCell align="center">{props.status}</TableCell>
-            <TableCell align="right">{dateFormat(props.created, "mmmm dS, yyyy, h:MM:ss TT")}</TableCell>
+            <TableCell align="center">{dateFormat(props.created, "mmmm dS, yyyy, h:MM:ss TT")}</TableCell>
             <TableCell align="center">
               {
                 (props.status === "Successful") ?
@@ -198,22 +243,26 @@ export default function Jobs(props) {
       );
     }
 
-    function openButtonOnClick() {
-      getPredictions(auth.user.email, row.id)
-        .then(res => {
-          const gottenPredictions = res.data;
-          setRowState({open: !rowState.open, predictions: gottenPredictions});
-      });
-
+    async function openButtonOnClick() {
+      const copyJobs = jobs.slice();
+      for (const existingJob of copyJobs) {
+        if(row.id===existingJob._id){
+          existingJob.open = !existingJob.open;
+          if(existingJob.open){
+            const res = await getPredictions(auth.user.email, row.id);
+            existingJob.predictions = res.data;
+          }
+        }
+        else{
+          existingJob.open=false;
+        }
+        
+      }
+      setJobs(copyJobs);
     }
 
     const timeTaken = Math.min(row.time_elapsed,row.timer+5);
     row.progress = timeTaken/(row.timer+5)*100;
-    // console.log("job");
-    // console.log(row);
-    // if(row.progress===100){
-    //   row.status="Successful";
-    // }
     return (
       <>
 
@@ -221,7 +270,7 @@ export default function Jobs(props) {
 
           <TableCell>
             <IconButton aria-label="expand row" size="small" onClick={openButtonOnClick}>
-              {rowState.open ? <KeyboardArrowUpIcon/> : <KeyboardArrowDownIcon/>}
+              {row.open ? <KeyboardArrowUpIcon/> : <KeyboardArrowDownIcon/>}
             </IconButton>
           </TableCell>
           <TableCell component="th" scope="row">
@@ -252,8 +301,8 @@ export default function Jobs(props) {
 
         <TableRow>
           <TableCell style={{paddingBottom: 0, paddingTop: 0}} colSpan={6}>
-            <Collapse in={rowState.open} timeout="auto" unmountOnExit>
-              {rowState.predictions.length!==0&&
+            <Collapse in={row.open} timeout="auto" unmountOnExit>
+              {row.predictions.length!==0&&
               <Box margin={1}>
                 <Typography variant="h6" gutterBottom component="div">
                   Predictions
@@ -267,13 +316,13 @@ export default function Jobs(props) {
                     </TableRow>
                   </TableHead>
                   <TableBody>
-                    {rowState.predictions.map((prediction) => (
+                    {row.predictions.map((prediction) => (
                       SubRow(prediction)
                     ))}
                   </TableBody>
                 </Table>
               </Box>}
-              {rowState.predictions.length===0&&
+              {row.predictions.length===0&&
               <Box margin={1}>
                 <Typography variant="h6" gutterBottom component="div">
                   No Prediction Submitted
