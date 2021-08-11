@@ -172,31 +172,24 @@ router.delete("/deletePrediction", (req, res) => {
     .catch(err => errorHandler(err, res));
 });
 
-router.post("/downloadPrediction", (req, res) => {
+router.post("/downloadPrediction", async (req, res) => {
   const id_token = req.body.id_token;
   const predictionID = req.body.predictionID;
   const localPath = "predictions/predictionFile.csv";
-  getUserId(id_token)
-    .then(userToken => {
-      return PredictionModel.findOne({user: userToken, _id: predictionID})
-        .then(pred => JobModel.findOne({user: userToken, _id: pred.jobID}));
-    })
-    .then(trainJob => {
-      const fileHash = trainJob.fileHash;
-      const timer = trainJob.timer;
-      const seed = 0;
-      const remotePath = `${slurm_command_dataset_path}../sessions/${fileHash}/ensemble/t${timer}_s${seed}/voting/full_ensemblesquared.csv`;
-      console.log(remotePath);
-      return connect()
-        .then(borg => {
-          console.log("Connected to borg");
-          return borg.getFile(localPath, remotePath);
-        })
-        .then(() => console.log("Successfully downloaded prediction file"))
-        .catch(() => res.sendStatus(404));
-    })
-    .then(() => res.download(localPath, () => removeCSV(localPath)))
-    .catch(err => errorHandler(err, res));
+  const userToken = await getUserId(id_token);
+  const pred = await PredictionModel.findOne({user: userToken, _id: predictionID}).exec();
+  const trainJob = await JobModel.findOne({user: userToken, _id: pred.jobID}).exec();
+  const fileHash = trainJob.fileHash;
+  const timer = trainJob.timer;
+  const seed = 0;
+  const remotePath = `${slurm_command_dataset_path}../sessions/${fileHash}/ensemble/t${timer}_s${seed}/voting/full_ensemblesquared.csv`;
+  
+  console.log(remotePath);
+  const borg = await connect();
+  console.log("Connected to borg");
+  await borg.getFile(localPath, remotePath);
+  console.log("Successfully downloaded prediction file");
+  res.download(localPath, () => removeCSV(localPath));
 });
 
 router.delete("/deletePredictionJobID", (req, res) => {
