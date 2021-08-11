@@ -5,6 +5,15 @@ const root = '/api'; // make sure this matches up with backend
  * A file for storing endpoint calls. Let the caller handle errors, so it can display appropriate errors to client
  */
 
+
+/*
+ * Other endpoints
+ */
+
+export function sendEmail(toSend) {
+  return axios.post(`${root}/contactus`, {toSend}).then(res => res.data);
+}
+
 /*
  * Auth endpoints
  */

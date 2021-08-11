@@ -1,7 +1,7 @@
 const csv = require('jquery-csv');
 const fs = require('fs');
-const { ssh_user, ssh_pw, ensemble_session_path, remote_ssh, contactus_user,
-  contactus_access_token, contactus_service_id, contactus_template_id } = require('./SecretHandler');
+const nodemailer = require("nodemailer");
+const { ssh_user, ssh_pw, ensemble_session_path, remote_ssh, email, email_pwd } = require('./SecretHandler');
 const { NodeSSH } = require('node-ssh');
 
 const ssh1 = new NodeSSH();
@@ -191,7 +191,30 @@ module.exports = {
     }
   },
 
-  sendEmail(body) {
+  sendEmail: function(info) {
+    return new Promise((resolve, reject) => {
+      const transporter = nodemailer.createTransport({
+        service: 'gmail',
+        auth: {
+          user: email,
+          pass: email_pwd
+        }
+      });
 
+      const mailOptions = {
+        from: info.fromEmail,
+        to: info.toEmail,
+        subject: info.subject,
+        text: info.message
+      };
+
+      transporter.sendMail(mailOptions, function(error, info){
+        if (error) {
+          reject(error);
+        } else {
+          resolve(info.response);
+        }
+      });
+    })
   }
 };
