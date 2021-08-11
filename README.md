@@ -83,7 +83,7 @@ Please see Image1 and Image2.
 - **React:** The project uses React, and we are using JSX to render to our frontend. We started our project using the create-react-app boilerplate code. We are also using many hooks throughout the project.
 - **Node and Express:** We are using Node to connect to our React frontend, and communicating (sending and receiving) data from out MongoDB database to display on our frontend. There are many examples of get/update/delete in server/server.js.
 - **MongoDB:** We are using MongoDB and the mongoose library to store users, jobs, and predictions information in our database so that we could retrieve them and showcase them to the user.
-- **Deployment:** We have deployed our project on Heroku. All the functionalities are present on the deployed application.
+- **Deployment:** We have deployed our project on Heroku. All the functionalities are present on the deployed application. We also have added github action so that any push to the main branch of our project would get deployed to our website.
 
 <hr/>
 
