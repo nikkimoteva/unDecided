@@ -7,7 +7,7 @@ export default function JobNameComponent(props) {
     <div>
       <TextField
         id="jobName"
-        label="Job Name"
+        label={props.placeholder}
         value={props.jobName}
         variant="outlined"
         style={{width: "52vh"}}

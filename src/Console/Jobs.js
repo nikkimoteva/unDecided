@@ -2,7 +2,7 @@ import {Box, Button, makeStyles, Grid} from "@material-ui/core";
 import {Link} from "react-router-dom";
 import React, {useEffect, useState} from "react";
 
-import {getJob, getJobs, deleteJob as deleteJobDB, downloadPredictionFile} from "../Common/Managers/EndpointManager";
+import {getJobs, deleteJob as deleteJobDB, downloadPredictionFile} from "../Common/Managers/EndpointManager";
 
 import {useAuth} from "../Authentication/Auth";
 import {useHistory} from "react-router-dom";
@@ -19,6 +19,7 @@ import Typography from '@material-ui/core/Typography';
 import Paper from '@material-ui/core/Paper';
 import KeyboardArrowDownIcon from '@material-ui/icons/KeyboardArrowDown';
 import KeyboardArrowUpIcon from '@material-ui/icons/KeyboardArrowUp';
+import RefreshIcon from '@material-ui/icons/Refresh';
 import LinearProgress from '@material-ui/core/LinearProgress';
 import dateFormat from 'dateformat';
 
@@ -75,16 +76,29 @@ export default function Jobs(props) {
 
   const url = props.url;
 
-  useEffect(() => {
+  function updateJobRows() {
     getJobs(auth.user.email)
       .then(res => {
         const gottenJobs = res.data;
         for (const gottenJob of gottenJobs) {
-          gottenJob.open = false;
-          gottenJob.predictions=[];
-        }
+            gottenJob.open = false;
+            gottenJob.predictions=[];
+            for (const existingJob of jobs) {
+              if(gottenJob._id.localeCompare(existingJob._id)===0){
+                gottenJob.open = existingJob.open;
+                gottenJob.predictions=existingJob.predictions;
+                if(gottenJob.open){
+                  //get latest prediction
+                }
+              }
+            }
+          }
         setJobs(gottenJobs);
       });
+  }
+
+  useEffect(() => {
+    updateJobRows();
   }, []);
 
   useEffect(() => {
@@ -126,6 +140,7 @@ export default function Jobs(props) {
     }
 
   function Row(props) {
+
     const row = props.row;
     const [rowState, setRowState] = React.useState({open: row.open, predictions: row.predictions});
     const classes = useRowStyles();
@@ -160,15 +175,19 @@ export default function Jobs(props) {
       props.id = props._id;
       const timeTaken = Math.min(props.time_elapsed,row.timer+5);
       props.progress = timeTaken/(row.timer+5)*100;
-      // console.log("pred");
-      // console.log(props);
       function deletePrediction() {
         const predictionID = props.id;
         deletePredictionDB(auth.user.email, predictionID).then(_ => {
           getPredictions(auth.user.email, row.id)
             .then(res => {
               const gottenPredictions = res.data;
-              setRowState({open: rowState.open, predictions: gottenPredictions});
+              const copyJobs = jobs.slice();
+              for (const existingJob of copyJobs) {
+                if(row.id===existingJob._id){
+                  existingJob.predictions=gottenPredictions;
+                  setJobs(copyJobs);
+                }
+              }
             });
         });
       }
@@ -205,7 +224,7 @@ export default function Jobs(props) {
             <TableCell align="center">{dateFormat(props.created, "mmmm dS, yyyy, h:MM:ss TT")}</TableCell>
             <TableCell align="center">
               {
-                (props.status === "Successful") ? 
+                (props.status === "Successful") ?
                  <Button variant="contained" className={classes.jobActionButton}
                           onClick={downloadPrediction} color="primary" startIcon={<GetAppIcon/>}
                  />
@@ -215,10 +234,10 @@ export default function Jobs(props) {
                       className={classes.jobActionButton} onClick={deletePrediction} color="primary"
                       startIcon={<DeleteIcon/>}
               />
-              
+
             </TableCell>
           </TableRow>
-          
+
           <ProgressBar status={props.status}progress={props.progress} colSpan={3}/>
 
         </>
@@ -246,11 +265,6 @@ export default function Jobs(props) {
 
     const timeTaken = Math.min(row.time_elapsed,row.timer+5);
     row.progress = timeTaken/(row.timer+5)*100;
-    // console.log("job");
-    // console.log(row);
-    // if(row.progress===100){
-    //   row.status="Successful";
-    // }
     return (
       <>
 
@@ -286,7 +300,7 @@ export default function Jobs(props) {
         </TableRow>
         <ProgressBar status={row.status} progress={row.progress} colSpan={6}/>
 
-        
+
         <TableRow>
           <TableCell style={{paddingBottom: 0, paddingTop: 0}} colSpan={6}>
             <Collapse in={row.open} timeout="auto" unmountOnExit>
@@ -320,7 +334,7 @@ export default function Jobs(props) {
 
           </TableCell>
         </TableRow>
-        
+
       </>
     );
   }
@@ -337,6 +351,9 @@ export default function Jobs(props) {
                 to={`${url}/submitJob`}
         >
           New Job
+        </Button>
+        <Button variant="outlined" color="secondary" onClick={updateJobRows} style={{margin: "10px 0"}}>
+          <RefreshIcon/>
         </Button>
       </Grid>
 
