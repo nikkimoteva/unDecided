@@ -60,12 +60,15 @@ export default function ContactUs() {
       sendEmail(toSend)
         .then((response) => {
           console.log("SUCCESS!", response.status, response.text);
-          setToSend({
+          const clear = {
             from_name: "",
             subject: "",
             message: "",
             email: "",
-          });
+          };
+          setToSend(clear);
+          setInput(clear);
+          setError(clear);
           alert("Your enquiry has been sent!");
         })
         .catch((err) => {
