@@ -123,7 +123,7 @@ export default function Jobs(props) {
           setJobs(gottenJobs);
         });
       }, 30000);
-      return () => clearInterval(intervalId); //This is important
+      return () => clearInterval(intervalId);
     });
 
   
@@ -197,8 +197,6 @@ export default function Jobs(props) {
         const predictionID = props.id;
         downloadPredictionFile(auth.user.email, predictionID)
           .then(res => {
-            console.log("Starting download");
-            // Disgusting JS stack code to make it actually force a download (from https://stackoverflow.com/questions/58630869/download-file-from-express-api-using-react-and-axios)
             const url = window.URL.createObjectURL(new Blob([res.data]));
             const link = document.createElement('a');
             link.href = url;
