@@ -24,8 +24,6 @@ const useStyles = makeStyles({
   image: {
     width: "70%",
     padding: '0 15%',
-    // margin: "10px auto 20px",
-    // display: "block",
   },
   title: {
     padding: '0 15%',
