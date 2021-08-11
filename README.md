@@ -101,9 +101,9 @@ Please see Image1 and Image2.
 <hr/>
 
 ### List of contributions
-- **Nikki Moteva**: She worked on the landing page, the contact us page, the personal email login and securely storing the user's information in the database by hashing and salting passwords, the profile page and securely storing the user's AWS secret key in the database, deploying the app, and many bug fixes. She also did research on security requirements for storing the user’s data. Lastly, she lead the team and the meetings in order to meet the required goals of the group.
+- **Nikki Moteva**: She worked on the landing page, the contact us page, the personal email login and securely storing the user's information in the database by hashing and salting passwords, the profile page and securely storing the user's AWS secret key in the database, deploying the app, setting up endpoints, and many bug fixes. She also did research on security requirements for storing the user’s data. Lastly, she lead the team and the meetings in order to meet the required goals of the group.
 - **Kian Shahangyan**:
-- **Robert Mo**:
+- **Robert Mo**: He worked on the job page, the docs page, the job submission form, and the prediction submission form. He setup the endpoint in the backend for the mentioned pages. He also did the polling to keep the progress of the job up to date.
 - **Harry Xu**:
 
 <hr/>
