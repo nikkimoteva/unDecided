@@ -1,6 +1,7 @@
 const csv = require('jquery-csv');
 const fs = require('fs');
-const { ssh_user, ssh_pw, ensemble_session_path, remote_ssh } = require('../src/SecretHandler');
+const { ssh_user, ssh_pw, ensemble_session_path, remote_ssh, contactus_user,
+  contactus_access_token, contactus_service_id, contactus_template_id } = require('./SecretHandler');
 const { NodeSSH } = require('node-ssh');
 
 const ssh1 = new NodeSSH();
@@ -188,5 +189,9 @@ module.exports = {
     } else {
       return null;
     }
+  },
+
+  sendEmail(body) {
+
   }
 };

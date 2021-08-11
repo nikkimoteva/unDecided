@@ -2,7 +2,6 @@ import React from 'react';
 import { useState } from 'react';
 import { send } from 'emailjs-com';
 import Button from '@material-ui/core/Button';
-import {contactus_user, contactus_service_id, contactus_template_id} from "../SecretHandler";
 import { makeStyles } from '@material-ui/core/styles';
 import TextField from '@material-ui/core/TextField';
 import "../Common/Button.css";
@@ -46,7 +45,7 @@ export default function ContactUs() {
 
   function handleChange(event) {
     setInput({
-      ...input, 
+      ...input,
       [event.target.name]: event.target.value
     });
 
@@ -57,28 +56,28 @@ export default function ContactUs() {
     event.preventDefault();
 
     if (validate()) {
-      send(
-        contactus_service_id,
-        contactus_template_id,
-        toSend,
-        contactus_user
-      )
-        .then((response) => {
-          console.log("SUCCESS!", response.status, response.text);
-          setToSend({
-            from_name: "",
-            subject: "",
-            message: "",
-            email: "",
-          });
-          alert("Your enquiry has been sent!");
-        })
-        .catch((err) => {
-          console.log("FAILED...", err);
-        });
+      // send(
+      //   Secrets.contactus_service_id,
+      //   Secrets.contactus_template_id,
+      //   toSend,
+      //   Secrets.contactus_user
+      // )
+      //   .then((response) => {
+      //     console.log("SUCCESS!", response.status, response.text);
+      //     setToSend({
+      //       from_name: "",
+      //       subject: "",
+      //       message: "",
+      //       email: "",
+      //     });
+      //     alert("Your enquiry has been sent!");
+      //   })
+      //   .catch((err) => {
+      //     console.log("FAILED...", err);
+      //   });
     }
   }
-  
+
 
   const handleChanges = handleChange.bind(this);
   const handleSubmits = handleSubmit.bind(this);

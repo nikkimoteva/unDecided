@@ -16,7 +16,6 @@ try {
   const contactus_access_token = process.env.CONTACTUS_ACCESS_TOKEN;
   const contactus_service_id = process.env.CONTACTUS_SERVICE_ID;
   const contactus_template_id = process.env.CONTACTUS_TEMPLATE_ID;
-  const googlelogin_clientID = process.env.GOOGLELOGIN_CLIENTID;
   const ssh_user = process.env.SSH_USER;
   const ssh_pw = process.env.SSH_PW;
   const borg_dataset_directory = process.env.BORG_DATASET_DIRECTORY;
@@ -25,7 +24,7 @@ try {
   const slurm_command_dataset_path =process.env.SLURM_COMMAND_DATASET_PATH;
   toExport = {
     user, password, server, database, email, captcha_site_key, captcha_secret_key, contactus_user,
-    contactus_access_token, contactus_service_id, contactus_template_id, googlelogin_clientID, ssh_user, ssh_pw, 
+    contactus_access_token, contactus_service_id, contactus_template_id, ssh_user, ssh_pw,
     borg_dataset_directory, remote_ssh, ensemble_session_path, slurm_command_dataset_path
   };
 }

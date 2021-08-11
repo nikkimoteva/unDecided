@@ -4,7 +4,7 @@ const app = express();
 const bodyParser = require('body-parser');
 const cors = require('cors');
 const logger = require('morgan');
-require('../src/SecretHandler'); // Initializes config
+require('./SecretHandler'); // Initializes config
 require("./database/Database"); // Initializes DB connection
 
 app.use(bodyParser.json({limit: "500mb"}));

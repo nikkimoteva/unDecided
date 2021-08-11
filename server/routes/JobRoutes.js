@@ -4,7 +4,7 @@ const PredictionModel = require("../database/models/Prediction");
 const router = express.Router();
 const {trainPipeline, makeid, runPredict, errorHandler, getUserId, connect, parseSqueue} = require("../Util");
 const {storeCSV, removeCSV} = require("../FileManager");
-const {borg_dataset_directory, slurm_command_dataset_path} = require('../../src/SecretHandler');
+const {borg_dataset_directory, slurm_command_dataset_path} = require('../SecretHandler');
 const {v4: uuidv4} = require('uuid');
 const mongoose = require('mongoose');
 
