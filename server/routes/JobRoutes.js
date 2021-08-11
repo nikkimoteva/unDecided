@@ -14,15 +14,12 @@ async function updateModel(model, jobsToUpdate) {
   if (jobsToUpdate.length !== 0) {
     const borg = await connect();
     for (const job of jobsToUpdate) {
-      // Prediction jobs need to get file hash from associated training job
       const trainJob = (model === PredictionModel) ? await JobModel.findOne({_id: mongoose.Types.ObjectId(job.jobID)}).exec() : job;
       const currName = trainJob.fileHash;
       const msg = await borg.execCommand(`/opt/slurm/bin/squeue -n ${currName}`);
       const squeueOut = parseSqueue(msg.stdout, currName);
 
-      // This usually occurs if the callback had failed to notify us, which can happen on local, or the job has not started running yet
       if (squeueOut === null) continue;
-      // Theoretically we don't need to check; only the currently running job has a valid file name
       const newStatus = (squeueOut.status === 'R') ? "Running" : "Queued";
       console.log(`${currName}: ${newStatus}`);
       await model.updateOne({_id: job._id}, {status: newStatus, time_elapsed: squeueOut.time_elapsed});
@@ -77,7 +74,6 @@ router.post("/submitTrainJob", (req, res) => {
 
   let trainString;
 
-  // if (jobName.length === 0) jobName = "auto generated nickname";
   storeCSV(dataset, local_path)
     .then(() => getUserId(id_token))
     .then(user_email => {
@@ -89,7 +85,7 @@ router.post("/submitTrainJob", (req, res) => {
       console.log("Success connecting to borg");
       return borg.putFile(local_path, train_path)
         .then(() => borg.exec(trainString, []))
-        .then(stdOut => {
+        .then(() => {
           const job = new JobModel({
             name: jobName,
             user: id_token,
@@ -140,11 +136,6 @@ router.post("/submitPrediction", async (req, res) => {
   });
 
   if (trainJob === null) throw new Error('Associated training job not found');
-  // if (!(job.headers.includes(job.target_name))) { // gotta push the target column into the file!
-  //   const a = job.headers;
-  //   a.push(job.target_name);
-  //   data[0] = testColumns;
-  //   const newFile = csv.fromArrays(data);
 
   const folder_path = slurm_command_dataset_path + trainJob.fileHash;
   const test_path = folder_path + '/' + test_file_name + '.csv';
@@ -158,7 +149,7 @@ router.post("/submitPrediction", async (req, res) => {
   const borg = await connect();
   await borg.putFile(local_path, test_path);
   console.log(predictString);
-  const stdOut = await borg.exec(predictString, []);
+  await borg.exec(predictString, []);
   await removeCSV(local_path);
   res.sendStatus(200);
 });
@@ -258,22 +249,5 @@ router.patch('/bbmlCallback/:jobID/:type', async (req, res, next) => {
     console.error(`Invalid type given: ${type}`);
   }
 });
-
-
-// router.get('/isJobDone', (req, res) => {
-//   const jobID = req.body.jobID;
-//
-//   connect()
-//     .then(borg => {
-//       return borg.exec('/opt/slurm/bin/squeue -j ' + String(jobID), []);
-//     })
-//     .then(stdOut => {
-//       const time_status_json = parseSqueue(stdOut, jobID);
-//       res.send(time_status_json);
-//     })
-//     .catch(err => {
-//       errorHandler(err);
-//     });
-// });
 
 module.exports = router;

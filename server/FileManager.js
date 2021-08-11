@@ -4,7 +4,7 @@ const path = require('path');
 
 function storeCSV(csvString, pathToFile) {
   console.log(`Saving downloaded csv to ${pathToFile}`);
-  const parent = path.dirname(pathToFile); // get parent directory of file
+  const parent = path.dirname(pathToFile);
   if (!fs.existsSync(parent)) {
     fs.mkdirSync(parent, {recursive: true});
   }
