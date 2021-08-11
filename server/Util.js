@@ -81,7 +81,7 @@ module.exports = {
     });
   },
 
-  runPredict: function (csv_file_name, job_id, timer, target_name, email, job_name, callback = "") {
+  runPredict: function (csv_file_name, job_id, timer, target_name, user_email, job_name, callback = "") {
     return `/opt/slurm/bin/sbatch --partition=blackboxml --nodelist=chicago\
        --error=/ubc/cs/research/plai-scratch/BlackBoxML/error_predict_eml.err\
        --output=/ubc/cs/research/plai-scratch/BlackBoxML/out_predict_eml.out\
@@ -89,7 +89,7 @@ module.exports = {
         ${job_id} '${job_name}' ${csv_file_name} ${timer} '${target_name}' ${email} '${callback}'`;
   },
 
-  trainPipeline: function (csv_file_name, target_name, email, job_id, timer, job_name, callback = "") {
+  trainPipeline: function (csv_file_name, target_name, user_email, job_id, timer, job_name, callback = "") {
     return `/opt/slurm/bin/sbatch --partition=blackboxml --nodelist=chicago\
         --error=/ubc/cs/research/plai-scratch/BlackBoxML/error_eml.err\
         --output=/ubc/cs/research/plai-scratch/BlackBoxML/out_eml.out\
@@ -215,6 +215,6 @@ module.exports = {
           resolve(info.response);
         }
       });
-    })
+    });
   }
 };
