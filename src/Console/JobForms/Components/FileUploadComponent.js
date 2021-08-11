@@ -23,8 +23,6 @@ export function FileUploadComponent(props) {
     setShowModal(false);
   }
 
-  console.log(1234567);
-
   const fileInput = React.createRef();
 
   function AWSCredAvailable() {
@@ -34,7 +32,6 @@ export function FileUploadComponent(props) {
       if (res === null || res.data === "") {
         setAWSAvail(true);
       } else {
-        //enable
         setAWSAvail(false);
       }
     });
@@ -43,7 +40,6 @@ export function FileUploadComponent(props) {
   return (
     <>
       <Hidden smUp={props.hidden}>
-        {/*File Input Element*/}
         <label htmlFor="fileInput">
           <input type="file"
                  accept=".csv"
@@ -51,14 +47,13 @@ export function FileUploadComponent(props) {
                  style={{display: "none"}}
                  id="fileInput"
                  name="File Input"
-                 onChange={(event) => props.onFilePicked(fileInput.current.files[0])}
+                 onChange={() => props.onFilePicked(fileInput.current.files[0])}
           />
           <Button color="primary" variant="outlined" component="span">
             Upload CSV
           </Button>
         </label>
 
-        {/*AWS Import button*/}
         <Tooltip disableFocusListener disableTouchListener title="Add or edit AWS Keys in your profile page.">
         <span>
           <Button variant="outlined" color="secondary" onClick={openModal} disabled={AWSAvail}>Import from AWS S3</Button>
