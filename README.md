@@ -102,7 +102,7 @@ Please see Image1 and Image2.
 
 ### List of contributions
 - **Nikki Moteva**: She worked on the landing page, the contact us page, the personal email login and securely storing the user's information in the database by hashing and salting passwords, the profile page and securely storing the user's AWS secret key in the database, deploying the app, and many bug fixes. She also did research on security requirements for storing the user’s data. Lastly, she lead the team and the meetings in order to meet the required goals of the group.
-- **Kian Shahangian**:
+- **Kian Shahangyan**:
 - **Robert Mo**:
 - **Harry Xu**:
 
