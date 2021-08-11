@@ -1,9 +1,7 @@
 import {Box, Button, makeStyles, Grid} from "@material-ui/core";
 import {Link} from "react-router-dom";
 import React, {useEffect, useState} from "react";
-
 import {getJobs, deleteJob as deleteJobDB, downloadPredictionFile} from "../Common/Managers/EndpointManager";
-
 import {useAuth} from "../Authentication/Auth";
 import {useHistory} from "react-router-dom";
 import Collapse from '@material-ui/core/Collapse';
@@ -22,14 +20,7 @@ import KeyboardArrowUpIcon from '@material-ui/icons/KeyboardArrowUp';
 import RefreshIcon from '@material-ui/icons/Refresh';
 import LinearProgress from '@material-ui/core/LinearProgress';
 import dateFormat from 'dateformat';
-
-
-import {
-  submitPrediction,
-  getPredictions,
-  deletePrediction as deletePredictionDB,
-  deletePredictionJobID
-} from "../Common/Managers/EndpointManager";
+import {getPredictions, deletePrediction as deletePredictionDB, deletePredictionJobID} from "../Common/Managers/EndpointManager";
 import DeleteIcon from '@material-ui/icons/Delete';
 
 const useRowStyles = makeStyles({
@@ -87,9 +78,6 @@ export default function Jobs(props) {
               if(gottenJob._id.localeCompare(existingJob._id)===0){
                 gottenJob.open = existingJob.open;
                 gottenJob.predictions=existingJob.predictions;
-                if(gottenJob.open){
-                  //get latest prediction
-                }
               }
             }
           }
@@ -114,9 +102,6 @@ export default function Jobs(props) {
               if(gottenJob._id.localeCompare(existingJob._id)===0){
                 gottenJob.open = existingJob.open;
                 gottenJob.predictions=existingJob.predictions;
-                if(gottenJob.open){
-                  //get latest prediction
-                }
               }
             }
           }
@@ -140,15 +125,13 @@ export default function Jobs(props) {
     }
 
   function Row(props) {
-
     const row = props.row;
-    const [rowState, setRowState] = React.useState({open: row.open, predictions: row.predictions});
     const classes = useRowStyles();
 
     function deleteJob() {
       const jobId = row.id;
       deleteJobDB(auth.user.email, jobId)
-        .then(_ => {
+        .then(() => {
           deletePredictionJobID(auth.user.email, jobId);
           console.log("Successfully deleted Job");
           return getJobs(auth.user.email);
@@ -177,7 +160,7 @@ export default function Jobs(props) {
       props.progress = timeTaken/(row.timer+5)*100;
       function deletePrediction() {
         const predictionID = props.id;
-        deletePredictionDB(auth.user.email, predictionID).then(_ => {
+        deletePredictionDB(auth.user.email, predictionID).then(() => {
           getPredictions(auth.user.email, row.id)
             .then(res => {
               const gottenPredictions = res.data;
@@ -260,7 +243,7 @@ export default function Jobs(props) {
       }
       setJobs(copyJobs);
     }
-
+    
     const timeTaken = Math.min(row.time_elapsed,row.timer+5);
     row.progress = timeTaken/(row.timer+5)*100;
     return (

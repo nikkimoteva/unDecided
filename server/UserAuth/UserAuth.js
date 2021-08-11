@@ -41,8 +41,7 @@ function validatePassword(email, password) {
             return null;
         }
         return bcrypt.compare(password, user.passwordHash)
-        .then ( (match) => {
-            console.log(match);
+        .then ((match) => {
             if (match) {
                 return user;
             } else {

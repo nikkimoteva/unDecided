@@ -56,31 +56,27 @@ export default function Signup() {
     event.preventDefault();
 
     if (validate()) {
-        // make call to userauth.js
-        // redirect to login / auto login
-
       auth.signup(user.name, user.email, user.password)
-        // userAuth.addUser(user.name, user.email, user.password)
-        .then ((res) => {
-          if (res.status === 400) {
-            alert("Error in signing up. Please try again.");
-          } else if (res.data.error) {
-            alert(res.data.error);
-          } else {
-            setLoginModal(false);
-            history.push('/console/jobs');
-            console.log("successfully logged in");
-            setUser( {
-              name: "",
-              email: "",
-              password: "",
-              cpass: "",
-            });
-          }
-        })
-        .catch ((err) => {
-          console.log ("FAILED...", err);
-        });
+      .then ((res) => {
+        if (res.status === 400) {
+          alert("Error in signing up. Please try again.");
+        } else if (res.data.error) {
+          alert(res.data.error);
+        } else {
+          setLoginModal(false);
+          history.push('/console/jobs');
+          console.log("successfully logged in");
+          setUser( {
+            name: "",
+            email: "",
+            password: "",
+            cpass: "",
+          });
+        }
+      })
+      .catch ((err) => {
+        console.log ("FAILED...", err);
+      });
     }
   }
 

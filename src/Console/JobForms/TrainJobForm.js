@@ -1,5 +1,5 @@
 import React, {useState} from "react";
-import {makeStyles, Typography} from "@material-ui/core";
+import {makeStyles} from "@material-ui/core";
 import {submitJob} from "../../Common/Managers/EndpointManager";
 import {useHistory} from "react-router-dom";
 import {useAuth} from "../../Authentication/Auth.js";
@@ -30,7 +30,6 @@ const useStyles = makeStyles((theme) => ({
   }
 }));
 
-// Useful constants
 const minJobTimeValue = 5;
 const maxJobTimeValue = 2880; // 48 hours
 
@@ -51,14 +50,12 @@ export default function TrainJobForm() {
   const auth = useAuth();
   const history = useHistory();
 
-  // Functions
   function getFileObjectContent(file) {
     return new Promise((resolve, reject) => {
       const reader = new FileReader();
       reader.readAsText(file);
       reader.onload = () => resolve(reader.result);
       reader.onprogress = (progress) => {
-        // Note: We only update if we got to the next percentage point. Otherwise, too many state updates slow down file loading
         const newProgressValue = Math.round(progress.loaded / progress.total * 100.);
         if (newProgressValue !== loadingValue) setLoadingValue(newProgressValue);
       };
@@ -68,19 +65,19 @@ export default function TrainJobForm() {
 
   // converts array of fields into array of json objects
   function updateCSVState(_csvString) {
-    const csvString = _csvString.replace("\r", ""); // for windows fix
+    const csvString = _csvString.replace("\r", "");
     setCSV(csvString);
     const header = csvString.split('\n')[0];
     const fields = header.split(',');
     setHeader(fields);
-    setTargetColumn(fields[fields.length - 1]); // Default to last column, as usually the last one is the target col
+    setTargetColumn(fields[fields.length - 1]);
     setDataImportSuccess(true);
   }
 
   function onFilePicked(file) {
     if (file.name.substring(file.name.length - 4) !== '.csv') alert("File name must have a .csv extension");
     else {
-      setDataImportSuccess(undefined); // Set both so success/fail messages go away
+      setDataImportSuccess(undefined);
       setIsLoadingFile(true);
       setProgressBarType('determinate');
       getFileObjectContent(file)
@@ -99,7 +96,6 @@ export default function TrainJobForm() {
     if (CSV === "") {
       alert("You must upload a csv file to train on.");
       return false;
-      // } else
     } else if (jobName.length === 0) {
       alert("Job name cannot be empty");
       return false;
@@ -119,7 +115,7 @@ export default function TrainJobForm() {
     const jobTime = maxJobTime * timeOption;
     if (validateFormData(jobTime)) {
       submitJob(auth.user.email, jobName, jobTime, targetColumn, CSV, header)
-        .then(res => {
+        .then(() => {
           alert("Job Submitted");
           history.push('/console/jobs');
         })
