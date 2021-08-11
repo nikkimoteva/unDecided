@@ -63,6 +63,7 @@ export default function TrainJobForm() {
     });
   }
 
+  // converts array of fields into array of json objects
   function updateCSVState(_csvString) {
     const csvString = _csvString.replace("\r", "");
     setCSV(csvString);
