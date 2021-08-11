@@ -12,7 +12,7 @@ export default class LoginModal extends React.Component {
             clientId="296036318202-uraiim5u0cf5qpqhujl3aaj1kniuu41e.apps.googleusercontent.com"
             buttonText="Login with Google"
             onSuccess={this.props.signin}
-            onFailure={(res) => console.log(res)}
+            onFailure={(err) => console.log(err)}
             cookiePolicy="https://ensemble-automl.herokuapp.com" // replace with `http://localhost:3000` if debugging locally
           />
         </div>

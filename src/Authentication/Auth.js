@@ -1,20 +1,10 @@
 import React, {createContext, useContext, useState} from "react";
 import {Route, Redirect} from "react-router-dom";
-import {
-  addAuthListener,
-  getAuthCookie,
-  setAuthCookie
-} from "../Common/Managers/CookieManager";
+import {addAuthListener, getAuthCookie, setAuthCookie} from "../Common/Managers/CookieManager";
 import {validateGoogleUser} from "../Common/Managers/EndpointManager";
 import {validateUser} from "../Common/Managers/EndpointManager";
 import {addUser} from "../Common/Managers/EndpointManager";
 
-// Source: https://reactrouter.com/web/example/auth-workflow
-
-/** For more details on
- * `authContext`, `ProvideAuth`, `useAuth` and `useProvideAuth`
- * refer to: https://usehooks.com/useAuth/
- */
 const authContext = createContext(undefined);
 
 export function ProvideAuth({children}) {
@@ -30,28 +20,25 @@ export function useAuth() {
   return useContext(authContext);
 }
 
-// Authentication state holding the auth provider
 function useAuthProvider() {
-  const [user, setUser] = useState(getAuthCookie());  // when users refresh, immediately loads auth cookie
+  const [user, setUser] = useState(getAuthCookie());
   addAuthListener(listenerCallback);
 
   function signup(name, email, password) { 
     console.log("Sign up");
     return addUser(name, email, password)
     .then ((res) => {
-      //login
       if (res.status === 400 || res.data.error) {
         return res;
       } else {
         console.log("stored info in the backend");
-        setAuthCookie({name, email});  // theoretically, this should setUser as well, since we added a listener to it
+        setAuthCookie({name, email});
         setUser({name, email});
         return res;
       }
     })
     .catch(err => {
       console.error(err);
-      // alert("Unable to signup. Please try again");
     });
   }
 
@@ -59,8 +46,6 @@ function useAuthProvider() {
     console.log("Sign in");
     return validateUser(email, password)
     .then ((usr) => {
-      //login
-      console.log(usr);
       if (usr.status === 200) {
         console.log("password has been validated");
         setAuthCookie({name: usr.data.name, email: usr.data.email});
@@ -81,10 +66,10 @@ function useAuthProvider() {
       .then(() => {
         console.log("Stored info in backend");
         const profile = credentials.getBasicProfile();
-        const id = profile.getId(); // Do not send to your backend! Use an ID token instead.
+        const id = profile.getId();
         const name = profile.getName();
-        const email = profile.getEmail(); // This is null if the 'email' scope is not present.
-        setAuthCookie({id, name, email});  // theoretically, this should setUser as well, since we added a listener to it
+        const email = profile.getEmail();
+        setAuthCookie({id, name, email});
         setUser({id, name, email});
         return Promise.resolve();
       })
@@ -95,12 +80,11 @@ function useAuthProvider() {
   }
 
   function signout() {
-    console.log("Signing out with Gauth");
+    console.log("Signing out");
     setAuthCookie("");
   }
 
   function listenerCallback(new_cookie) {
-    console.log(`New Cookie Value: ${new_cookie.value}`);
     setUser(new_cookie.value);
   }
 
@@ -113,8 +97,7 @@ function useAuthProvider() {
   };
 }
 
-// A wrapper for <Route> that redirects to the login
-// screen if you're not yet authenticated.
+
 export function PrivateRoute({children, ...rest}) {
   const auth = useAuth();
   return (
@@ -124,7 +107,7 @@ export function PrivateRoute({children, ...rest}) {
         auth.user ? (
           children
         ) : (
-          <Redirect // TODO: May want to redirect to actual login page, but not necessary since they can't hit this route through the UI
+          <Redirect
             to={{
               pathname: "/",
               state: {from: location}
@@ -135,25 +118,3 @@ export function PrivateRoute({children, ...rest}) {
     />
   );
 }
-
-/*
-function LoginPage() {
-  let history = useHistory();
-  let location = useLocation();
-  let auth = useAuth();
-
-  let { from } = location.state || { from: { pathname: "/" } };
-  let login = () => {
-    auth.signin(() => {
-      history.replace(from);
-    });
-  };
-
-  return (
-    <div>
-      <p>You must log in to view the page at {from.pathname}</p>
-      <button onClick={login}>Log in</button>
-    </div>
-  );
-}
-*/

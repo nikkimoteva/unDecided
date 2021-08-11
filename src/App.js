@@ -9,13 +9,8 @@ import {ProvideLoginModalState} from "./Authentication/LoginModalProvider";
 
 export default function App() {
   let theme = createMuiTheme({
-    // See https://material-ui.com/customization/theming/
-
     // color palette
-    palette: {
-      //   type: "dark",
-      //   divider: "rgba(255, 255, 255, 0.12)",
-    },
+    palette: {},
     // fonts and font sizes for Typography components
     typography: {},
     //default component props, like spacing, ripple effect, etc
