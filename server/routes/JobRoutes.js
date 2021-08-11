@@ -188,7 +188,10 @@ router.post("/downloadPrediction", (req, res) => {
       const remotePath = `${slurm_command_dataset_path}../sessions/${fileHash}/ensemble/t${timer}_s${seed}/voting/full_ensemblesquared.csv`;
       console.log(remotePath);
       return connect()
-        .then(borg => borg.getFile(localPath, remotePath))
+        .then(borg => {
+          console.log("Connected to borg");
+          return borg.getFile(localPath, remotePath);
+        })
         .then(() => console.log("Successfully downloaded prediction file"))
         .catch(() => res.sendStatus(404));
     })
