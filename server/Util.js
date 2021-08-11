@@ -1,6 +1,7 @@
 const csv = require('jquery-csv');
 const fs = require('fs');
-const { ssh_user, ssh_pw, ensemble_session_path, remote_ssh } = require('../src/SecretHandler');
+const nodemailer = require("nodemailer");
+const { ssh_user, ssh_pw, ensemble_session_path, remote_ssh, email, email_pwd } = require('./SecretHandler');
 const { NodeSSH } = require('node-ssh');
 
 const ssh1 = new NodeSSH();
@@ -80,7 +81,7 @@ module.exports = {
     });
   },
 
-  runPredict: function (csv_file_name, job_id, timer, target_name, email, job_name, callback = "") {
+  runPredict: function (csv_file_name, job_id, timer, target_name, user_email, job_name, callback = "") {
     return `/opt/slurm/bin/sbatch --partition=blackboxml --nodelist=chicago\
        --error=/ubc/cs/research/plai-scratch/BlackBoxML/error_predict_eml.err\
        --output=/ubc/cs/research/plai-scratch/BlackBoxML/out_predict_eml.out\
@@ -88,7 +89,7 @@ module.exports = {
         ${job_id} '${job_name}' ${csv_file_name} ${timer} '${target_name}' ${email} '${callback}'`;
   },
 
-  trainPipeline: function (csv_file_name, target_name, email, job_id, timer, job_name, callback = "") {
+  trainPipeline: function (csv_file_name, target_name, user_email, job_id, timer, job_name, callback = "") {
     return `/opt/slurm/bin/sbatch --partition=blackboxml --nodelist=chicago\
         --error=/ubc/cs/research/plai-scratch/BlackBoxML/error_eml.err\
         --output=/ubc/cs/research/plai-scratch/BlackBoxML/out_eml.out\
@@ -188,5 +189,32 @@ module.exports = {
     } else {
       return null;
     }
+  },
+
+  sendEmail: function(info) {
+    return new Promise((resolve, reject) => {
+      const transporter = nodemailer.createTransport({
+        service: 'gmail',
+        auth: {
+          user: email,
+          pass: email_pwd
+        }
+      });
+
+      const mailOptions = {
+        from: info.fromEmail,
+        to: info.toEmail,
+        subject: info.subject,
+        text: info.message
+      };
+
+      transporter.sendMail(mailOptions, function(error, info){
+        if (error) {
+          reject(error);
+        } else {
+          resolve(info.response);
+        }
+      });
+    });
   }
 };

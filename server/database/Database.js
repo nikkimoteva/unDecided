@@ -1,5 +1,5 @@
 const mongoose = require('mongoose');
-const {user, password, server, database} = require("../../src/SecretHandler");
+const {user, password, server, database} = require("../SecretHandler");
 
 class Database {
   constructor() {

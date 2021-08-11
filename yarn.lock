@@ -7240,13 +7240,6 @@ __metadata:
   languageName: node
   linkType: hard
 
-"emailjs-com@npm:^3.2.0":
-  version: 3.2.0
-  resolution: "emailjs-com@npm:3.2.0"
-  checksum: 55526fffe440ecc96018e319d61d17061969b7af1688a3af37d26c892529b56f0dd75e4f7e674e1ee15274968e431c9cb7e3dc17e2fc48b0e19a7f66590471d3
-  languageName: node
-  linkType: hard
-
 "emittery@npm:^0.7.1":
   version: 0.7.2
   resolution: "emittery@npm:0.7.2"
@@ -11940,6 +11933,13 @@ fsevents@^1.2.7:
   languageName: node
   linkType: hard
 
+"nodemailer@npm:^6.6.3":
+  version: 6.6.3
+  resolution: "nodemailer@npm:6.6.3"
+  checksum: abcdcbc80279d6200ded778765046ce64210d901953d3ec7caaaa45ae44401d8c41cf3651b6d6cfaadf945a492e815f4c8a062bdf31214bd98417a090f530830
+  languageName: node
+  linkType: hard
+
 "nopt@npm:^5.0.0":
   version: 5.0.0
   resolution: "nopt@npm:5.0.0"
@@ -16478,7 +16478,6 @@ resolve@^2.0.0-next.3:
     csv-string: ^4.0.1
     csvtojson: ^2.0.10
     dateformat: ^4.5.1
-    emailjs-com: ^3.2.0
     eslint: ^7.29.0
     eslint-config-google: ^0.14.0
     eslint-plugin-react: ^7.24.0
@@ -16489,6 +16488,7 @@ resolve@^2.0.0-next.3:
     morgan: ^1.10.0
     multer: ^1.4.2
     node-ssh: ^12.0.0
+    nodemailer: ^6.6.3
     react: ^17.0.2
     react-dom: ^17.0.2
     react-google-login: ^5.2.2
