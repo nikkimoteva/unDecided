@@ -57,22 +57,17 @@ export default function ContactUs() {
 
     if (validate()) {
       sendEmail(toSend)
-        .then((response) => {
-          console.log("SUCCESS!", response.status, response.text);
-          const clear = {
-            from_name: "",
-            subject: "",
-            message: "",
-            email: "",
-          };
-          setToSend(clear);
-          setInput(clear);
-          setError(clear);
-          alert("Your enquiry has been sent!");
-        })
-        .catch((err) => {
-          console.log("FAILED...", err);
-        });
+      .then((response) => {
+        console.log("SUCCESS!", response.status, response.text);
+        const clear = {
+          from_name: "",
+          subject: "",
+          message: "",
+          email: "",
+        };
+        setToSend(clear);
+        setInput(clear);
+        setError(clear);
         alert("Your enquiry has been sent!");
       })
       .catch((err) => {

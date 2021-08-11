@@ -67,6 +67,7 @@ function PredJobForm() {
     return true;
   }
 
+  // converts array of fields into array of json objects
   function updateCSVState(_csvString) {
     const csvString = _csvString.replace("\r", "");
     const header = csvString.split('\n')[0];

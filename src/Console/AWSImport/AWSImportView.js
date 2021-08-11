@@ -64,7 +64,7 @@ const useStyles = makeStyles(() => ({
 
 export default function AWSImportView(props) {
   const [rows, setRows] = useState([]);
-  const [rowsToShow, setRowsToShow] = useState([]);
+  const [rowsToShow, setRowsToShow] = useState([]); // rowsToShow and rows can be different based on search params
   const [currBucket, setCurrBucket] = useState("");
   const [tableFields, setTableFields] = useState([]);
   const [showBucketsTable, setShowBucketsTable] = useState(true);
