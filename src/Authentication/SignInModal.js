@@ -63,8 +63,6 @@ export default function SignIn() {
     event.preventDefault();
 
     if (validate()) {
-        // make call to userauth.js
-        // login
       auth.signin(user.email, user.password)
       .then ((res) => {
         if (res) {

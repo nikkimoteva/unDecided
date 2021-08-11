@@ -11,7 +11,7 @@ const jobSchema = new mongoose.Schema({
   },
   fileHash: {
     type: String,
-    // required: true // TODO: Should we make this required
+    required: true
   },
   status: {
     type: String,
@@ -20,10 +20,11 @@ const jobSchema = new mongoose.Schema({
   },
   headers:{
     type: Array,
-    // required: true // TODO make required
+    required: true
   },
   target_name: {
-    type: String
+    type: String,
+    required: true
   },
   timer: {
     type: Number,
@@ -31,7 +32,7 @@ const jobSchema = new mongoose.Schema({
   },
   target_column: {
     type: Number,
-    default : 0 // TODO: IS this a good idea
+    required: true
   },
   created: {
     type: Date,

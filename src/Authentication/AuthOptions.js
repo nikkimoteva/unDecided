@@ -10,7 +10,7 @@ import SignupModal from "./SignupModal";
 import SignInModal from "./SignInModal";
 import Divider from '@material-ui/core/Divider';
 
-const useStyles = makeStyles((theme) => ({
+const useStyles = makeStyles(() => ({
   root: {
   },
   container: {

@@ -43,7 +43,6 @@ router.get("/profile", (req, res) => {
 router.post("/addUser", (req, res) => {
   UserAuth.addUser(req.body.name, req.body.email, req.body.password)
     .then((result) => {
-      console.log(result);
       if (result === null) {
         return res.sendStatus(400);
       } else if (!result){
@@ -61,7 +60,6 @@ router.post("/addUser", (req, res) => {
 router.post("/addAWSCred", (req, res) => {
   return UserAuth.addAWSCred(req.body.email, req.body.accessKey, req.body.secretKey)
   .then ((result) => {
-    console.log(result);
     if (result === null) {
       console.log("Internal Error");
       return res.sendStatus(500);

@@ -1,5 +1,5 @@
 import React, {useState} from "react";
-import {makeStyles, Typography} from "@material-ui/core";
+import {makeStyles} from "@material-ui/core";
 import {useHistory,useLocation} from "react-router-dom";
 import {useAuth} from "../../Authentication/Auth.js";
 import AWSImportView from "../AWSImport/AWSImportView";
@@ -46,14 +46,12 @@ function PredJobForm() {
   const params = useParams();
   const jobID = params.jobID.slice(1);
 
-  // Functions
   function getFileObjectContent(file) {
     return new Promise((resolve, reject) => {
       const reader = new FileReader();
       reader.readAsText(file);
       reader.onload = () => resolve(reader.result);
       reader.onprogress = (progress) => {
-        // Note: We only update if we got to the next percentage point. Otherwise, too many state updates slow down file loading
         const newProgressValue = Math.round(progress.loaded / progress.total * 100.);
         if (newProgressValue !== loadingValue) setLoadingValue(newProgressValue);
       };
@@ -69,15 +67,12 @@ function PredJobForm() {
     return true;
   }
 
-  // converts array of fields into array of json objects
   function updateCSVState(_csvString) {
-    const csvString = _csvString.replace("\r", ""); // for windows fix
+    const csvString = _csvString.replace("\r", "");
     const header = csvString.split('\n')[0];
     const fields = header.split(',');
 
     if (!isEqualArrays(fields, location.state.headers)) {
-      console.log(fields);
-      console.log(location.state.headers);
       alert("The prediction dataset must have the same columns as the training dataset");
       setDataImportSuccess(false);
     } else {
@@ -89,7 +84,7 @@ function PredJobForm() {
   function onFilePicked(file) {
     if (file.name.substring(file.name.length - 4) !== '.csv') alert("File name must have a .csv extension");
     else {
-      setDataImportSuccess(undefined); // Set both so success/fail messages go away
+      setDataImportSuccess(undefined);
       setIsLoadingFile(true);
       setProgressBarType('determinate');
       getFileObjectContent(file)
@@ -122,7 +117,7 @@ function PredJobForm() {
     event.preventDefault();
     if (validateFormData()) {
       submitPrediction(auth.user.email, jobName,jobID , CSV)
-        .then(res => {
+        .then(() => {
           alert("Job Submitted");
           history.push('/console/jobs');
         })

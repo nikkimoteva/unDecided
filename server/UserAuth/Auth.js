@@ -58,7 +58,7 @@ function verifyAuth(req) {
         });
         return newUser.save();
       })
-      .then(_ => resolve())
+      .then(() => resolve())
       .catch(err => reject(err));
   });
 }

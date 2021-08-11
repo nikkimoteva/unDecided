@@ -56,21 +56,20 @@ export default function ContactUs() {
     event.preventDefault();
 
     if (validate()) {
-      console.log(toSend);
       sendEmail(toSend)
-        .then((response) => {
-          console.log("SUCCESS!", response.status, response.text);
-          setToSend({
-            from_name: "",
-            subject: "",
-            message: "",
-            email: "",
-          });
-          alert("Your enquiry has been sent!");
-        })
-        .catch((err) => {
-          console.log("FAILED...", err);
+      .then((response) => {
+        console.log("SUCCESS!", response.status, response.text);
+        setToSend({
+          from_name: "",
+          subject: "",
+          message: "",
+          email: "",
         });
+        alert("Your enquiry has been sent!");
+      })
+      .catch((err) => {
+        console.log("FAILED...", err);
+      });
     }
   }
 

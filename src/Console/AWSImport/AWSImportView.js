@@ -1,4 +1,4 @@
-import {registerAWS, listBuckets as listBucketsDB, listObjects, getObject, addAWSCred, getAWSCred} from "../../Common/Managers/EndpointManager";
+import {registerAWS, listBuckets as listBucketsDB, listObjects, getObject, getAWSCred} from "../../Common/Managers/EndpointManager";
 import React, {useContext, useState} from "react";
 import {DataGrid} from "@material-ui/data-grid";
 import KeyboardReturnIcon from '@material-ui/icons/KeyboardReturn';
@@ -64,7 +64,7 @@ const useStyles = makeStyles(() => ({
 
 export default function AWSImportView(props) {
   const [rows, setRows] = useState([]);
-  const [rowsToShow, setRowsToShow] = useState([]); // rowsToShow and rows can be different based on search params
+  const [rowsToShow, setRowsToShow] = useState([]);
   const [currBucket, setCurrBucket] = useState("");
   const [tableFields, setTableFields] = useState([]);
   const [showBucketsTable, setShowBucketsTable] = useState(true);
@@ -109,20 +109,10 @@ export default function AWSImportView(props) {
   }
 
   function registerAndListBuckets(region) {
-    console.log(region);
     const cookie = getAuthCookie();
     return getAWSCred(cookie.email)
       .then((res) => {
-        // if (res === null) {
-        //   console.log("aws creds do not exist");
-        //   return "error";
-        // } 
-        // else {
-          return registerAWS(region, res.data.access, res.data.secret);
-        // }
-      })
-      .then( (res) => {
-        console.log(res);
+        return registerAWS(region, res.data.access, res.data.secret);
       })
       .then(() => {
         updateRows([]);
@@ -138,7 +128,7 @@ export default function AWSImportView(props) {
         updateRows(rows);
       })
       .catch(err => {
-        alert("Unable to get buckets. Check that the user has S3 Read privileges");
+        alert("Unable to get buckets. Check that the user has S3 Read privileges and the S3 credentials are correct.");
         console.log(err);
       })
       .finally(() => setIsLoadingList(false));
@@ -151,14 +141,14 @@ export default function AWSImportView(props) {
     setIsLoadingList(true);
     listObjects(bucketName)
       .then(res => {
-        const objects = (res !== "") ? res : []; // avoids errors when there are no objects in bucket
+        const objects = (res !== "") ? res : [];
         const rows = getObjectRows(objects);
         setTableFields(objectTableFields);
         updateRows(rows);
       })
       .catch(err => {
-        console.log(err);
         alert("Failed to retrieve data from objects. Check that the region selected matches the bucket region");
+        console.log(err);
       })
       .finally(() => {
         setIsLoadingList(false);
@@ -167,7 +157,6 @@ export default function AWSImportView(props) {
   }
 
   function getObjectOnClick(params, event) {
-    console.log(props);
     const key = params.row.Key;
     if (key.slice(-4) !== ".csv") {
       alert("File object must have a '.csv' extension");
