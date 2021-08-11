@@ -14,6 +14,7 @@ async function updateModel(model, jobsToUpdate) {
   if (jobsToUpdate.length !== 0) {
     const borg = await connect();
     for (const job of jobsToUpdate) {
+      // Prediction jobs need to get file hash from associated training job
       const trainJob = (model === PredictionModel) ? await JobModel.findOne({_id: mongoose.Types.ObjectId(job.jobID)}).exec() : job;
       const currName = trainJob.fileHash;
       const msg = await borg.execCommand(`/opt/slurm/bin/squeue -n ${currName}`);
