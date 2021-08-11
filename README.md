@@ -52,7 +52,7 @@ CSV datasets.
 - [x] Multiple OAuth providers
 - [ ] Take as input other types of data
 - [x] Integrate other storage solutions into app (e.g. S3, kaggle, etc)
-- [ ] Job notification
+- [x] Job notification
 
 #### Break down of 2 minimal requirements into ~2-5 smaller tasks
 - Opening page
@@ -79,7 +79,7 @@ Please see Image1 and Image2.
 <hr/>
 
 ### Technologies used in this project
-- **HTML/CS+JS:** In our project, we used JSX, JS front, and CSS for a lot of the stylings. We also used Material UI for styling and making our project more user friendly.
+- **HTML/CSS+JS:** In our project, we used JSX, JS front, and CSS for a lot of the stylings. We also used Material UI for styling and making our project more user friendly.
 - **React:** The project uses React, and we are using JSX to render to our frontend. We started our project using the create-react-app boilerplate code. We are also using many hooks throughout the project.
 - **Node and Express:** We are using Node to connect to our React frontend, and communicating (sending and receiving) data from out MongoDB database to display on our frontend. There are many examples of get/update/delete in server/server.js.
 - **MongoDB:** We are using MongoDB and the mongoose library to store users, jobs, and predictions information in our database so that we could retrieve them and showcase them to the user.
@@ -94,8 +94,7 @@ Please see Image1 and Image2.
 <hr/>
 
 ### Next Steps
-- **Job notification:** Due to time restriction, we were unable to work on this stretch goal, which is sending the user job notifications when their jobs have finished. However, currently the user is able to see the progress of their jobs on a progress bar we implemented on our jobs page. The job notification would ease the use of the application.
-- **Support of other data types:** Supporting other data types such as images, text, and NLP files would increase the usability of our product. Similar to job notifications, time restriction did not allow us to work on this stretch goal. Supporting other data types would get integrated into our submit jobs/predictions page.
+- **Support of other data types:**  Due to time restriction, we were unable to work on this stretch goal, which is supporting other data types such as images, text, and NLP files, which would increase the usability of our product. Supporting other data types would get integrated into our submit jobs/predictions page.
 - **Premium account:** Since using machine learning engines requires a lot of resources and could be expensive in the long run, there can be an option for a premium account in which the client would need to pay for longer training times, so that the cost of the training won’t be all on BlackboxML. We will add that to the account plan, and store a client's credit card information for use.
 - **Integration of other web services:** During our research and work on AWS S3, we were able to see first hand how much more convenient it is for a client to use our website to directly upload their files from S3, rather than the users having to open their account on another tab, download their data into their local computer, and upload their data into our system. In the next steps, we are looking into integrating more web services, such as Google and Microsoft Azure, to increase the ease of using our product. 
 
