@@ -104,7 +104,7 @@ Please see Image1 and Image2.
 - **Nikki Moteva**: She worked on the landing page, the contact us page, the personal email login and securely storing the user's information in the database by hashing and salting passwords, the profile page and securely storing the user's AWS secret key in the database, deploying the app, setting up endpoints, and many bug fixes. She also did research on security requirements for storing the user’s data. Lastly, she lead the team and the meetings in order to meet the required goals of the group.
 - **Kian Shahangyan**:
 - **Robert Mo**: He worked on the job page, the docs page, the job submission form, and the prediction submission form. He setup the endpoint in the backend for the mentioned pages. He also did the polling to keep the progress of the job up to date.
-- **Harry Xu**:
+- **Harry Xu**: He researched and had discussions with the BlockboxML team on ways to connect to the Ensemble Squared backend which is hosted by the ubc server. Moreover, he worked on rewriting the existing prediction/training job which was written in python into javascript, and retrieving and parsing the data that comes from the server. Lastly, he worked on early template of the UI for jobs/demo page (discontinued).
 
 <hr/>
 
