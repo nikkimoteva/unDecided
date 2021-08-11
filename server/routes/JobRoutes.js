@@ -13,7 +13,7 @@ async function updateModel(model, jobsToUpdate) {
     const borg = await connect();
     for (const job of jobsToUpdate) {
       // Prediction jobs need to get file hash from associated training job
-      const trainJob = (model === PredictionModel) ? await JobModel.findOne({_id: job.jobID}).exec() : job;
+      const trainJob = (model === PredictionModel) ? await JobModel.findOne({_id: mongoose.Types.ObjectId(job.jobID)}).exec() : job;
       const currName = trainJob.fileHash;
       const msg = await borg.execCommand(`/opt/slurm/bin/squeue -n ${currName}`);
       const squeueOut = parseSqueue(msg.stdout, currName);
@@ -44,6 +44,7 @@ router.post("/", async (req, res) => {
 });
 
 router.post("/job", async (req, res) => {
+  console.log('/job path hit');
   const id_token = req.body.id_token;
   const jobID = req.body.jobID;
   const jobsToUpdate = await JobModel.find({user: id_token, _id: jobID});
@@ -146,16 +147,17 @@ router.post("/submitPrediction", async (req, res) => {
   const folder_path = slurm_command_dataset_path + trainJob.fileHash;
   const test_path = folder_path + '/' + test_file_name + '.csv';
   const local_path = `predictions/${trainJob.fileHash}.csv`;
-  const callback = `https://ensemble-automl.herokuapp.com/api/bbmlCallback/${trainJob.fileHash}/prediction`;
-  const predictString = runPredict(test_path, trainJob.fileHash, trainJob.timer, trainJob.target_name, user_email, trainJob.name, callback);
+  const predJob = await prediction.save();
+  const _id = predJob._id.toString();
 
+  const callback = `https://ensemble-automl.herokuapp.com/api/jobs/bbmlCallback/${_id}/prediction`;
+  const predictString = runPredict(test_path, trainJob.fileHash, trainJob.timer, trainJob.target_name, user_email, trainJob.name, callback);
   await storeCSV(dataset, local_path);
   const borg = await connect();
   await borg.putFile(local_path, test_path);
   console.log(predictString);
   const stdOut = await borg.exec(predictString, []);
   await removeCSV(local_path);
-  await prediction.save();
   res.sendStatus(200);
 });
 
@@ -202,19 +204,23 @@ router.delete("/deletePredictionJobID", (req, res) => {
     .catch(err => errorHandler(err, res));
 });
 
-router.patch('/bbmlCallback/:jobID/:type', (req, res) => {
+router.patch('/bbmlCallback/:jobID/:type', (req, res, next) => {
   console.log("bbmlCallback called");
   const jobID = req.params.jobID;
   const type = req.params.type;
   const newStatus = (req.body.isSuccess) ? "Successful" : "Failed";
   if (type === "training") {
-    JobModel.updateOne({_id: jobID}, {status: newStatus});
+    JobModel.updateOne({fileHash: jobID}, {status: newStatus}) // if training, ID is fileHash
+      .then(res.end())
+      .catch(next);
   } else if (type === "prediction") {
-    PredictionModel.updateOne({jobID: jobID}, {status: newStatus});
+    console.log(jobID);
+    PredictionModel.updateOne({_id: mongoose.Types.ObjectId(jobID)}, {status: newStatus}) // otherwise, ID is _id of prediction job
+      .then(res.end())
+      .catch(next);
   } else {
     console.error(`Invalid type given: ${type}`);
   }
-  res.end();
 });
 
 

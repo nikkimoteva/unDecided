@@ -2,7 +2,7 @@ import {Box, Button, makeStyles, Grid} from "@material-ui/core";
 import {Link} from "react-router-dom";
 import React, {useEffect, useState} from "react";
 
-import {getJob, getJobs, deleteJob as deleteJobDB, downloadPredictionFile} from "../Common/Managers/EndpointManager";
+import {getJobs, deleteJob as deleteJobDB, downloadPredictionFile} from "../Common/Managers/EndpointManager";
 
 import {useAuth} from "../Authentication/Auth";
 import {useHistory} from "react-router-dom";
@@ -19,6 +19,7 @@ import Typography from '@material-ui/core/Typography';
 import Paper from '@material-ui/core/Paper';
 import KeyboardArrowDownIcon from '@material-ui/icons/KeyboardArrowDown';
 import KeyboardArrowUpIcon from '@material-ui/icons/KeyboardArrowUp';
+import RefreshIcon from '@material-ui/icons/Refresh';
 import LinearProgress from '@material-ui/core/LinearProgress';
 import dateFormat from 'dateformat';
 
@@ -70,18 +71,21 @@ const useStyles = makeStyles({
 export default function Jobs(props) {
   const classes = useStyles();
   const [jobs, setJobs] = useState([]);
-  const [selectionModel, setSelectionModel] = useState([]);
   const auth = useAuth();
   const history = useHistory();
 
   const url = props.url;
 
-  useEffect(() => {
+  function updateJobRows() {
     getJobs(auth.user.email)
       .then(res => {
         const gottenJobs = res.data;
         setJobs(gottenJobs);
       });
+  }
+
+  useEffect(() => {
+    updateJobRows();
   }, []);
 
   
@@ -98,26 +102,10 @@ export default function Jobs(props) {
     }
 
   function Row(props) {
-
     const [row, setRow] = React.useState(props.row);
     const [rowState, setRowState] = React.useState({open: false, predictions: []});
     const classes = useRowStyles();
-    const [dateTime, setDateTime] = useState(new Date());
 
-    useEffect(() => {
-      const intervalId = setInterval(() => {
-
-        setDateTime(new Date());
-        getJob(auth.user.email,row.id)
-        .then(res => {
-          const job = res.data[0];
-          job.id = job._id;
-          setRow(job);
-        });
-      }, 30000);
-      return () => clearInterval(intervalId); //This is important
-    });
-    
     function deleteJob() {
       const jobId = row.id;
       deleteJobDB(auth.user.email, jobId)
@@ -189,7 +177,7 @@ export default function Jobs(props) {
             <TableCell align="right">{dateFormat(props.created, "mmmm dS, yyyy, h:MM:ss TT")}</TableCell>
             <TableCell align="center">
               {
-                (props.status === "Successful") ? 
+                (props.status === "Successful") ?
                  <Button variant="contained" className={classes.jobActionButton}
                           onClick={downloadPrediction} color="primary" startIcon={<GetAppIcon/>}
                  />
@@ -199,10 +187,10 @@ export default function Jobs(props) {
                       className={classes.jobActionButton} onClick={deletePrediction} color="primary"
                       startIcon={<DeleteIcon/>}
               />
-              
+
             </TableCell>
           </TableRow>
-          
+
           <ProgressBar status={props.status}progress={props.progress} colSpan={3}/>
 
         </>
@@ -261,7 +249,7 @@ export default function Jobs(props) {
         </TableRow>
         <ProgressBar status={row.status} progress={row.progress} colSpan={6}/>
 
-        
+
         <TableRow>
           <TableCell style={{paddingBottom: 0, paddingTop: 0}} colSpan={6}>
             <Collapse in={rowState.open} timeout="auto" unmountOnExit>
@@ -295,7 +283,7 @@ export default function Jobs(props) {
 
           </TableCell>
         </TableRow>
-        
+
       </>
     );
   }
@@ -312,6 +300,9 @@ export default function Jobs(props) {
                 to={`${url}/submitJob`}
         >
           New Job
+        </Button>
+        <Button variant="outlined" color="secondary" onClick={updateJobRows} style={{margin: "10px 0"}}>
+          <RefreshIcon/>
         </Button>
       </Grid>
 
