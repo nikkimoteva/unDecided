@@ -36,7 +36,7 @@ export default function SignIn() {
     auth.signinGoogle(credentials)
       .then(() => {
         setLoginModal(false);
-        history.push('/console/jobs');
+        history.push('/console');
       });
   }
 
@@ -67,7 +67,7 @@ export default function SignIn() {
       .then ((res) => {
         if (res) {
           setLoginModal(false);
-          history.push('/console/jobs');
+          history.push('/console');
           console.log("successfully logged in");
           setUser( {
             email: "",

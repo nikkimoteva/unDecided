@@ -120,7 +120,7 @@ function PredJobForm() {
       submitPrediction(auth.user.email, jobName,jobID , CSV)
         .then(() => {
           alert("Job Submitted");
-          history.push('/console/jobs');
+          history.push('/console');
         })
         .catch(err => {
           console.log(err);

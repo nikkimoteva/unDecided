@@ -117,7 +117,7 @@ export default function TrainJobForm() {
       submitJob(auth.user.email, jobName, jobTime, targetColumn, CSV, header)
         .then(() => {
           alert("Job Submitted");
-          history.push('/console/jobs');
+          history.push('/console');
         })
         .catch(err => {
           console.log(err);
