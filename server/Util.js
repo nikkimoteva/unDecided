@@ -111,7 +111,6 @@ module.exports = {
       password: ssh_pw
     })
       .then(() => forwardOutPromise(ssh1.connection, ssh2))
-      // .then(() => ssh2.execCommand('cd /ubc/cs/research/plai-scratch/BlackBoxML/bbml-backend-3'))
       .then(() => ssh2);
   },
 
@@ -156,8 +155,8 @@ module.exports = {
   parseSqueue: function(stdOut, fileHash) {
     const first_part_of_hash = fileHash.slice(0, 8);
     if (stdOut && stdOut.includes(first_part_of_hash)) {
-      const idx = stdOut.search(first_part_of_hash) + 20;  // time column starts here, may have trailing white space
-      const end_idx = idx + 13;  // ends here, may have trailing white space
+      const idx = stdOut.search(first_part_of_hash) + 20;
+      const end_idx = idx + 13;
       const status = stdOut.slice(stdOut.search(first_part_of_hash) + 17, (stdOut.search(first_part_of_hash) + 20)).trim();
       const time_string = stdOut.slice(idx, end_idx).trim();
 

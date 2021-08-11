@@ -16,15 +16,12 @@ function addUser(name, email, password) {
                 .then((hash, err) => {
                 if (err) {
                     console.log(err);
-                    // send internal error message 
                     console.log("Internal Error");
                     return null;
                 } else {
                     const hashGen = hash;
-                    // store hashed password and salt in DB
                     UserModel.create({name: name, email: email, passwordHash: hashGen});
                     console.log("SUCCESSFULLY ADDED USER");
-                    // redirect to login page
                     return true;
                 }
             });
@@ -37,7 +34,6 @@ function validatePassword(email, password) {
     .then ( (user) => {
         if (!user) {
             console.log("user not found");
-            // user not found, send "email or password is incorrect"
             return null;
         }
         return bcrypt.compare(password, user.passwordHash)
@@ -45,7 +41,6 @@ function validatePassword(email, password) {
             if (match) {
                 return user;
             } else {
-                // password incorrect, send "email or password is incorrect"
                 return null;
             }
         })
@@ -77,7 +72,6 @@ function getAWSCred(email) {
     return UserModel.findOne({email: email})
     .then((user) => {
         if (!user.AWSSecretKey || !user.AWSAccessKey) return null;
-        // return {access: user.AWSAccessKey, secret: user.AWSSecretKey};
         const bytes = CryptoJS.AES.decrypt(user.AWSSecretKey, cryptoSalt);
         const originalSecret = bytes.toString(CryptoJS.enc.Utf8);
         return {access: user.AWSAccessKey, secret: originalSecret};
