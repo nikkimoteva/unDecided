@@ -7,9 +7,6 @@ export default function DocsRouter() {
 
   // Use this to create pages based off of /docs part of url
   return <Switch>
-    <Route path={`${path}/Page1`}><></></Route>
-    <Route path={`${path}/Page2`}><></></Route>
-    <Route path={`${path}/Page3`}><></></Route>
-    <Route path={path}><Docs/ ></Route>  {/*Default route*/}
+    <Route path={path}><Docs/ ></Route>
   </Switch>;
 }
