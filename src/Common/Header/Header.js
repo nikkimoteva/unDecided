@@ -58,7 +58,7 @@ export default function Header() {
       <ButtonGroup variant="text" color="inherit" className={classes.toolbarButtons} size="large">
       <Button component={Link} to="/contact">Contact Us</Button>
         <Button component={Link} to="/docs">Docs</Button>
-        <Button component={Link} to="/console/jobs">Jobs</Button>
+        <Button component={Link} to="/console">Jobs</Button>
         <ProfileIcon signout={logout}/>
       </ButtonGroup>
     );

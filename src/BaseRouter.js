@@ -3,7 +3,6 @@ import Header from "./Common/Header/Header";
 import {CircularProgress} from "@material-ui/core";
 import {PrivateRoute} from "./Authentication/Auth";
 import DocsRouter from "./Docs/DocsRouter";
-import Demo from "./Demo/Demo";
 import Landing from "./Landing Page/Landing";
 import ContactUs from "./ContactUs/Contact";
 import React, {lazy, Suspense} from "react";
@@ -20,7 +19,6 @@ export default function BaseRouter() {
             <LazyLoadConsole/>
           </PrivateRoute>
           <Route path="/docs"><DocsRouter/></Route>
-          <Route path="/demo"><Demo/></Route>
           <Route path="/contact"><ContactUs/></Route>
           <Route exact path="/"><Landing/></Route>
         </Suspense>

@@ -1,7 +1,6 @@
 import {CircularProgress} from "@material-ui/core";
 import React from "react";
 
-
 export default function LoadingIcon(props) {
   return (
     <div hidden={props.hidden}>

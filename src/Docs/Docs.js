@@ -6,7 +6,6 @@ import signUp from './Screenshot/Sign Up.png';
 import jobPage from './Screenshot/Job Page.png';
 import jobSubmission from './Screenshot/Job Submission Page.png';
 import chooseCSV from './Screenshot/Choose CSV.png';
-import csvLoaded from './Screenshot/CSV Loaded.png';
 import submitJob from './Screenshot/Submit Job.png';
 import jobSubmitted from './Screenshot/Job Page Submitted.png';
 import jobTrained from './Screenshot/Job Trained.png';
