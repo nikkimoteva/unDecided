@@ -1,21 +1,16 @@
 import React from 'react';
-import "./common/Button.css";
+import "./Common/Button.css";
 import {responsiveFontSizes} from "@material-ui/core";
 import {createMuiTheme, StylesProvider, ThemeProvider} from "@material-ui/core/styles";
-import {ProvideAuth} from "./common/Auth";
+import {ProvideAuth} from "./Authentication/Auth";
 import BaseRouter from "./BaseRouter";
-import {ProvideLoginModalState} from "./common/LoginModalProvider";
+import {ProvideLoginModalState} from "./Authentication/LoginModalProvider";
 
 
 export default function App() {
   let theme = createMuiTheme({
-    // See https://material-ui.com/customization/theming/
-
     // color palette
-    palette: {
-      //   type: "dark",
-      //   divider: "rgba(255, 255, 255, 0.12)",
-    },
+    palette: {},
     // fonts and font sizes for Typography components
     typography: {},
     //default component props, like spacing, ripple effect, etc

@@ -1,17 +1,16 @@
 import React, {useState, useEffect} from 'react';
 import Typed from 'react-typed';
-import CustomButton from "../common/Button";
 import logo from '../images/logo.png';
 import figure1 from '../images/figure1.jpg';
 import Button from '@material-ui/core/Button';
 import RankingTable from "./RankingTable";
 import Overview from "./Overview";
-import "../common/Button.css";
+import {Link, useHistory} from "react-router-dom";
+import {useLoginModalContext} from "../Authentication/LoginModalProvider";
+import {useAuth} from "../Authentication/Auth";
+import "../Common/Button.css";
 import "../App.css";
 import "./Landing.css";
-import {Link, useHistory} from "react-router-dom";
-import {useLoginModalContext} from "../common/LoginModalProvider";
-import {useAuth} from "../common/Auth";
 
 export default function Landing() {
   const [clicked, setClicked] = useState(false);
@@ -57,12 +56,11 @@ export default function Landing() {
                  loop={true}
           />
           <div className="ButtonUI">
-            <Button className="CustomButton" component={Link}
-                    to="./demo" variant="contained" color="primary" href="#outlined-buttons"
-            >
-              autoML In Action
-            </Button>
-  
+             <Button className="CustomButton" component={Link}
+                     to="./docs" variant="contained" color="primary" href="#outlined-buttons"
+             >
+               autoML In Action
+             </Button>
             <Button className="CustomButton" variant="contained"
                     color="primary" onClick={handleGetStartedOnClick}
             >

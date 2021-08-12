@@ -1,41 +1,29 @@
 require("../database/Database");
 const bcrypt = require('bcrypt');
 const UserModel = require('../database/models/User');
+const CryptoJS = require("crypto-js");
 const saltRounds = 10;
+const cryptoSalt = "qe#7$$9djn";
 
 function addUser(name, email, password) {
-    let saltGen;
     return UserModel.findOne({email: email})
     .then ( (res) => {
         if (res){
             console.log("Email already exists");
-            return 1;
+            return false;
         } else {
-            return bcrypt.genSalt(saltRounds)
-            .then ((salt, err) => {
+            return bcrypt.hash(password, saltRounds)
+                .then((hash, err) => {
                 if (err) {
                     console.log(err);
-                    // send internal error message
                     console.log("Internal Error");
                     return null;
+                } else {
+                    const hashGen = hash;
+                    UserModel.create({name: name, email: email, passwordHash: hashGen});
+                    console.log("SUCCESSFULLY ADDED USER");
+                    return true;
                 }
-                saltGen = salt;
-                return bcrypt.hash(password, salt)
-                    .then((hash, err) => {
-                    if (err) {
-                        console.log(err);
-                        // send internal error message 
-                        console.log("Internal Error");
-                        return null;
-                    } else {
-                        const hashGen = hash;
-                        // store hashed password and salt in DB
-                        UserModel.create({name: name, email: email, salt: saltGen, passwordHash: hashGen});
-                        console.log("SUCCESSFULLY ADDED USER");
-                        // redirect to login page
-                        return 2;
-                    }
-                });
             });
         }
     });
@@ -46,18 +34,13 @@ function validatePassword(email, password) {
     .then ( (user) => {
         if (!user) {
             console.log("user not found");
-            // alert("email or password is incorrect. Please try again.");
             return null;
         }
-        // const saltGen = user.salt;
-        // const passHash = saltGen + password; no need to store salt?? look more into it
         return bcrypt.compare(password, user.passwordHash)
-        .then ( (match) => {
-            console.log(match);
+        .then ((match) => {
             if (match) {
                 return user;
             } else {
-                // password incorrect, send "email or password is incorrect"
                 return null;
             }
         })
@@ -67,7 +50,41 @@ function validatePassword(email, password) {
     });
 }
 
+
+function addAWSCred(email, accessKey, secretKey) {
+    if (accessKey.trim() === "" || secretKey.trim() === "") return false;
+    const crypt = CryptoJS.AES.encrypt(secretKey, cryptoSalt).toString();
+    return UserModel.findOneAndUpdate({email: email}, {AWSAccessKey: accessKey, AWSSecretKey: crypt})
+    .then ((res, err) => {
+        if (err) {
+            console.log(err);
+            return null;
+        } else {
+            return true;
+        }
+    })
+    .catch((err) => {
+        console.log(err);
+    });
+}
+
+function getAWSCred(email) {
+    return UserModel.findOne({email: email})
+    .then((user) => {
+        if (!user.AWSSecretKey || !user.AWSAccessKey) return null;
+        const bytes = CryptoJS.AES.decrypt(user.AWSSecretKey, cryptoSalt);
+        const originalSecret = bytes.toString(CryptoJS.enc.Utf8);
+        return {access: user.AWSAccessKey, secret: originalSecret};
+    })
+    .catch((err) => {
+        console.log(err);
+        return null;
+    });
+}
+
 module.exports = {
     addUser: addUser,
-    validatePassword: validatePassword
+    validatePassword: validatePassword,
+    addAWSCred: addAWSCred,
+    getAWSCred: getAWSCred,
 };

@@ -1,8 +1,8 @@
 import React, {useState} from "react";
-import {makeStyles, Typography} from "@material-ui/core";
-import {submitJob} from "../../common/Managers/EndpointManager";
+import {makeStyles} from "@material-ui/core";
+import {submitJob} from "../../Common/Managers/EndpointManager";
 import {useHistory} from "react-router-dom";
-import {useAuth} from "../../common/Auth.js";
+import {useAuth} from "../../Authentication/Auth.js";
 import AWSImportView from "../AWSImport/AWSImportView";
 import JobNameComponent from "./Components/JobNameComponent";
 import JobTimeComponent from "./Components/JobTimeComponent";
@@ -10,7 +10,7 @@ import TargetColumnComponent from "./Components/TargetColumnComponent";
 import SubmitButton from "./Components/SubmitButton";
 import {FileUploadComponent} from "./Components/FileUploadComponent";
 import DataImportStatusMsg from "./Components/DataImportStatusMsg";
-import LoadingIcon from "../../common/LoadingIcon";
+import LoadingIcon from "../../Common/LoadingIcon";
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -30,7 +30,6 @@ const useStyles = makeStyles((theme) => ({
   }
 }));
 
-// Useful constants
 const minJobTimeValue = 5;
 const maxJobTimeValue = 2880; // 48 hours
 
@@ -51,14 +50,12 @@ export default function TrainJobForm() {
   const auth = useAuth();
   const history = useHistory();
 
-  // Functions
   function getFileObjectContent(file) {
     return new Promise((resolve, reject) => {
       const reader = new FileReader();
       reader.readAsText(file);
       reader.onload = () => resolve(reader.result);
       reader.onprogress = (progress) => {
-        // Note: We only update if we got to the next percentage point. Otherwise, too many state updates slow down file loading
         const newProgressValue = Math.round(progress.loaded / progress.total * 100.);
         if (newProgressValue !== loadingValue) setLoadingValue(newProgressValue);
       };
@@ -67,19 +64,20 @@ export default function TrainJobForm() {
   }
 
   // converts array of fields into array of json objects
-  function updateCSVState(csvString) {
+  function updateCSVState(_csvString) {
+    const csvString = _csvString.replace("\r", "");
     setCSV(csvString);
     const header = csvString.split('\n')[0];
     const fields = header.split(',');
     setHeader(fields);
-    setTargetColumn(fields[fields.length - 1]); // Default to last column, as usually the last one is the target col
+    setTargetColumn(fields[fields.length - 1]);
     setDataImportSuccess(true);
   }
 
   function onFilePicked(file) {
     if (file.name.substring(file.name.length - 4) !== '.csv') alert("File name must have a .csv extension");
     else {
-      setDataImportSuccess(undefined); // Set both so success/fail messages go away
+      setDataImportSuccess(undefined);
       setIsLoadingFile(true);
       setProgressBarType('determinate');
       getFileObjectContent(file)
@@ -98,7 +96,6 @@ export default function TrainJobForm() {
     if (CSV === "") {
       alert("You must upload a csv file to train on.");
       return false;
-      // } else
     } else if (jobName.length === 0) {
       alert("Job name cannot be empty");
       return false;
@@ -118,7 +115,10 @@ export default function TrainJobForm() {
     const jobTime = maxJobTime * timeOption;
     if (validateFormData(jobTime)) {
       submitJob(auth.user.email, jobName, jobTime, targetColumn, CSV, header)
-        .then(res => history.push('/console/jobs'))
+        .then(() => {
+          alert("Job Submitted");
+          history.push('/console');
+        })
         .catch(err => {
           console.log(err);
           alert("Job failed to submit");
@@ -146,7 +146,7 @@ export default function TrainJobForm() {
                              onFilePicked={onFilePicked}
         />
 
-        <JobNameComponent jobName={jobName} setJobName={setJobName}/>
+        <JobNameComponent jobName={jobName} setJobName={setJobName} placeholder="Job Name"/>
 
         <JobTimeComponent maxJobTime={maxJobTime} setMaxJobTime={setMaxJobTime} timeOption={timeOption}
                           setTimeOption={setTimeOption}

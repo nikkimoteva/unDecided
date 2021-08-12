@@ -1,5 +1,5 @@
 import {useState} from "react";
-import {Button, MenuItem, TextField} from "@material-ui/core";
+import {Button, TextField} from "@material-ui/core";
 import {makeStyles} from "@material-ui/core/styles";
 
 const useStyles = makeStyles(() => ({
@@ -15,41 +15,11 @@ const useStyles = makeStyles(() => ({
   }
 }));
 
-const regions = [
-  'us-east-2',
-  'us-east-1',
-  'us-west-1',
-  'us-west-2',
-  'af-south-1',
-  'ap-east-1',
-  'ap-northeast-3',
-  'ap-northeast-2',
-  'ap-southeast-1',
-  'ap-southeast-2',
-  'ap-northeast-1',
-  'ca-central-1',
-  'cn-north-1',
-  'cn-northwest-1',
-  'eu-central-1',
-  'eu-west-1',
-  'eu-west-2',
-  'eu-south-1',
-  'eu-west-3',
-  'eu-north-1',
-  'me-south-1',
-  'sa-east-1'
-];
-
 export default function AWSImportForm(props) {
-  const [region, setRegion] = useState(regions[0]);
   const [accessKey, setAccessKey] = useState("");
   const [secretKey, setSecretKey] = useState("");
 
   const classes = useStyles();
-
-  function handleRegionChange(event) {
-    setRegion(event.target.value);
-  }
 
   function handleAccessKeyChange(event) {
     setAccessKey(event.target.value);
@@ -59,21 +29,14 @@ export default function AWSImportForm(props) {
     setSecretKey(event.target.value);
   }
 
+  function clear() {
+    setAccessKey("");
+    setSecretKey("");
+  }
+
   return (
     <form>
       <div className={classes.formDiv}>
-        <TextField
-          select
-          className={classes.formElem}
-          id="region-select"
-          value={region}
-          onChange={handleRegionChange}
-          label="S3 Bucket Region"
-        >
-          {
-            regions.map(region => <MenuItem key={region} value={region}>{region}</MenuItem>)
-          }
-        </TextField>
         <TextField
           value={accessKey}
           onChange={handleAccessKeyChange}
@@ -93,8 +56,8 @@ export default function AWSImportForm(props) {
         <Button
           variant="contained"
           color="primary"
-          onClick={() => props.onSubmit(region, accessKey, secretKey)}
-          disabled={region === "" || accessKey === "" || secretKey === ""}
+          onClick={() => {props.onSubmit(accessKey, secretKey); clear(); alert("Successfully added!");}}
+          disabled={accessKey === "" || secretKey === ""}
           className={classes.formElem}
         >
           Use Credentials

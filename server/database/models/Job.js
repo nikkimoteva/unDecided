@@ -11,19 +11,20 @@ const jobSchema = new mongoose.Schema({
   },
   fileHash: {
     type: String,
-    // required: true
+    required: true
   },
   status: {
     type: String,
-    required: true,
-    default: "Running"
+    enum: ['Queued', 'Running', 'Successful', 'Failed'],
+    default: "Queued"
   },
   headers:{
     type: Array,
-    // required: true
+    required: true
   },
   target_name: {
-    type: String
+    type: String,
+    required: true
   },
   timer: {
     type: Number,
@@ -31,11 +32,15 @@ const jobSchema = new mongoose.Schema({
   },
   target_column: {
     type: Number,
-    default : 0
+    required: true
   },
   created: {
     type: Date,
-    default: Date.now()
+    default: Date.now
+  },
+  time_elapsed: {
+    type: Number,
+    default: 0
   }
 });
 

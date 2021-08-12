@@ -1,15 +1,16 @@
 import React, {useState} from "react";
-import {makeStyles, Typography} from "@material-ui/core";
+import {makeStyles} from "@material-ui/core";
 import {useHistory,useLocation} from "react-router-dom";
-import {useAuth} from "../../common/Auth.js";
+import {useAuth} from "../../Authentication/Auth.js";
 import AWSImportView from "../AWSImport/AWSImportView";
 import JobNameComponent from "./Components/JobNameComponent";
 import SubmitButton from "./Components/SubmitButton";
 import {FileUploadComponent} from "./Components/FileUploadComponent";
 import DataImportStatusMsg from "./Components/DataImportStatusMsg";
-import LoadingIcon from "../../common/LoadingIcon";
-import {submitPrediction} from "../../common/Managers/EndpointManager";
 
+import LoadingIcon from "../../Common/LoadingIcon";
+import {submitPrediction} from "../../Common/Managers/EndpointManager";
+import { useParams } from 'react-router-dom';
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -29,7 +30,7 @@ const useStyles = makeStyles((theme) => ({
   }
 }));
 
-export default function PredJobForm() {
+function PredJobForm() {
   const [jobName, setJobName] = useState("");
   const [CSV, setCSV] = useState("");
 
@@ -42,15 +43,15 @@ export default function PredJobForm() {
   const auth = useAuth();
   const history = useHistory();
   const location = useLocation();
+  const params = useParams();
+  const jobID = params.jobID.slice(1);
 
-  // Functions
   function getFileObjectContent(file) {
     return new Promise((resolve, reject) => {
       const reader = new FileReader();
       reader.readAsText(file);
       reader.onload = () => resolve(reader.result);
       reader.onprogress = (progress) => {
-        // Note: We only update if we got to the next percentage point. Otherwise, too many state updates slow down file loading
         const newProgressValue = Math.round(progress.loaded / progress.total * 100.);
         if (newProgressValue !== loadingValue) setLoadingValue(newProgressValue);
       };
@@ -67,7 +68,8 @@ export default function PredJobForm() {
   }
 
   // converts array of fields into array of json objects
-  function updateCSVState(csvString) {
+  function updateCSVState(_csvString) {
+    const csvString = _csvString.replace("\r", "");
     const header = csvString.split('\n')[0];
     const fields = header.split(',');
 
@@ -83,7 +85,7 @@ export default function PredJobForm() {
   function onFilePicked(file) {
     if (file.name.substring(file.name.length - 4) !== '.csv') alert("File name must have a .csv extension");
     else {
-      setDataImportSuccess(undefined); // Set both so success/fail messages go away
+      setDataImportSuccess(undefined);
       setIsLoadingFile(true);
       setProgressBarType('determinate');
       getFileObjectContent(file)
@@ -115,9 +117,10 @@ export default function PredJobForm() {
   function submitHandler(event) {
     event.preventDefault();
     if (validateFormData()) {
-      submitPrediction(auth.user.email, jobName, location.state.id, CSV)
-        .then(res => {
-          history.push('/console/jobs');
+      submitPrediction(auth.user.email, jobName,jobID , CSV)
+        .then(() => {
+          alert("Job Submitted");
+          history.push('/console');
         })
         .catch(err => {
           console.log(err);
@@ -147,10 +150,12 @@ export default function PredJobForm() {
                              onFilePicked={onFilePicked}
         />
 
-        <JobNameComponent jobName={jobName} setJobName={setJobName}/>
+        <JobNameComponent jobName={jobName} setJobName={setJobName} placeholder="Prediction Job Name"/>
         <SubmitButton submitHandler={submitHandler}/>
 
       </form>
     </div>
   );
 }
+
+export default PredJobForm;

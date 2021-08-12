@@ -6234,6 +6234,13 @@ __metadata:
   languageName: node
   linkType: hard
 
+"crypto-js@npm:^4.1.1":
+  version: 4.1.1
+  resolution: "crypto-js@npm:4.1.1"
+  checksum: c12bbf7372534a8889737791eb8d1851a90b5afbbf86e013636fb782c32c05e3e3eab5dfc511ca9020a275a43d0e4138d0e95612b99595f336ccf54180b68a00
+  languageName: node
+  linkType: hard
+
 "crypto-random-string@npm:^1.0.0":
   version: 1.0.0
   resolution: "crypto-random-string@npm:1.0.0"
@@ -6702,6 +6709,13 @@ __metadata:
     whatwg-mimetype: ^2.3.0
     whatwg-url: ^8.0.0
   checksum: 42239927c6a202e2d02b7f41c94ca53e3cea036898b97b8bf6120ed1b25e0dd11c48ec7aa5c84cf807c2cb9f3a637df9fb50f3ca25a52863186a4ac46254726b
+  languageName: node
+  linkType: hard
+
+"dateformat@npm:^4.5.1":
+  version: 4.5.1
+  resolution: "dateformat@npm:4.5.1"
+  checksum: d5d08fd36f0987570cacada467145c722b4051285fae32969d62ef4bfc3c392f310bf6982a3ecbe62f0b42a944846d94a2bff53b8051ad1540bcaf118732fbf4
   languageName: node
   linkType: hard
 
@@ -7223,13 +7237,6 @@ __metadata:
     minimalistic-assert: ^1.0.1
     minimalistic-crypto-utils: ^1.0.1
   checksum: e0fb360fb6800666e0f69c837ae1f19656583322f81e106e458242055b8e241e80a48c92da8f1324684d1ff348751ff38abeadcfc1f28c54157c29d229d039a1
-  languageName: node
-  linkType: hard
-
-"emailjs-com@npm:^3.2.0":
-  version: 3.2.0
-  resolution: "emailjs-com@npm:3.2.0"
-  checksum: 55526fffe440ecc96018e319d61d17061969b7af1688a3af37d26c892529b56f0dd75e4f7e674e1ee15274968e431c9cb7e3dc17e2fc48b0e19a7f66590471d3
   languageName: node
   linkType: hard
 
@@ -11926,6 +11933,13 @@ fsevents@^1.2.7:
   languageName: node
   linkType: hard
 
+"nodemailer@npm:^6.6.3":
+  version: 6.6.3
+  resolution: "nodemailer@npm:6.6.3"
+  checksum: abcdcbc80279d6200ded778765046ce64210d901953d3ec7caaaa45ae44401d8c41cf3651b6d6cfaadf945a492e815f4c8a062bdf31214bd98417a090f530830
+  languageName: node
+  linkType: hard
+
 "nopt@npm:^5.0.0":
   version: 5.0.0
   resolution: "nopt@npm:5.0.0"
@@ -16460,9 +16474,10 @@ resolve@^2.0.0-next.3:
     bcrypt: ^5.0.1
     body-parser: ^1.19.0
     cors: ^2.8.5
+    crypto-js: ^4.1.1
     csv-string: ^4.0.1
     csvtojson: ^2.0.10
-    emailjs-com: ^3.2.0
+    dateformat: ^4.5.1
     eslint: ^7.29.0
     eslint-config-google: ^0.14.0
     eslint-plugin-react: ^7.24.0
@@ -16473,6 +16488,7 @@ resolve@^2.0.0-next.3:
     morgan: ^1.10.0
     multer: ^1.4.2
     node-ssh: ^12.0.0
+    nodemailer: ^6.6.3
     react: ^17.0.2
     react-dom: ^17.0.2
     react-google-login: ^5.2.2
