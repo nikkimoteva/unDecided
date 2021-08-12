@@ -228,7 +228,7 @@ router.patch('/bbmlCallback/:jobID/:type', async (req, res, next) => {
     JobModel.updateOne({fileHash: jobID}, {status: newStatus}) // if training, ID is fileHash
       .then(() => {
         const subject = (req.body.isSuccess) ? "Your training job is complete" : "Your training job has failed";
-        info.subject = `Ensemble AutoML - ${subject}"`;
+        info.subject = `Ensemble AutoML - ${subject}`;
         info.message = (req.body.isSuccess)
         ? `A training job you recently submitted has successfully completed. Please go to https://ensemble-automl.herokuapp.com/console to submit a prediction.`
           : `A training job you recently submitted has failed. Please try restarting the job at https://ensemble-automl.herokuapp.com/console or reply to this email to submit a ticket.`;
@@ -240,7 +240,7 @@ router.patch('/bbmlCallback/:jobID/:type', async (req, res, next) => {
     PredictionModel.updateOne({_id: mongoose.Types.ObjectId(jobID)}, {status: newStatus}) // otherwise, ID is _id of prediction job
       .then(() => {
         const subject = (req.body.isSuccess) ? "Your Prediction job is complete" : "Your Prediction job has failed";
-        info.subject = `Ensemble AutoML - ${subject}"`;
+        info.subject = `Ensemble AutoML - ${subject}`;
         info.message = (req.body.isSuccess)
           ? `A prediction job you recently submitted has successfully completed. Please go to https://ensemble-automl.herokuapp.com/console to download your prediction.`
           : `A prediction job you recently submitted has failed. Please try restarting the job at https://ensemble-automl.herokuapp.com/console or reply to this email to submit a ticket.`;
