@@ -56,6 +56,11 @@ export default function Landing() {
                  loop={true}
           />
           <div className="ButtonUI">
+             <Button className="CustomButton" component={Link}
+                     to="./docs" variant="contained" color="primary" href="#outlined-buttons"
+             >
+               autoML In Action
+             </Button>
             <Button className="CustomButton" variant="contained"
                     color="primary" onClick={handleGetStartedOnClick}
             >
