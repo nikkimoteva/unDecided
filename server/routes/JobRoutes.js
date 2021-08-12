@@ -77,7 +77,8 @@ router.post("/submitTrainJob", (req, res) => {
   storeCSV(dataset, local_path)
     .then(() => getUserId(id_token))
     .then(user_email => {
-      trainString = trainPipeline(targetPath, targetColumnName, user_email, file_name, maxJobTime, jobName, callback);
+      const sanitizedJobName = jobName.replace(/[^a-zA-Z ]/g, "");
+      trainString = trainPipeline(targetPath, targetColumnName, user_email, file_name, maxJobTime, sanitizedJobName, callback);
       console.log(trainString);
     })
     .then(() => connect())
